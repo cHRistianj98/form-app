@@ -7,10 +7,11 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "dev:cloud": "npm run build && wrangler pages dev dist --binding APP_PASSWORD=local-demo-123 --binding SESSION_SECRET=local-demo-session-secret-please-change --d1 DB=local-forma",
+    "dev:cloud": "npm run build && wrangler dev",
     "db:local": "wrangler d1 execute forma-nutri --local --file=./schema.sql",
     "db:remote": "wrangler d1 execute forma-nutri --remote --file=./schema.sql",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
