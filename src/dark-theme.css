@@ -10,6 +10,8 @@
   --green: #8dd5b1;
   background: var(--page);
   color: var(--text);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 ::selection { background: #b8ed8740; color: #fff; }
 body { background: var(--page); }
@@ -89,6 +91,7 @@ button { color: inherit; }
 .food-avatar.packshot { position: relative; }
 .food-avatar.packshot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 4px; }
 .favorite-foods-panel { margin-bottom: 20px; }
+.own-foods-panel { margin-bottom: 20px; }
 .favorite-foods-panel .food-search-info strong { white-space: normal; line-height: 1.4; }
 .food-product-note { color: var(--muted); font-size: 11px; line-height: 1.7; margin: -10px 0 20px; }
 .fat-bound-note { margin: 12px 0 0; }
@@ -142,8 +145,12 @@ button { color: inherit; }
 .photo-credit { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--border); margin-top: 13px; padding-top: 13px; overflow-wrap: anywhere; color: var(--muted); }
 .photo-credit a { color: var(--green); }
 .photo-credit small { font-size: 10px; }
-.modal-backdrop { background: #03080dbd; }
-.modal-card { background: var(--surface); border: 1px solid #344548; box-shadow: 0 30px 100px #00000070; }
+.modal-backdrop { background: #03080dbd; top: var(--modal-viewport-top,0px); bottom: auto; height: var(--modal-viewport-height,100dvh); }
+.modal-card { background: var(--surface); border: 1px solid #344548; box-shadow: 0 30px 100px #00000070; min-height: 0; max-height: min(89vh,900px,calc(var(--modal-viewport-height,100dvh) - 36px)); }
+.modal-top { flex-shrink: 0; }
+.modal-body { min-height: 0; scroll-padding-block: 16px; -webkit-overflow-scrolling: touch; }
+.selected-food>div:nth-child(2) { min-width: 0; }
+.selected-food h3 { overflow-wrap: anywhere; }
 .search-field { border-color: #3c5351; background: #10191d; color: #9cc4aa; }
 .search-field input { color: var(--text); }
 .search-field input::placeholder { color: #91a69b; }
@@ -184,6 +191,33 @@ button { color: inherit; }
   .plan-preset span { font-size: 11px; }
   .calculation-card { padding: 15px; }
   .calculation-card dl>div { font-size: 11px; }
+  .modal-backdrop {
+    align-items: center;
+    padding: max(16px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));
+  }
+  .modal-card {
+    max-width: 440px;
+    border-radius: 20px;
+    max-height: min(80svh,calc(var(--modal-viewport-height,100dvh) - max(16px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom))));
+  }
+  .modal-top { padding: 15px 16px; }
+  .modal-top h2 { font-size: 19px; }
+  .modal-top .icon-button { width: 44px; height: 44px; margin: -7px -7px -7px 0; flex-shrink: 0; }
+  .modal-body { padding: 16px; }
+  .modal-body .food-results { max-height: none; overflow: visible; }
+  .selected-food { padding: 12px; gap: 10px; margin-bottom: 16px; }
+  .selected-food .food-avatar.big { width: 56px; height: 56px; border-radius: 13px; }
+  .selected-food h3 { font-size: 14px; }
+  .selected-food p { line-height: 1.5; }
+  .modal-body .field { margin-bottom: 14px; }
+  .modal-actions .button { min-height: 44px; min-width: 0; white-space: normal; }
+}
+/* Safari zooms focused text controls below 16px. Keep user pinch zoom available. */
+@media(max-width:780px), (pointer:coarse) {
+  .field input, .field select, .field textarea, .search-field input, .login-input input {
+    font-size: 16px;
+    line-height: 1.4;
+  }
 }
 @media(prefers-reduced-motion:reduce) {
   *, *::before, *::after { transition: none!important; scroll-behavior: auto!important; }
