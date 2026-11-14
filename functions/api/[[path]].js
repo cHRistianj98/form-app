@@ -40,12 +40,20 @@ const nutrients = ['kcal','protein','carbs','fat','fiber','sugars','saturatedFat
 function validFood(food) {
   if (!food || !validId(food.id) || typeof food.name !== 'string' || !food.name.trim() || food.name.length>180) return false;
   if (food.brand != null && (typeof food.brand !== 'string' || food.brand.length>120)) return false;
+  if (food.unit != null && !['g','ml'].includes(food.unit)) return false;
+  if (food.fatLessThan != null && typeof food.fatLessThan !== 'boolean') return false;
+  if (food.imageFit != null && !['contain','cover'].includes(food.imageFit)) return false;
+  if (food.imageNote != null && (typeof food.imageNote !== 'string' || food.imageNote.length>240)) return false;
   for (const k of nutrients) if (food[k] != null && !finite(food[k],0,100000)) return false;
   return ['kcal','protein','carbs','fat'].every(k=>finite(food[k],0,100000));
 }
 function cleanFood(food) {
   const result = {id:food.id,name:food.name.trim(),brand:(food.brand||'').trim(),source: String(food.source||'Własny').slice(0,50)};
   for (const k of nutrients) if (food[k] != null) result[k] = food[k];
+  if (food.unit != null) result.unit = food.unit;
+  if (food.fatLessThan != null) result.fatLessThan = food.fatLessThan;
+  if (food.imageFit != null) result.imageFit = food.imageFit;
+  if (food.imageNote != null) result.imageNote = food.imageNote;
   if (typeof food.image === 'string' && (/^\/foods\/[a-z][a-z0-9-]*\.webp$/.test(food.image) || /^https:\/\/images\.openfoodfacts\.org\/[\w/.-]+$/.test(food.image))) result.image = food.image;
   return result;
 }

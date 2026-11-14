@@ -72,5 +72,8 @@ if any(photo['license'].startswith('GFDL') for photo in photos.values()):
     for photo in photos.values():
         if photo['license'].startswith('GFDL'):
             photo['licenseUrl'] = '/foods/GFDL-1.2.txt'
-(OUT / 'credits.json').write_text(json.dumps(photos, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+credits_path = OUT / 'credits.json'
+credits = json.loads(credits_path.read_text(encoding='utf-8')) if credits_path.exists() else {}
+credits.update(photos)
+credits_path.write_text(json.dumps(credits, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 print('Saved ' + str(len(photos)) + ' attributed WebP photographs.', flush=True)

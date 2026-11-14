@@ -1,4 +1,6 @@
 import {ACTIVITY_LEVELS, DEFAULT_PROFILE} from './profile.js';
+import {FAVORITE_FOODS} from './favoriteFoods.js';
+export {FAVORITE_FOODS} from './favoriteFoods.js';
 
 // Orientacyjne wartości na 100 g. Dane mikroskładników podawane są tylko tam,
 // gdzie mamy rozsądny szacunek; brak danych nigdy nie oznacza zera.
@@ -62,11 +64,32 @@ export const NUTRIENTS = [
 export function canonicalText(text = '') {
   return text.toLocaleLowerCase('pl').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g,'l').trim();
 }
-export function scaleFood(food, grams) {
+// The legacy entries.grams column stores the amount in the food's unit.
+// No density conversion: data per 100 ml scales directly by ml, per 100 g by g.
+export const foodUnit = food => food.unit === 'ml' ? 'ml' : 'g';
+export function scaleFood(food, quantity) {
   const fields = ['kcal','protein','carbs','fat',...NUTRIENTS.map(([k])=>k)];
-  return Object.fromEntries(fields.map((k) => [k, food[k] == null || food[k] === '' ? null : Number(food[k]) * Number(grams || 0) / 100]));
+  return Object.fromEntries(fields.map((k) => [k, food[k] == null || food[k] === '' ? null : Number(food[k]) * Number(quantity || 0) / 100]));
 }
 export const fmt = (n, digits = 0) => Number(n || 0).toLocaleString('pl-PL',{maximumFractionDigits:digits,minimumFractionDigits:0});
+export function nutrientLabel(value, lessThan=false, digits=1) {
+  if (value == null) return '—';
+  // Round an upper bound upwards: <0.005 g must never be displayed as <0 g.
+  const upper = Math.ceil(Number(value)*10**digits)/10**digits;
+  return lessThan ? `< ${fmt(upper,digits)}` : fmt(value,digits);
+}
+
+export function foodOptions(query='',personal=[],remote=[]) {
+  const all=[...personal,...FAVORITE_FOODS,...BASE_FOODS,...remote];
+  const seen=new Set();
+  const terms=canonicalText(query).split(/\s+/).filter(Boolean);
+  return all.filter(food=>{
+    if (seen.has(food.id)) return false;
+    seen.add(food.id);
+    const text=canonicalText(food.name+' '+(food.brand||''));
+    return terms.every(term=>text.includes(term));
+  }).slice(0,terms.length?50:18);
+}
 export function parseNum(value) { const n = Number(String(value).replace(',','.')); return Number.isFinite(n) ? n : 0; }
 export const DAY_LABELS = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
 export function localDay(d = new Date()) {
@@ -136,7 +159,8 @@ export function calcDailyBalance(targets, eaten) {
 export function foodImage(food) {
   // Resolve the current image even for old diary snapshots that lack this field.
   if (typeof food.image === 'string' && (/^\/foods\/[a-z][a-z0-9-]*\.webp$/.test(food.image) || /^https:\/\/images\.openfoodfacts\.org\//.test(food.image))) return food.image;
-  const base = BASE_FOODS.find(f=>f.id===food.id) || BASE_FOODS.find(f=>canonicalText(f.name)===canonicalText(food.name));
+  const catalog = [...FAVORITE_FOODS,...BASE_FOODS];
+  const base = catalog.find(f=>f.id===food.id) || catalog.find(f=>canonicalText(f.name)===canonicalText(food.name));
   return base?.image || null;
 }
 export function calcStepsKcal(steps, activities) {

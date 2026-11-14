@@ -1,0 +1,52 @@
+{
+  "lidl-protein-milk": {
+    "title": "Pilos High Protein — mleko",
+    "url": "https://images.openfoodfacts.org/images/products/590/082/002/4420/front_fr.5.400.jpg",
+    "source": "https://world.openfoodfacts.org/product/5900820024420",
+    "author": "Open Food Facts contributors",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "piatnica-cream-18": {
+    "title": "Piątnica — Śmietana 18%",
+    "url": "https://piatnica.com.pl/content/uploads/2020/11/Smietana_18_200_g.png",
+    "source": "https://piatnica.com.pl/produkt/smietana-18-200-g/",
+    "author": "Źródło zdjęcia: Piątnica",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "hochland-gouda": {
+    "title": "Hochland — Gouda w plastrach",
+    "url": "https://www.hochland.pl/img/produkty-2025-op/kremowe-w-plastrach-gouda.jpg",
+    "source": "https://www.hochland.pl/produkty/kremowe/w-plastrach/gouda.html",
+    "author": "Źródło zdjęcia: Hochland",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "lidl-protein-cheese": {
+    "title": "Milbona — ser High Protein",
+    "url": "https://www.lidl.pt/static/assets/queijo-fatiado-1250580.png",
+    "source": "https://www.lidl.pt/c/lidl-sao-silvestre/s10059158",
+    "author": "Źródło zdjęcia: Lidl",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "lidl-protein-cup": {
+    "title": "Lidl — kubki High Protein (zdjęcie poglądowe serii)",
+    "url": "https://www.lidl.dk/static/assets/Text-Image_HighProtein_6-659085.jpg",
+    "source": "https://www.lidl.dk/c/high-protein/s10027668",
+    "author": "Źródło zdjęcia: Lidl",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "laciate-milk-32": {
+    "title": "Łaciate — mleko 3,2%",
+    "url": "https://mlekpol.com.pl/wp-content/uploads/2018/07/Mleko-Laciate-1L-EDGE-3_2pr-P-10-09-2026-scaled.jpg",
+    "source": "https://mlekpol.com.pl/index.php/produkt/mleko-uht-laciate-32/",
+    "author": "Źródło zdjęcia: Mlekpol",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "cincin-rose-zero": {
+    "title": "Cin&Cin — Free Rosé 0%",
+    "url": "https://eu-central-1.linodeobjects.com/unlimitree-prezentovo/cincin-free-rose.png",
+    "source": "https://prezentovo.com/produkt/cincin-free-rose/",
+    "author": "Źródło zdjęcia: Prezentovo",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  }
+}

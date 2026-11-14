@@ -385,5 +385,68 @@
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Cottagecheese200px.jpg",
     "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "fav-lidl-protein-milk": {
+    "image": "/foods/fav-lidl-protein-milk.webp",
+    "title": "Pilos High Protein — mleko",
+    "author": "Open Food Facts contributors",
+    "source": "https://world.openfoodfacts.org/product/5900820024420",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-piatnica-cream-18": {
+    "image": "/foods/fav-piatnica-cream-18.webp",
+    "title": "Piątnica — Śmietana 18%",
+    "author": "Źródło zdjęcia: Piątnica",
+    "source": "https://piatnica.com.pl/produkt/smietana-18-200-g/",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-hochland-gouda": {
+    "image": "/foods/fav-hochland-gouda.webp",
+    "title": "Hochland — Gouda w plastrach",
+    "author": "Źródło zdjęcia: Hochland",
+    "source": "https://www.hochland.pl/produkty/kremowe/w-plastrach/gouda.html",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-lidl-protein-cheese": {
+    "image": "/foods/fav-lidl-protein-cheese.webp",
+    "title": "Milbona — ser High Protein",
+    "author": "Źródło zdjęcia: Lidl",
+    "source": "https://www.lidl.pt/c/lidl-sao-silvestre/s10059158",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-lidl-protein-cup": {
+    "image": "/foods/fav-lidl-protein-cup.webp",
+    "title": "Lidl — kubki High Protein (zdjęcie poglądowe serii)",
+    "author": "Źródło zdjęcia: Lidl",
+    "source": "https://www.lidl.dk/c/high-protein/s10027668",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-laciate-milk-32": {
+    "image": "/foods/fav-laciate-milk-32.webp",
+    "title": "Łaciate — mleko 3,2%",
+    "author": "Źródło zdjęcia: Mlekpol",
+    "source": "https://mlekpol.com.pl/index.php/produkt/mleko-uht-laciate-32/",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-cincin-rose-zero": {
+    "image": "/foods/fav-cincin-rose-zero.webp",
+    "title": "Cin&Cin — Free Rosé 0%",
+    "author": "Źródło zdjęcia: Prezentovo",
+    "source": "https://prezentovo.com/produkt/cincin-free-rose/",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
   }
 }
