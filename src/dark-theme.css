@@ -1,0 +1,183 @@
+:root {
+  color-scheme: dark;
+  --page: #0d1215;
+  --surface: #151d21;
+  --raised: #1c282c;
+  --border: #2b393c;
+  --text: #eef4f0;
+  --muted: #a5b5af;
+  --accent: #b8ed87;
+  --green: #8dd5b1;
+  background: var(--page);
+  color: var(--text);
+}
+::selection { background: #b8ed8740; color: #fff; }
+body { background: var(--page); }
+button { color: inherit; }
+.sidebar { background: #10181b; border-color: var(--border); }
+.sidebar-brand, .topline h1, .login-brand, .login-card h1 { color: var(--text); }
+.brand-mark { background: #253a2e; color: var(--accent); box-shadow: none; }
+.sidebar-brand small, .sidebar-nav-label, .sidebar-profile small, .sidebar-profile>svg { color: var(--muted); }
+.sidebar-nav button { color: #acbcb6; }
+.sidebar-nav button:hover { color: var(--text); background: #1a2529; }
+.sidebar-nav button.active { background: #263b2c; color: var(--accent); }
+.sidebar-nav button.active svg, .brand-point { color: var(--accent); }
+.nav-mark { background: var(--accent); }
+.sidebar-goal { background: #19262a; border: 1px solid var(--border); }
+.goal-symbol, .profile-avatar { background: #2a3d30; color: var(--accent); }
+.sidebar-goal h3 { color: var(--text); }
+.sidebar-goal small, .sidebar-goal p, .page-subtitle { color: var(--muted); }
+.sidebar-profile { border-color: var(--border); }
+.goal-meter, .goal-big-meter, .meter { background: #2b3a3d; }
+.goal-meter>span, .goal-big-meter>span { background: var(--accent); }
+.today-marker { color: #9cbd9e; }
+.status-dot { background: var(--accent); box-shadow: 0 0 0 4px #b8ed8715; }
+.date-nav { background: var(--surface); border-color: var(--border); box-shadow: none; }
+.date-text, .date-text svg { color: #d1e0d7; }
+.icon-button, .remove-button { color: var(--muted); }
+.icon-button:hover { background: var(--raised); color: var(--accent); }
+.demo-banner { background: #232c20; color: #c2d6ab; border-color: #3d4a34; }
+.calorie-hero { background: linear-gradient(125deg,#1a362b,#162b26); border: 1px solid #395044; }
+.calorie-hero:before { background: radial-gradient(circle,#80c96d15,transparent 70%); }
+.hero-eyebrow { color: var(--accent); }
+.hero-intro p { color: #bbd0c4; }
+.hero-figures>div>strong { color: var(--accent); }
+.hero-equation>span { gap: 8px; }
+.goal-card { background: #1c2929; border: 1px solid #354340; }
+.goal-card h3, .big-weight { color: var(--text); }
+.weight-compare, .goal-card p { color: #b0c3b7; }
+.soft-badge { background: #324630; color: #d0ecb9; }
+.soft-badge.neutral { background: var(--raised); color: #b8c9bf; }
+.light-link, .text-link, .attribution a { color: var(--accent); }
+.panel, .meal-card { background: var(--surface); border-color: var(--border); box-shadow: 0 5px 20px #0000000c; }
+.section-heading h2, .macro-item>strong, .entry-text strong, .entry-calories,
+.week-foot strong, .micro-item strong, .food-search-info strong, .food-search-kcal strong,
+.empty-state h3, .stat-panel>strong, .action-tile strong, .empty-chart strong,
+.measure-list>div>strong, .subsection-title, .modal-top h2, .selected-food h3 { color: var(--text); }
+.section-heading p, .macro-item>span, .macro-item>strong small,
+.meal-name span:not(.icon-badge), .entry-text small, .entry-calories small,
+.step-summary>div:nth-child(2)>span, .step-goal small, .burn-breakdown>div>span,
+.chart-guide, .chart-col, .goal-line span, .week-foot, .micro-item span,
+.muted-note, .activity-tip, .app-footer, .food-search-info small, .food-mini-macros,
+.food-search-kcal small, .attribution, .empty-state, .feature-intro p,
+.stat-panel>span, .stat-panel>small, .activity-entry>div:nth-child(2)>span,
+.weight-chart-labels, .chart-xlabels, .empty-chart, .measure-list>div>span,
+.settings-aside .panel>p, .modal-top p, .source-note, .help-note,
+.selected-food p, .with-unit span, .portion-energy span, .portion-macro span,
+.login-card>p, .login-foot, .search-meta>span { color: var(--muted); }
+.icon-badge { background: #243c32; color: #97dcba; }
+.icon-badge.sun, .icon-badge.breakfast { background: #3b3221; color: #edc780; }
+.icon-badge.blue { background: #20383e; color: #8acbd4; }
+.icon-badge.purple, .icon-badge.dinner { background: #302e48; color: #b9adf2; }
+.icon-badge.snack { background: #3d2a35; color: #e5a4c4; }
+.icon-badge.lunch { background: #263d30; color: #a4d5ae; }
+.macro-icon.protein { background: #302d49; color: #b8b3ff; }
+.macro-icon.carb { background: #403323; color: #f3c285; }
+.macro-icon.fat { background: #422e32; color: #f3acb5; }
+.small-add, .round-add { background: #2a3b2d; color: var(--accent); }
+.small-add:hover, .round-add:hover { background: #3a5139; }
+.meal-entry, .burn-breakdown, .week-foot, .activity-entry, .measure-list>div,
+.subsection-title, .modal-top, .source-note { border-color: var(--border); }
+.entry-main:hover .entry-text strong { color: var(--accent); }
+.remove-button:hover { background: #472b2d; color: #ffb8b4; }
+.food-avatar { background: #2d3b31; color: #c4e0ae; overflow: hidden; width: 42px; height: 42px; }
+.food-avatar.large { width: 58px; height: 58px; border-radius: 13px; }
+.food-avatar.big { width: 76px; height: 76px; border-radius: 16px; }
+.food-avatar.has-photo { background: #d7ded3; }
+.food-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.food-search-row { background: #192327; border-color: var(--border); padding: 13px; gap: 13px; }
+.food-search-row:hover { background: #21312f; border-color: #607d57; }
+.food-row-plus { color: var(--accent); }
+.food-catalog, .food-list { gap: 11px; }
+.burn-breakdown b, .chart-col span.today, .activity-entry>b { color: var(--green); }
+.subtle-full-button { background: #1c2c26; color: var(--accent); border-color: #4c674b; }
+.subtle-full-button:hover { background: #283d2c; }
+.activity-budget-note { color: var(--muted); font-size: 11px; line-height: 1.7; margin: 0 0 17px; }
+.goal-line { border-color: #658359; }
+.micro-item { background: var(--raised); }
+.button.primary { background: var(--accent); color: #172318; box-shadow: none; }
+.button.primary:hover { background: #c9f6a4; }
+.button.outline { border-color: #4b634b; color: var(--accent); background: transparent; }
+.button.outline:hover, .button.ghost:hover { background: #283c30; }
+.button.ghost { background: var(--raised); color: #d2e0d7; }
+.feature-intro { background: #1b2a27; }
+.feature-icon { background: #30432f; color: var(--accent); }
+.action-tile { background: #1b282b; border-color: var(--border); }
+.action-tile:hover { background: #24362d; border-color: #597451; }
+.action-tile>span { color: #a6c9ad; }
+.tip-panel { background: #1b2824; }
+.field>span, .check-line { color: #c2d0c8; }
+.field input, .field select, .field textarea, .with-unit { background: #10191d; border-color: #3a4b4e; color: var(--text); }
+.field input::placeholder, .field textarea::placeholder { color: #81968b; }
+.field input:disabled { opacity: .5; }
+.field-hint { color: var(--muted); font-size: 11px; line-height: 1.65; font-weight: 400; }
+.profile-preview { background: #293b2b; color: var(--accent); border: 1px solid #465e3b; }
+.profile-preview strong { color: var(--accent); line-height: 1.6; }
+.profile-preview span { color: #c0d0b5; }
+.plan-preset { display: flex; align-items: center; gap: 13px; padding: 17px; background: #25372a; border: 1px solid #445d39; border-radius: 14px; margin-bottom: 25px; color: var(--accent); }
+.plan-preset>div { flex: 1; }
+.plan-preset strong, .plan-preset span { display: block; }
+.plan-preset strong { font-size: 13px; }
+.plan-preset span { font-size: 12px; margin-top: 5px; color: #d2e6c3; }
+.calculation-card { padding: 19px; border: 1px solid #3c5147; border-radius: 14px; background: #14231e; margin-bottom: 22px; }
+.calculation-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .05em; }
+.calculation-card dl { margin: 17px 0 0; }
+.calculation-card dl>div { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; padding: 9px 0; }
+.calculation-card dt { color: var(--muted); }
+.calculation-card dd { margin: 0; text-align: right; white-space: nowrap; font-weight: 700; }
+.calculation-total { border-top: 1px solid #3b5143; margin-top: 7px; padding-top: 15px!important; }
+.calculation-total dt, .calculation-total dd { color: var(--accent); font-weight: 700; }
+.calculation-card p { font-size: 11px; line-height: 1.7; color: var(--muted); margin: 14px 0 8px; }
+.nutrition-sources { display: flex; flex-direction: column; gap: 12px; padding-top: 15px; border-top: 1px solid var(--border); }
+.nutrition-sources a { color: var(--accent); font-size: 11px; line-height: 1.6; text-underline-offset: 3px; }
+.photo-credits details { font-size: 12px; line-height: 1.7; }
+.photo-credits summary { cursor: pointer; color: var(--accent); }
+.photo-credit { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--border); margin-top: 13px; padding-top: 13px; overflow-wrap: anywhere; color: var(--muted); }
+.photo-credit a { color: var(--green); }
+.photo-credit small { font-size: 10px; }
+.modal-backdrop { background: #03080dbd; }
+.modal-card { background: var(--surface); border: 1px solid #344548; box-shadow: 0 30px 100px #00000070; }
+.search-field { border-color: #3c5351; background: #10191d; color: #9cc4aa; }
+.search-field input { color: var(--text); }
+.search-field input::placeholder { color: #91a69b; }
+.search-field button { color: #c0cfc5; }
+.source-note a { color: var(--accent); }
+.inline-hint { color: #e3c68f; }
+.empty-search { color: var(--muted); }
+.empty-search strong { color: var(--text); }
+.selected-food { background: #1e2e2b; }
+.portion-preview, .estimate { background: #263a2a; color: #b5d5b5; }
+.portion-energy strong, .portion-macro b, .estimate strong { color: var(--accent); }
+.activity-choice button { background: #172327; border-color: #35494b; color: #bbcec1; }
+.activity-choice button.active { background: #30492d; color: var(--accent); border-color: #89b16c; }
+.check-line input { accent-color: var(--accent); }
+.online-search-button { background: #263a2a; color: var(--accent); border-color: #4c6945; }
+.online-search-button:hover { background: #344b30; }
+.login-page { background: var(--page); }
+.login-glow { background: #1e4030; opacity: .45; }
+.login-card { background: var(--surface); border: 1px solid var(--border); box-shadow: 0 22px 70px #00000050; }
+.login-input { background: #10191d; border-color: #3a4b4e; }
+.login-input input { background: transparent; color: var(--text); }
+.form-error { color: #ffb9ab; line-height: 1.7; }
+.error-box { background: #3e2827; color: #ffb9ab; }
+.loading-screen { background: var(--page); color: var(--muted); }
+.toast { background: #c2f09a; color: #192719; box-shadow: 0 10px 45px #00000050; }
+.weight-chart svg line { stroke: #3d5048; }
+.weight-chart svg path[fill="none"] { stroke: var(--green); }
+.weight-chart svg circle { fill: var(--green); stroke: var(--surface); }
+@media(max-width:780px) {
+  .mobile-nav { background: #111b20f5; border-color: #34413e; }
+  .mobile-nav button { color: #a4b7ad; }
+  .mobile-nav button.active { color: var(--accent); }
+}
+@media(max-width:600px) {
+  .food-avatar.large { width: 52px; height: 52px; }
+  .food-search-info strong { font-size: 12px; }
+  .plan-preset { padding: 13px; gap: 10px; }
+  .plan-preset span { font-size: 11px; }
+  .calculation-card { padding: 15px; }
+  .calculation-card dl>div { font-size: 11px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *, *::before, *::after { transition: none!important; scroll-behavior: auto!important; }
+}

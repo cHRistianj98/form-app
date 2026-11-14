@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {calcTargets,calcStepsKcal,scaleFood,BASE_FOODS,activityKcal,localDay,shiftDay} from '../src/foods.js';
 import {onRequest} from '../functions/api/[[path]].js';
+import {DEFAULT_PROFILE} from '../src/profile.js';
 
 const env = {
   APP_PASSWORD: 'test-secret-long-password',
@@ -24,9 +25,9 @@ test('food portion scales linearly',()=>{
   assert.equal(scaleFood(onion,50).iron,null);
 });
 test('targets start from 186cm/93kg/28y and allow edits',()=>{
-  const p={height:186,startWeight:93,targetWeight:85,age:28,sex:'male',deficit:450,proteinFactor:1.8,fatFactor:.8,manualCalories:0};
+  const p={...DEFAULT_PROFILE};
   const r=calcTargets(p,93);
-  assert.equal(r.bmr,1958); assert.equal(r.calories,1899);assert.equal(r.protein,153);
+  assert.equal(r.bmr,1958); assert.equal(r.calories,2600);assert.equal(r.protein,180);
   assert.equal(calcTargets({...p,manualCalories:2200},93).calories,2200);
 });
 test('steps account for baseline and included running',()=>{

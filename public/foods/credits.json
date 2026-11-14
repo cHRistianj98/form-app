@@ -1,0 +1,389 @@
+{
+  "egg": {
+    "image": "/foods/egg.webp",
+    "title": "Chicken eggs 20101113.jpg",
+    "author": "Batholith (talk)",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "source": "https://commons.wikimedia.org/wiki/File:Chicken_eggs_20101113.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "onion": {
+    "image": "/foods/onion.webp",
+    "title": "Mixed_onions.jpg",
+    "author": "Colin",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Mixed_onions.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "banana": {
+    "image": "/foods/banana.webp",
+    "title": "Bananavarieties.jpg",
+    "author": "TimothyPilgrim",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Bananavarieties.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "chicken": {
+    "image": "/foods/chicken.webp",
+    "title": "Raw chicken slices.jpg",
+    "author": "kakyusei",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Raw_chicken_slices.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "rice": {
+    "image": "/foods/rice.webp",
+    "title": "Uncooked ST25 rice on bamboo surface.jpg",
+    "author": "VinhNguyen.1257",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Uncooked_ST25_rice_on_bamboo_surface.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "ricec": {
+    "image": "/foods/ricec.webp",
+    "title": "Meshi_001.jpg",
+    "author": "Ocdp",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Meshi_001.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "potato": {
+    "image": "/foods/potato.webp",
+    "title": "Salzkartoffeln.jpg",
+    "author": "MarkusHagenlocher",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Salzkartoffeln.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "salmon": {
+    "image": "/foods/salmon.webp",
+    "title": "Frozen salmon fillet.jpg",
+    "author": "Medicalfools / David Chancey",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Frozen_salmon_fillet.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "oats": {
+    "image": "/foods/oats.webp",
+    "title": "Rolled_oats.jpg",
+    "author": "en:user:Hankwang",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "source": "https://commons.wikimedia.org/wiki/File:Rolled_oats.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "apple": {
+    "image": "/foods/apple.webp",
+    "title": "Pink_lady_and_cross_section.jpg",
+    "author": "fir0002  flagstaffotos [at] gmail.com\n\t\tCanon 20D + Sigma 150mm f/2.8",
+    "license": "GFDL 1.2",
+    "licenseUrl": "/foods/GFDL-1.2.txt",
+    "source": "https://commons.wikimedia.org/wiki/File:Pink_lady_and_cross_section.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "bread": {
+    "image": "/foods/bread.webp",
+    "title": "Weißbrot-1.jpg",
+    "author": "Rainer Zenz",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Wei%C3%9Fbrot-1.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "wholebread": {
+    "image": "/foods/wholebread.webp",
+    "title": "Vegan_no-knead_whole_wheat_bread_loaf,_September_2010.jpg",
+    "author": "Veganbaking.net",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Vegan_no-knead_whole_wheat_bread_loaf,_September_2010.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "tw": {
+    "image": "/foods/tw.webp",
+    "title": "Skimmed_milk_quark_on_spoon.jpg",
+    "author": "SKopp",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Skimmed_milk_quark_on_spoon.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "skyr": {
+    "image": "/foods/skyr.webp",
+    "title": "Skyr.is_með_vanillu.jpg",
+    "author": "Schnee (talk)",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Skyr.is_me%C3%B0_vanillu.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "milk": {
+    "image": "/foods/milk.webp",
+    "title": "Glass_of_Milk_(33657535532).jpg",
+    "author": "NIAID",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Glass_of_Milk_(33657535532).jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "olive": {
+    "image": "/foods/olive.webp",
+    "title": "Oliven_V1.jpg",
+    "author": "Poyraz 72",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Oliven_V1.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "butter": {
+    "image": "/foods/butter.webp",
+    "title": "Švédský_koláč_naruby_904_(cropped).JPG",
+    "author": "Matěj Baťha",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%C5%A0v%C3%A9dsk%C3%BD_kol%C3%A1%C4%8D_naruby_904_(cropped).JPG",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "tomato": {
+    "image": "/foods/tomato.webp",
+    "title": "Tomato_je.jpg",
+    "author": "Softeis",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Tomato_je.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "cucumber": {
+    "image": "/foods/cucumber.webp",
+    "title": "Cucumber picture.jpg",
+    "author": "Mgmoscatello",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cucumber_picture.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "lettuce": {
+    "image": "/foods/lettuce.webp",
+    "title": "Iceberg lettuce in Poplar Farmhouse (87696).jpg",
+    "author": "Zolfeqar Fatihzadeh",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Iceberg_lettuce_in_Poplar_Farmhouse_(87696).jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "carrot": {
+    "image": "/foods/carrot.webp",
+    "title": "Vegetable-Carrot-Bundle-wStalks.jpg",
+    "author": "Evan-Amos",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "source": "https://commons.wikimedia.org/wiki/File:Vegetable-Carrot-Bundle-wStalks.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "tuna": {
+    "image": "/foods/tuna.webp",
+    "title": "Buzzonaglia di tonno.JPG",
+    "author": "Diluviano at Italian Wikipedia",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "source": "https://commons.wikimedia.org/wiki/File:Buzzonaglia_di_tonno.JPG",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "pasta": {
+    "image": "/foods/pasta.webp",
+    "title": "(Pasta)_by_David_Adam_Kess_(pic.2).jpg",
+    "author": "David Adam Kess",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:(Pasta)_by_David_Adam_Kess_(pic.2).jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "pastac": {
+    "image": "/foods/pastac.webp",
+    "title": "Cooked spaghetti (square).jpg",
+    "author": "Kevin Todora",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cooked_spaghetti_(square).jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "beef": {
+    "image": "/foods/beef.webp",
+    "title": "Hackfleisch-1.jpg",
+    "author": "No machine-readable author provided. Rainer Zenz assumed (based on copyright claims).",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Hackfleisch-1.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "roll": {
+    "image": "/foods/roll.webp",
+    "title": "Bread_rolls_at_a_bakery_(cropped).jpg",
+    "author": "fir0002  flagstaffotos [at] gmail.com\n\t\tCanon 20D + Tamron 28-75mm f/2.8",
+    "license": "GFDL 1.2",
+    "licenseUrl": "/foods/GFDL-1.2.txt",
+    "source": "https://commons.wikimedia.org/wiki/File:Bread_rolls_at_a_bakery_(cropped).jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "peanut": {
+    "image": "/foods/peanut.webp",
+    "title": "2020-03-24_20_57_22_An_open_jar_of_Skippy_Creamy_Peanut_Butter_in_the_Dulles_section_of_Sterling,_Loudoun_County,_Virginia.jpg",
+    "author": "Famartin",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2020-03-24_20_57_22_An_open_jar_of_Skippy_Creamy_Peanut_Butter_in_the_Dulles_section_of_Sterling,_Loudoun_County,_Virginia.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "walnut": {
+    "image": "/foods/walnut.webp",
+    "title": "Walnuts_-_whole_and_open_with_halved_kernel.jpg",
+    "author": "Ivar Leidus",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Walnuts_-_whole_and_open_with_halved_kernel.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "orange": {
+    "image": "/foods/orange.webp",
+    "title": "Oranges_-_whole-halved-segment.jpg",
+    "author": "Ivar Leidus",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Oranges_-_whole-halved-segment.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "strawberry": {
+    "image": "/foods/strawberry.webp",
+    "title": "Garden_strawberry_(Fragaria_×_ananassa)_single2.jpg",
+    "author": "Ivar Leidus",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Garden_strawberry_(Fragaria_%C3%97_ananassa)_single2.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "broccoli": {
+    "image": "/foods/broccoli.webp",
+    "title": "Broccoli_and_cross_section_edit.jpg",
+    "author": "Fir0002",
+    "license": "GFDL 1.2",
+    "licenseUrl": "/foods/GFDL-1.2.txt",
+    "source": "https://commons.wikimedia.org/wiki/File:Broccoli_and_cross_section_edit.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "eggwhite": {
+    "image": "/foods/eggwhite.webp",
+    "title": "Pasteurized egg white.jpg",
+    "author": "Manodegloria",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "source": "https://commons.wikimedia.org/wiki/File:Pasteurized_egg_white.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "yogurt": {
+    "image": "/foods/yogurt.webp",
+    "title": "Joghurt.jpg",
+    "author": "No machine-readable author provided. Rainer Zenz assumed (based on copyright claims).",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Joghurt.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "chocolate": {
+    "image": "/foods/chocolate.webp",
+    "title": "Green_and_Black's_dark_chocolate_bar_2.jpg",
+    "author": "Mx. Granger",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Green_and_Black%27s_dark_chocolate_bar_2.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "tortilla": {
+    "image": "/foods/tortilla.webp",
+    "title": "NCI_flour_tortillas.jpg",
+    "author": "Autor niepodany; źródło: Wikimedia Commons",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "source": "https://commons.wikimedia.org/wiki/File:NCI_flour_tortillas.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "ham": {
+    "image": "/foods/ham.webp",
+    "title": "Ham_from_turkey,_tomatoes_and_cucumber.JPG",
+    "author": "Biso",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ham_from_turkey,_tomatoes_and_cucumber.JPG",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "cheese": {
+    "image": "/foods/cheese.webp",
+    "title": "Somerset-Cheddar.jpg",
+    "author": "J.P.Lon",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Somerset-Cheddar.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "kefir": {
+    "image": "/foods/kefir.webp",
+    "title": "Kefir_in_a_glass.JPG",
+    "author": "Quijote at Russian Wikipedia",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kefir_in_a_glass.JPG",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "avocado": {
+    "image": "/foods/avocado.webp",
+    "title": "Avocado with cross section edit.jpg",
+    "author": "Muhammad Mahdi Karim",
+    "license": "GFDL 1.2",
+    "licenseUrl": "/foods/GFDL-1.2.txt",
+    "source": "https://commons.wikimedia.org/wiki/File:Avocado_with_cross_section_edit.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "kiwi": {
+    "image": "/foods/kiwi.webp",
+    "title": "Kiwifruit, slice.jpg",
+    "author": "J.smith",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kiwifruit,_slice.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "honey": {
+    "image": "/foods/honey.webp",
+    "title": "Runny_hunny.jpg",
+    "author": "Scott Bauer, USDA ARS",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "source": "https://commons.wikimedia.org/wiki/File:Runny_hunny.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "oil": {
+    "image": "/foods/oil.webp",
+    "title": "Canola_Oil_(4107885913)_Cropped.jpg",
+    "author": "Veganbaking.net",
+    "license": "CC BY-SA 2.5",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.5",
+    "source": "https://commons.wikimedia.org/wiki/File:Canola_Oil_(4107885913)_Cropped.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  },
+  "cottage": {
+    "image": "/foods/cottage.webp",
+    "title": "Cottagecheese200px.jpg",
+    "author": "FASTILY (TALK)",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cottagecheese200px.jpg",
+    "changes": "Resized and converted to WebP; cropped in the interface."
+  }
+}

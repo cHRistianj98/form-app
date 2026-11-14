@@ -1,5 +1,8 @@
 // Cloudflare Pages Functions. Single-user backend with Cloudflare D1.
 // All /api/* endpoints require a signed HttpOnly session cookie, except session/login.
+import {normalizeProfile, ACTIVITY_LEVELS} from '../../src/profile.js';
+import {calcTargets} from '../../src/foods.js';
+
 const json = (value, status = 200, headers = {}) => new Response(JSON.stringify(value), {
   status, headers: { 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff', ...headers }
 });
@@ -43,6 +46,7 @@ function validFood(food) {
 function cleanFood(food) {
   const result = {id:food.id,name:food.name.trim(),brand:(food.brand||'').trim(),source: String(food.source||'Własny').slice(0,50)};
   for (const k of nutrients) if (food[k] != null) result[k] = food[k];
+  if (typeof food.image === 'string' && (/^\/foods\/[a-z][a-z0-9-]*\.webp$/.test(food.image) || /^https:\/\/images\.openfoodfacts\.org\/[\w/.-]+$/.test(food.image))) result.image = food.image;
   return result;
 }
 async function readBody(req) {
@@ -66,7 +70,7 @@ async function state(db) {
     activities:ar.results.map(({included_in_steps,...x})=>({...x,includedInSteps:!!included_in_steps})),
     daily:dr.results,
     foods:fr.results.map(r=>JSON.parse(r.food_json)),
-    profile:pr ? JSON.parse(pr.value_json) : null,
+    profile:normalizeProfile(pr ? JSON.parse(pr.value_json) : null),
   };
 }
 function mappedProduct(p) {
@@ -76,7 +80,7 @@ function mappedProduct(p) {
   if (kcal == null && num('energy_100g') != null) kcal = num('energy_100g') / 4.184;
   const food = {
     id:`off:${String(p.code||'')}`, name:(p.product_name_pl || p.product_name || '').trim(),
-    brand:(p.brands||'').slice(0,100), source:'Open Food Facts',
+    brand:(p.brands||'').slice(0,100), source:'Open Food Facts', image:p.image_front_small_url || null,
     kcal,protein:num('proteins_100g'),carbs:num('carbohydrates_100g'),fat:num('fat_100g'),
     fiber:num('fiber_100g'),sugars:num('sugars_100g'),saturatedFat:num('saturated-fat_100g'),
     salt:num('salt_100g'),calcium: num('calcium_100g') == null ? null : num('calcium_100g')*1000,
@@ -90,7 +94,7 @@ function mappedProduct(p) {
   return food;
 }
 async function searchFood(term) {
-  const fields = 'code,product_name,product_name_pl,brands,nutriments';
+  const fields = 'code,product_name,product_name_pl,brands,nutriments,image_front_small_url';
   const qs = new URLSearchParams({search_terms:term,search_simple:'1',action:'process',json:'1',page_size:'18',fields});
   const controller = new AbortController();
   const timeout = setTimeout(()=>controller.abort(),8000);
@@ -170,8 +174,14 @@ export async function onRequest(context) {
     if (path[0]==='profile' && method==='POST') {
       const b=await readBody(req);
       if (!finite(b.height,100,250)||!Number.isInteger(b.age)||b.age<15||b.age>110||!['male','female'].includes(b.sex)||!finite(b.startWeight,20,500)||!finite(b.targetWeight,20,500)||!finite(b.deficit,0,1300)||!finite(b.proteinFactor,0.5,3.5)||!finite(b.fatFactor,0.3,2)||!finite(b.manualCalories,0,6000)) return json({error:'Niepoprawny profil'},400);
+      const p=normalizeProfile(b);
+      if (p.nutritionVersion!==2 || !['mifflin','eer2023'].includes(p.energyMethod) || !ACTIVITY_LEVELS.some(a=>a.id===p.activityLevel) || !['percent','kcal'].includes(p.deficitMode) || !finite(p.deficitPercent,0,25) || !finite(p.manualProtein,0,400) || (p.energyMethod==='eer2023' && p.age<19)) return json({error:'Niepoprawne ustawienia wyliczania kalorii'},400);
+      const weights=await env.DB.prepare('SELECT weight FROM daily_metrics WHERE weight IS NOT NULL ORDER BY day DESC LIMIT 1').first();
+      const targets=calcTargets(p,weights?.weight || p.startWeight);
+      if (targets.calories<=0 || !targets.macrosFit) return json({error:'Cel kalorii musi pokrywać wybrane białko i tłuszcze. Zwiększ kalorie lub zmień makro.'},400);
+      const fields=['nutritionVersion','height','age','sex','startWeight','targetWeight','deficit','proteinFactor','fatFactor','manualCalories','energyMethod','activityLevel','deficitMode','deficitPercent','manualProtein'];
       await env.DB.prepare("INSERT INTO settings (key,value_json) VALUES ('profile',?) ON CONFLICT(key) DO UPDATE SET value_json=excluded.value_json")
-        .bind(JSON.stringify({height:b.height,age:b.age,sex:b.sex,startWeight:b.startWeight,targetWeight:b.targetWeight,deficit:b.deficit,proteinFactor:b.proteinFactor,fatFactor:b.fatFactor,manualCalories:b.manualCalories})).run();return json({ok:true});
+        .bind(JSON.stringify(Object.fromEntries(fields.map(k=>[k,p[k]])))).run();return json({ok:true});
     }
     return json({error:'Nieznany adres API'},404);
   } catch(e) {

@@ -5,10 +5,10 @@ Responsywna aplikacja React + Vite + Cloudflare Pages Functions + D1. Jeden uży
 ## Co działa
 
 - Dziennik posiłków: śniadanie, obiad, kolacja, przekąski; każdy składnik dodajesz osobno z gramaturą, możesz poprawić porcję lub ją usunąć.
-- **41 podstawowych produktów** (wartości orientacyjne na 100 g) i produkty własne z etykiety; wyszukiwanie marki i nazwy przez **Open Food Facts** z przycisku (nie wykonujemy żądań na każde naciśnięcie klawisza, zgodnie z ich limitami).
+- **43 podstawowe produkty ze zdjęciami WebP** (wartości orientacyjne na 100 g) i produkty własne z etykiety; wyszukiwanie marki i nazwy przez **Open Food Facts** z przycisku (nie wykonujemy żądań na każde naciśnięcie klawisza, zgodnie z ich limitami).
 - Kalorie, białko, węglowodany, tłuszcze, błonnik, cukry, nasycone kwasy tłuszczowe, sól, wapń, żelazo, potas, magnez, witamina C, D, B12 — te składniki, dla których produkt ma dane. Brak danych = `—`, nigdy nie jest prezentowany jako zero.
 - Kroki, trening siłowy, bieganie, spacer, rower, inny trening, szacunkowy wydatek energetyczny; mechanizm ograniczający podwójne liczenie kroków z biegu i spaceru.
-- Profil: start 93 kg, cel 85 kg, wzrost 186 cm (wiek, płeć i cele do zmiany w ustawieniach), własny deficyt i białko/tłuszcze, ręczna kaloryczność.
+- Ciemny interfejs na komputerze i telefonie. Profil: start 93 kg, cel 85 kg, wzrost 186 cm; punkt startowy **2600 kcal i 180 g białka**. Wiek, płeć, aktywność, metoda obliczeń i cele są edytowalne.
 - Pomiary wagi, wykres wagi, wykres tygodnia, data wstecz, eksport danych do JSON.
 - Hasło, podpisana 30-dniowa sesja w `HttpOnly; Secure; SameSite=Lax` cookie, dane w D1 (nie w kodzie ani w localStorage).
 - Lokalny podgląd w Vite bez Cloudflare — dane zapisują się w `localStorage` **wyłącznie w tym trybie**. Wdrożona wersja nigdy nie udaje synchronizacji, jeśli baza nie działa.
@@ -100,14 +100,24 @@ Po połączeniu repo z Cloudflare Pages wystarczy `git push` do gałęzi `main`.
 
 ## Model liczenia kalorii
 
-- BMR: równanie **Mifflina–St Jeora** na bazie wagi, wzrostu, wieku i wybranej płci do wzoru.
-- Dzienne zapotrzebowanie podstawowe w tym uproszczonym modelu = `BMR × 1,2` (niska aktywność). Dzienny cel = `zapotrzebowanie – deficyt`, z możliwością ręcznej zmiany.
-- Dodatkowe kroki = `max(0, kroki − 3000 − kroki ze zgłoszonych spacerów/biegów) × 0,04 kcal`. Odjęcie 3000 to heurystyka, by nie liczyć podstawowej aktywności podwójnie.
-- Bieganie z dystansem = `około 1 kcal × kg × km`. Inne treningi = `net MET × masa kg × czas (h)`; możesz wpisać kalorie z zegarka ręcznie.
-- Dzienny budżet = `cel bazowy + dodatkowe kcal z ruchu`. Pozostało = `budżet − spożyte kcal`.
-- Makro: białko domyślnie `1,8 g × kg wagi docelowej`, tłuszcz `0,8 g × kg wagi docelowej`, węglowodany jako reszta kalorii.
+- **Mifflin–St Jeor + PAL**: energia spoczynkowa na podstawie aktualnej wagi (ostatni pomiar do wybranego dnia), wzrostu, wieku i płci do wzoru. Mnożymy ją przez wybrany poziom aktywności: 1,4 / 1,6 / 1,75 / 2,0. Domyślne 1,6 to jawne założenie do sprawdzenia, a nie pomiar aktywności.
+- **EER / DRI 2023**: alternatywne równania całkowitego zapotrzebowania dla dorosłych od 19 lat, osobne dla płci i kategorii aktywności. Nie mnożymy ponownie EER przez PAL. W ustawieniach pokazujemy porównanie obu metod.
+- Kalkulator odejmuje wybrany deficyt procentowy (domyślnie 15%, zakres 0–25%) lub stały deficyt w kcal. Zero oznacza utrzymanie masy. Ręczny cel kalorii ma pierwszeństwo; ustawienie go na 0 włącza wynik kalkulatora.
+- Punkt startowy zgodny z wybraną preferencją: **2600 kcal i 180 g białka**. Dla 93 kg, 186 cm, 28 lat, mężczyzny i PAL 1,6 metoda Mifflina daje około 3132 kcal na utrzymanie i 2662 kcal po deficycie 15%. Nie potwierdza to indywidualnego zapotrzebowania.
+- **Stały cel obejmuje przeciętny ruch**. Kroki i treningi nie powiększają ponownie budżetu jedzenia. Pozostało = `cel dzienny − spożyte kcal`; makro opiera się na tym samym budżecie.
+- Ruch pokazujemy informacyjnie: kroki ponad umowną bazę 3000 i po odjęciu oznaczonych biegów/spacerów, z przelicznikiem 0,04 kcal/krok. Bieganie z dystansem ≈ `1 kcal × kg × km`; inne treningi używają net MET. To heurystyki, które nie zmieniają celu.
+- Białko: stałe **180 g**, opcjonalnie `2 g × kg aktualnej wagi` po ustawieniu stałego celu białka na 0. Tłuszcz: `0,8 g × kg wagi docelowej`. Węglowodany: pozostałe kcal po białku (4 kcal/g) i tłuszczach (9 kcal/g), podzielone przez 4. Formularz i API odrzucają cele, które nie pokrywają wybranego białka i tłuszczu.
+- Starszy profil otrzymuje nowy model przy odczycie, bez zmiany dziennika i schematu D1. Ręcznie wybrane kalorie oraz niestandardowy deficyt i białko zostają zachowane. Nowe ustawienia utrwalają się po zapisie profilu.
 
 To **szacunki**, nie pomiar spalania. Nie ma integracji z Apple Health / HealthKit ani automatycznego importu kroków. Urządzenia i aplikacje mogą podawać różne kalorie aktywne i całkowite; przed wpisaniem sprawdź, których używasz.
+
+Źródła metod: [Mifflin–St Jeor](https://pubmed.ncbi.nlm.nih.gov/2305711/), [równania EER i kategorie aktywności DRI 2023 — Health Canada](https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/equations-estimate-energy-requirement.html), [NIDDK Body Weight Planner](https://www.niddk.nih.gov/bwp), [ISSN — białko i wysiłek](https://pmc.ncbi.nlm.nih.gov/articles/PMC5477153/). Linki są również dostępne w ustawieniach aplikacji.
+
+## Zdjęcia produktów
+
+Fotografie poglądowe są przechowywane lokalnie w `public/foods/` jako WebP (łącznie około 1 MB z metadanymi). Listy, wyszukiwarka, podgląd porcji i wcześniejsze wpisy produktów bazowych korzystają ze zdjęć bez zmiany historycznych wartości odżywczych. Nieznane produkty własne zachowują inicjał; wyszukiwanie Open Food Facts może dostarczać własne zdjęcie produktu.
+
+Autorzy, źródła, licencje i informacja o konwersji: `public/foods/credits.json`, dostępne też w Ustawieniach → Zdjęcia produktów. Pełny tekst GFDL 1.2 dołączono w tym samym katalogu. Zatwierdzone źródła zdjęć znajdują się w `scripts/food-photo-sources.json`. Opcjonalna regeneracja wymaga Python i Pillow (`python -m pip install Pillow`, następnie `python scripts/prepare-food-photos.py`); build aplikacji nie pobiera zdjęć z internetu.
 
 ## Dane i bezpieczeństwo
 
@@ -121,14 +131,17 @@ To **szacunki**, nie pomiar spalania. Nie ma integracji z Apple Health / HealthK
 ## Struktura
 
 ```text
-src/App.jsx                 React — wszystkie ekrany i formularze
+src/App.jsx                 React — dziennik, produkty i aktywność
+src/SettingsPage.jsx        profil, kalkulator i źródła
+src/profile.js              domyślny profil i migracja ustawień
 src/styles.css              styl responsywny, w tym wersja mobilna
+src/dark-theme.css          ciemna paleta i nowe elementy kalkulatora
 src/foods.js                baza żywności i funkcje kalkulacji
 src/storage.js              komunikacja z API i lokalny tryb podglądu
 functions/api/[[path]].js   Cloudflare Pages Functions: auth, CRUD, Open Food Facts
 schema.sql                  struktura D1 / SQLite
-public/                     ikony, manifest, konfiguracja tras
- tests/basic.test.mjs       testy logiki i API
+public/                     ikony, manifest, zdjęcia i konfiguracja tras
+tests/                      testy logiki, modelu żywieniowego i API
 ```
 
 ## Przydatne źródła

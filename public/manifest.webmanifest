@@ -4,8 +4,8 @@
   "description": "Prywatny licznik kalorii, makro, kroków i treningów.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f7f8f4",
-  "theme_color": "#f7f8f4",
+  "background_color": "#0d1215",
+  "theme_color": "#0d1215",
   "icons": [
     {
       "src": "/icon-192.png",

@@ -1,7 +1,9 @@
+import {ACTIVITY_LEVELS, DEFAULT_PROFILE} from './profile.js';
+
 // Orientacyjne wartości na 100 g. Dane mikroskładników podawane są tylko tam,
 // gdzie mamy rozsądny szacunek; brak danych nigdy nie oznacza zera.
 const f = (id, name, kcal, protein, carbs, fat, extra = {}) => ({
-  id: `base:${id}`, name, brand: '', source: 'Orientacyjne',
+  id: `base:${id}`, name, brand: '', source: 'Orientacyjne', image: `/foods/${id}.webp`,
   kcal, protein, carbs, fat, ...extra,
 });
 export const BASE_FOODS = [
@@ -86,18 +88,61 @@ export function activityKcal(type, minutes, distance, weight) {
   return Math.max(0, Math.round(metNet * weight * minutes / 60));
 }
 export function calcTargets(profile, weight) {
-  const w = weight || profile.startWeight || 93;
-  const bmr = 10*w + 6.25*(profile.height || 186) - 5*(profile.age || 28) + (profile.sex === 'female' ? -161 : 5);
-  const base = Math.round(bmr * 1.2);
-  const calories = profile.manualCalories && Number(profile.manualCalories) > 0 ? Number(profile.manualCalories) : Math.max(1200, Math.round(base - (profile.deficit || 450)));
-  const protein = Math.round((profile.proteinFactor || 1.8) * (profile.targetWeight || 85));
-  const fat = Math.round((profile.fatFactor || 0.8) * (profile.targetWeight || 85));
-  const carbs = Math.max(0,Math.round((calories - protein*4 - fat*9)/4));
-  return {bmr: Math.round(bmr),base,calories,protein,fat,carbs,fiber:30};
+  const p = {...DEFAULT_PROFILE, ...profile};
+  const number = (value, fallback) => Number.isFinite(Number(value)) && Number(value) > 0 ? Number(value) : fallback;
+  const w = number(weight, number(p.startWeight, 93));
+  const height = number(p.height, 186), age = number(p.age, 28);
+  const female = p.sex === 'female';
+  const bmr = 10*w + 6.25*height - 5*age + (female ? -161 : 5);
+  const activity = ACTIVITY_LEVELS.find(a=>a.id===p.activityLevel) || ACTIVITY_LEVELS[1];
+  const mifflin = bmr * activity.pal;
+  // DRI 2023 EER for adults aged 19+. Units: years, cm, kg, kcal/day.
+  // Source: Health Canada, linked in profile.js. EER already includes activity.
+  const coefficients = female ? {
+    inactive:[584.90,-7.01,5.72,11.71], low:[575.77,-7.01,6.60,12.14],
+    active:[710.25,-7.01,6.54,12.34], very:[511.83,-7.01,9.07,12.56],
+  } : {
+    inactive:[753.07,-10.83,6.50,14.10], low:[581.47,-10.83,8.30,14.94],
+    active:[1004.82,-10.83,6.52,15.91], very:[-517.88,-10.83,15.61,19.11],
+  };
+  const [constant, a, h, m] = coefficients[activity.id];
+  const eer = constant + a*age + h*height + m*w;
+  const method = p.energyMethod === 'eer2023' && age >= 19 ? 'eer2023' : 'mifflin';
+  const maintenance = method === 'eer2023' ? eer : mifflin;
+  const deficitPercent = Math.max(0, Math.min(25, Number(p.deficitPercent) || 0));
+  const requestedDeficit = p.deficitMode === 'kcal' ? Math.max(0, Number(p.deficit) || 0) : maintenance * deficitPercent / 100;
+  const automaticCalories = Math.max(0, Math.round(maintenance - requestedDeficit));
+  const manual = Number(p.manualCalories) > 0;
+  const calories = manual ? Number(p.manualCalories) : automaticCalories;
+  const protein = Math.round(Number(p.manualProtein) > 0 ? Number(p.manualProtein) : number(p.proteinFactor, 2) * w);
+  const fat = Math.round(number(p.fatFactor, 0.8) * number(p.targetWeight, 85));
+  const macroCalories = protein*4 + fat*9;
+  const carbs = Math.max(0, Math.round((calories - macroCalories)/4));
+  return {
+    bmr:Math.round(bmr), base:Math.round(maintenance), calories, protein, fat, carbs, fiber:30,
+    automaticCalories, manual, method, activity, weight:w,
+    mifflin:Math.round(mifflin), eer:age>=19?Math.round(eer):null,
+    deficit:Math.round(maintenance-calories), requestedDeficit:Math.round(requestedDeficit),
+    macroCalories, macrosFit:macroCalories<=calories,
+  };
+}
+
+// A fixed daily plan includes usual activity through PAL/EER. Logs are useful
+// estimates, but do not increase the food budget a second time.
+export function calcDailyBalance(targets, eaten) {
+  return {budget:targets.calories, remaining:targets.calories-(Number(eaten)||0)};
+}
+
+export function foodImage(food) {
+  // Resolve the current image even for old diary snapshots that lack this field.
+  if (typeof food.image === 'string' && (/^\/foods\/[a-z][a-z0-9-]*\.webp$/.test(food.image) || /^https:\/\/images\.openfoodfacts\.org\//.test(food.image))) return food.image;
+  const base = BASE_FOODS.find(f=>f.id===food.id) || BASE_FOODS.find(f=>canonicalText(f.name)===canonicalText(food.name));
+  return base?.image || null;
 }
 export function calcStepsKcal(steps, activities) {
-  // Unikamy doliczania pierwszych 3 tys. kroków objętych PAL 1.2,
-  // oraz ponownego liczenia kroków z biegu / spaceru dodanych jako trening.
+  // Informacyjny szacunek ruchu ponad umowną bazę 3 tys. kroków.
+  // Odejmujemy kroki z biegu / spaceru, by nie liczyć ich ponownie.
+  // Ten szacunek nie zwiększa celu kalorii zawierającego już aktywność.
   const exerciseSteps = activities.reduce((total,a) => total + (a.includedInSteps ?
     (a.type === 'run' ? (Number(a.distance)>0 ? a.distance * 1250 : a.minutes * 150) :
      a.type === 'walk' ? a.minutes * 100 : 0) : 0), 0);
