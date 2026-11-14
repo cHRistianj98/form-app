@@ -2,6 +2,7 @@
 // All /api/* endpoints require a signed HttpOnly session cookie, except session/login.
 import {normalizeProfile, ACTIVITY_LEVELS} from '../../src/profile.js';
 import {calcTargets} from '../../src/foods.js';
+import {NUTRIENT_FIELDS,MACRO_FIELDS} from '../../src/nutrients.js';
 
 const json = (value, status = 200, headers = {}) => new Response(JSON.stringify(value), {
   status, headers: { 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff', ...headers }
@@ -36,21 +37,27 @@ async function auth(req,env) {
 const validDay = d => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) && !Number.isNaN(Date.parse(d));
 const finite = (n,min,max) => typeof n === 'number' && Number.isFinite(n) && n>=min && n<=max;
 const validId = s => typeof s === 'string' && s.length>0 && s.length<=100 && /^[\w:-]+$/.test(s);
-const nutrients = ['kcal','protein','carbs','fat','fiber','sugars','saturatedFat','salt','calcium','iron','potassium','magnesium','vitaminC','vitaminD','b12'];
+const nutrients = NUTRIENT_FIELDS;
 function validFood(food) {
   if (!food || !validId(food.id) || typeof food.name !== 'string' || !food.name.trim() || food.name.length>180) return false;
   if (food.brand != null && (typeof food.brand !== 'string' || food.brand.length>120)) return false;
-  if (food.unit != null && !['g','ml'].includes(food.unit)) return false;
+  if (food.unit != null && !['g','ml','tablet'].includes(food.unit)) return false;
+  if (food.basisQuantity != null && food.basisQuantity !== (food.unit==='tablet'?1:100)) return false;
+  if (food.aliases != null && (!Array.isArray(food.aliases)||food.aliases.length>12||!food.aliases.every(s=>typeof s==='string'&&s.length<=100))) return false;
+  if (food.servingSizes != null && (!Array.isArray(food.servingSizes)||food.servingSizes.length>12||!food.servingSizes.every(s=>s&&typeof s.label==='string'&&s.label.length<=100&&finite(s.quantity,0.1,100000)&&(food.unit!=='tablet'||Number.isInteger(s.quantity))))) return false;
   if (food.fatLessThan != null && typeof food.fatLessThan !== 'boolean') return false;
   if (food.imageFit != null && !['contain','cover'].includes(food.imageFit)) return false;
   if (food.imageNote != null && (typeof food.imageNote !== 'string' || food.imageNote.length>240)) return false;
   for (const k of nutrients) if (food[k] != null && !finite(food[k],0,100000)) return false;
-  return ['kcal','protein','carbs','fat'].every(k=>finite(food[k],0,100000));
+  return MACRO_FIELDS.every(k=>food[k]===null||finite(food[k],0,100000));
 }
 function cleanFood(food) {
   const result = {id:food.id,name:food.name.trim(),brand:(food.brand||'').trim(),source: String(food.source||'Własny').slice(0,50)};
-  for (const k of nutrients) if (food[k] != null) result[k] = food[k];
+  for (const k of nutrients) if (food[k] !== undefined) result[k] = food[k];
   if (food.unit != null) result.unit = food.unit;
+  if (food.basisQuantity != null) result.basisQuantity = food.basisQuantity;
+  if (food.aliases != null) result.aliases = food.aliases;
+  if (food.servingSizes != null) result.servingSizes = food.servingSizes.map(({label,quantity})=>({label,quantity}));
   if (food.fatLessThan != null) result.fatLessThan = food.fatLessThan;
   if (food.imageFit != null) result.imageFit = food.imageFit;
   if (food.imageNote != null) result.imageNote = food.imageNote;
@@ -148,6 +155,7 @@ export async function onRequest(context) {
     if (path[0]==='entries' && method==='POST') {
       const b=await readBody(req);
       if (!validId(b.id)||!validDay(b.day)||!['breakfast','lunch','dinner','snack'].includes(b.meal)||!finite(b.grams,0.1,100000)||!validFood(b.food)) return json({error:'Niepoprawny wpis jedzenia'},400);
+      if (b.food.unit==='tablet'&&!Number.isInteger(b.grams)) return json({error:'Podaj całkowitą liczbę tabletek'},400);
       await env.DB.prepare('INSERT INTO entries (id,day,meal,grams,food_json) VALUES (?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET day=excluded.day,meal=excluded.meal,grams=excluded.grams,food_json=excluded.food_json')
         .bind(b.id,b.day,b.meal,b.grams,JSON.stringify(cleanFood(b.food))).run();
       return json({ok:true});

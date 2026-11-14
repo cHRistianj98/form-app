@@ -1,6 +1,8 @@
 import {ACTIVITY_LEVELS, DEFAULT_PROFILE} from './profile.js';
 import {FAVORITE_FOODS} from './favoriteFoods.js';
 export {FAVORITE_FOODS} from './favoriteFoods.js';
+import {NUTRIENTS,NUTRIENT_FIELDS} from './nutrients.js';
+export {NUTRIENTS} from './nutrients.js';
 
 // Orientacyjne wartości na 100 g. Dane mikroskładników podawane są tylko tam,
 // gdzie mamy rozsądny szacunek; brak danych nigdy nie oznacza zera.
@@ -54,22 +56,16 @@ export const BASE_FOODS = [
   f('cottage','Serek wiejski',97,11.4,3,4.3,{calcium:80,salt:0.7}),
 ];
 
-export const NUTRIENTS = [
-  ['fiber','Błonnik','g'], ['sugars','Cukry','g'], ['saturatedFat','Tłuszcze nasycone','g'],
-  ['salt','Sól','g'], ['calcium','Wapń','mg'], ['iron','Żelazo','mg'],
-  ['potassium','Potas','mg'], ['magnesium','Magnez','mg'],
-  ['vitaminC','Witamina C','mg'], ['vitaminD','Witamina D','µg'], ['b12','Witamina B12','µg'],
-];
-
 export function canonicalText(text = '') {
   return text.toLocaleLowerCase('pl').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g,'l').trim();
 }
 // The legacy entries.grams column stores the amount in the food's unit.
 // No density conversion: data per 100 ml scales directly by ml, per 100 g by g.
-export const foodUnit = food => food.unit === 'ml' ? 'ml' : 'g';
+export const foodUnit = food => food.unit === 'tablet' ? 'tabl.' : food.unit === 'ml' ? 'ml' : 'g';
+export const foodBasis = food => food.unit === 'tablet' ? 1 : 100;
+export const foodBasisLabel = food => `${foodBasis(food)} ${foodUnit(food)}`;
 export function scaleFood(food, quantity) {
-  const fields = ['kcal','protein','carbs','fat',...NUTRIENTS.map(([k])=>k)];
-  return Object.fromEntries(fields.map((k) => [k, food[k] == null || food[k] === '' ? null : Number(food[k]) * Number(quantity || 0) / 100]));
+  return Object.fromEntries(NUTRIENT_FIELDS.map((k) => [k, food[k] == null || food[k] === '' ? null : Number(food[k]) * Number(quantity || 0) / foodBasis(food)]));
 }
 export const fmt = (n, digits = 0) => Number(n || 0).toLocaleString('pl-PL',{maximumFractionDigits:digits,minimumFractionDigits:0});
 export function nutrientLabel(value, lessThan=false, digits=1) {
@@ -86,7 +82,7 @@ export function foodOptions(query='',personal=[],remote=[]) {
   return all.filter(food=>{
     if (seen.has(food.id)) return false;
     seen.add(food.id);
-    const text=canonicalText(food.name+' '+(food.brand||''));
+    const text=canonicalText(food.name+' '+(food.brand||'')+' '+(food.aliases||[]).join(' '));
     return terms.every(term=>text.includes(term));
   }).slice(0,terms.length?50:18);
 }

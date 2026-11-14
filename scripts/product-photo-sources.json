@@ -48,5 +48,71 @@
     "source": "https://prezentovo.com/produkt/cincin-free-rose/",
     "author": "Źródło zdjęcia: Prezentovo",
     "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "laciate-butter": {
+    "title": "Masło Łaciate",
+    "url": "https://mlekpol.com.pl/wp-content/uploads/2018/07/maslo-Laciate-z-witaminami-200g-21_08_2025-A-750.png",
+    "source": "https://mlekpol.com.pl/index.php/produkt/maslo-extra-laciate-2/",
+    "author": "Źródło zdjęcia: Mlekpol",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "alesto-walnuts": {
+    "title": "Orzechy włoskie Alesto",
+    "url": "https://www.lidl.pl/static/assets/sz0375-7ba5e26c-84eb-4b56-9a09-656cb6fba828.png",
+    "source": "https://www.lidl.pl/c/alesto/s10008069",
+    "author": "Źródło zdjęcia: Lidl",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "olimp-whey-isolate": {
+    "title": "Olimp Whey Isolate 95 — czekolada",
+    "url": "https://www.mediaexpert.pl/media/cache/gallery/images/18/1865603/Odzywka-bialkowa-OLIMP-Pure-Whey-Isolate-95-Czekoladowy-01.jpg",
+    "source": "https://www.mediaexpert.pl/sport-i-rekreacja/suplementy-na-silownie/odzywki/odzywka-bialkowa-olimp-pure-whey-isolate-95-czekoladowy-600-g",
+    "author": "Źródło zdjęcia: Media Expert",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "basia-pizza-flour": {
+    "title": "Mąka Basia na pizzę włoską",
+    "url": "https://upieczmy.to/userdata/public/gfx/6789/Maka-pszenna-typ-00-Basia-na-pizze-wloska-1kg.jpg",
+    "source": "https://upieczmy.to/pl/p/Maka-pszenna-typ-00-Basia-na-pizze-wloska-1kg/4239",
+    "author": "Źródło zdjęcia: Upieczmy.to",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "reduced-fat-cocoa": {
+    "title": "Kakao — fotografia poglądowa",
+    "url": "https://www.schmuetz-naturkost.de/media/image/product/1972/lg/bio-kakaopulver-extra-qualitaet-250g.jpg",
+    "source": "https://www.schmuetz-naturkost.de/Bio-Kakaopulver-Extra-Qualitaet-250g",
+    "author": "Źródło zdjęcia: Schmütz Naturkost",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "lidl-turkey-breast": {
+    "image": "/foods/ham.webp",
+    "title": "Wędlina z indyka — fotografia poglądowa",
+    "author": "Biso",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ham_from_turkey,_tomatoes_and_cucumber.JPG",
+    "changes": "Resized and converted to WebP; cropped in the interface.",
+    "localPath": "public/foods/ham.webp"
+  },
+  "vanilla-aerosol-cream": {
+    "title": "Bita śmietana w aerozolu — fotografia poglądowa",
+    "url": "https://img.kupi.cz/kupi/thumbs/slehacka-ve-spreji-pilos_box_1920_1080.jpg",
+    "source": "https://www.kupi.cz/sleva/slehacka-ve-spreji-pilos",
+    "author": "Źródło zdjęcia: Kupi.cz",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "lidl-aerosol-cream": {
+    "title": "Bita śmietana Lidl — niebieski aerozol",
+    "url": "https://cashmap.fra1.digitaloceanspaces.com/product/60a63dad63248.jpg",
+    "source": "https://cashmap.hu/termekek/67022/pilos-tejszinhab-spray-30-uht-cukrozott-255-g",
+    "author": "Źródło zdjęcia: Cashmap",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "plusssz-multivitamin": {
+    "title": "Plusssz 100% Multiwitamina — pomarańcza i mango",
+    "url": "https://media.drogerienatura.pl/catalog/product/5/9/5901785305357_Plusssz_100_Multiwitamina_Pomarancza__Mango_80g_1_0c3a.jpg?height=600&image-type=image&store=default&width=600",
+    "source": "https://drogerienatura.pl/produkt/plusssz-100-multiwitamina-pomarancza-mango-80g-5901785305357",
+    "author": "Źródło zdjęcia: Drogerie Natura",
+    "license": "Materiał produktowy — prawa zastrzeżone"
   }
 }

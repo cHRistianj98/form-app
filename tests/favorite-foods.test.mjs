@@ -5,7 +5,7 @@ import {BASE_FOODS,FAVORITE_FOODS,foodImage,foodOptions,foodUnit,nutrientLabel,s
 import worker from '../worker/index.js';
 
 test('seven selectable products retain the user table, including ml basis and the fat upper bound',()=>{
-  const rows=FAVORITE_FOODS.map(f=>[f.id.slice(9),foodUnit(f),f.kcal,f.protein,f.carbs,f.fat]);
+  const rows=FAVORITE_FOODS.slice(0,7).map(f=>[f.id.slice(9),foodUnit(f),f.kcal,f.protein,f.carbs,f.fat]);
   assert.deepEqual(rows,[
     ['lidl-protein-milk','ml',54,8,4.7,0.5],
     ['piatnica-cream-18','g',191,2.5,4.8,18],
@@ -46,7 +46,7 @@ test('fat bounds remain visible and round upwards even for tiny portions',()=>{
 });
 
 test('user products appear without online search and match brand/name in either order without duplicates',()=>{
-  assert.deepEqual(foodOptions().slice(0,7).map(f=>f.id),FAVORITE_FOODS.map(f=>f.id));
+  assert.deepEqual(foodOptions().slice(0,FAVORITE_FOODS.length).map(f=>f.id),FAVORITE_FOODS.map(f=>f.id));
   assert.equal(foodOptions('smietana piatnica')[0].id,FAVORITE_FOODS[1].id);
   assert.equal(foodOptions('hochland gouda')[0].id,FAVORITE_FOODS[2].id);
   assert.equal(foodOptions('mleko lidl')[0].id,FAVORITE_FOODS[0].id);
@@ -91,16 +91,22 @@ test('Worker saves and reloads product snapshots with units, images, qualifiers 
     assert.equal(r.status,200,food.id);
   }
   const state=await (await ask('state')).json();
-  assert.equal(state.entries.length,7);
+  assert.equal(state.entries.length,FAVORITE_FOODS.length);
   state.entries.forEach((entry,i)=>{
     assert.deepEqual(entry.food,FAVORITE_FOODS[i]);
     assert.equal(foodUnit(entry.food),foodUnit(FAVORITE_FOODS[i]));
-    assert.equal(scaleFood(entry.food,entry.grams).kcal,FAVORITE_FOODS[i].kcal*2.5);
+    assert.equal(scaleFood(entry.food,entry.grams).kcal,FAVORITE_FOODS[i].kcal==null?null:FAVORITE_FOODS[i].kcal*2.5);
   });
   const custom={...FAVORITE_FOODS[0],id:'own:drink'};
   assert.equal((await ask('foods','POST',custom)).status,200);
   assert.deepEqual(customFood,custom);
   for(const change of [{unit:'l'},{fatLessThan:'true'},{imageFit:'invalid'}]) {
     assert.equal((await ask('entries','POST',{id:'entry:bad',day:'2026-11-14',meal:'breakfast',grams:100,food:{...custom,...change}})).status,400);
+  }
+  const tablet=FAVORITE_FOODS.find(food=>food.unit==='tablet');
+  const record={id:'entry:tablet',day:'2026-11-14',meal:'breakfast',grams:1,food:tablet};
+  assert.equal((await ask('entries','POST',{...record,grams:0.5})).status,400);
+  for(const change of [{basisQuantity:100},{b1:'1.1'},{vitaminC:-1},{servingSizes:[{label:'Pół tabletki',quantity:0.5}]}]) {
+    assert.equal((await ask('entries','POST',{...record,food:{...tablet,...change}})).status,400);
   }
 });

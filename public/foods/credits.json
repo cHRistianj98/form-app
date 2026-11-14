@@ -448,5 +448,86 @@
     "license": "Materiał produktowy — prawa zastrzeżone",
     "licenseUrl": "",
     "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-laciate-butter": {
+    "image": "/foods/fav-laciate-butter.webp",
+    "title": "Masło Łaciate",
+    "author": "Źródło zdjęcia: Mlekpol",
+    "source": "https://mlekpol.com.pl/index.php/produkt/maslo-extra-laciate-2/",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-alesto-walnuts": {
+    "image": "/foods/fav-alesto-walnuts.webp",
+    "title": "Orzechy włoskie Alesto",
+    "author": "Źródło zdjęcia: Lidl",
+    "source": "https://www.lidl.pl/c/alesto/s10008069",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-olimp-whey-isolate": {
+    "image": "/foods/fav-olimp-whey-isolate.webp",
+    "title": "Olimp Whey Isolate 95 — czekolada",
+    "author": "Źródło zdjęcia: Media Expert",
+    "source": "https://www.mediaexpert.pl/sport-i-rekreacja/suplementy-na-silownie/odzywki/odzywka-bialkowa-olimp-pure-whey-isolate-95-czekoladowy-600-g",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-basia-pizza-flour": {
+    "image": "/foods/fav-basia-pizza-flour.webp",
+    "title": "Mąka Basia na pizzę włoską",
+    "author": "Źródło zdjęcia: Upieczmy.to",
+    "source": "https://upieczmy.to/pl/p/Maka-pszenna-typ-00-Basia-na-pizze-wloska-1kg/4239",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-reduced-fat-cocoa": {
+    "image": "/foods/fav-reduced-fat-cocoa.webp",
+    "title": "Kakao — fotografia poglądowa",
+    "author": "Źródło zdjęcia: Schmütz Naturkost",
+    "source": "https://www.schmuetz-naturkost.de/Bio-Kakaopulver-Extra-Qualitaet-250g",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-lidl-turkey-breast": {
+    "image": "/foods/fav-lidl-turkey-breast.webp",
+    "title": "Wędlina z indyka — fotografia poglądowa",
+    "author": "Biso",
+    "source": "https://commons.wikimedia.org/wiki/File:Ham_from_turkey,_tomatoes_and_cucumber.JPG",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-vanilla-aerosol-cream": {
+    "image": "/foods/fav-vanilla-aerosol-cream.webp",
+    "title": "Bita śmietana w aerozolu — fotografia poglądowa",
+    "author": "Źródło zdjęcia: Kupi.cz",
+    "source": "https://www.kupi.cz/sleva/slehacka-ve-spreji-pilos",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-lidl-aerosol-cream": {
+    "image": "/foods/fav-lidl-aerosol-cream.webp",
+    "title": "Bita śmietana Lidl — niebieski aerozol",
+    "author": "Źródło zdjęcia: Cashmap",
+    "source": "https://cashmap.hu/termekek/67022/pilos-tejszinhab-spray-30-uht-cukrozott-255-g",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-plusssz-multivitamin": {
+    "image": "/foods/fav-plusssz-multivitamin.webp",
+    "title": "Plusssz 100% Multiwitamina — pomarańcza i mango",
+    "author": "Źródło zdjęcia: Drogerie Natura",
+    "source": "https://drogerienatura.pl/produkt/plusssz-100-multiwitamina-pomarancza-mango-80g-5901785305357",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
   }
 }
