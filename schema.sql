@@ -1,0 +1,39 @@
+CREATE TABLE IF NOT EXISTS entries (
+  id TEXT PRIMARY KEY,
+  day TEXT NOT NULL,
+  meal TEXT NOT NULL,
+  grams REAL NOT NULL CHECK(grams > 0 AND grams <= 100000),
+  food_json TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_entries_day ON entries(day);
+
+CREATE TABLE IF NOT EXISTS activities (
+  id TEXT PRIMARY KEY,
+  day TEXT NOT NULL,
+  type TEXT NOT NULL,
+  minutes REAL NOT NULL DEFAULT 0,
+  distance REAL NOT NULL DEFAULT 0,
+  kcal REAL NOT NULL DEFAULT 0,
+  included_in_steps INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_activities_day ON activities(day);
+
+CREATE TABLE IF NOT EXISTS daily_metrics (
+  day TEXT PRIMARY KEY,
+  steps INTEGER NOT NULL DEFAULT 0,
+  weight REAL,
+  notes TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS foods (
+  id TEXT PRIMARY KEY,
+  food_json TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS settings (
+  key TEXT PRIMARY KEY,
+  value_json TEXT NOT NULL
+);

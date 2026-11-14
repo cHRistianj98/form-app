@@ -1,0 +1,25 @@
+{
+  "name": "forma-nutri",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "dev:cloud": "npm run build && wrangler pages dev dist --binding APP_PASSWORD=local-demo-123 --binding SESSION_SECRET=local-demo-session-secret-please-change --d1 DB=local-forma",
+    "db:local": "wrangler d1 execute forma-nutri --local --file=./schema.sql",
+    "db:remote": "wrangler d1 execute forma-nutri --remote --file=./schema.sql",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
+    "vite": "^6.1.0",
+    "wrangler": "^4.10.0"
+  }
+}
