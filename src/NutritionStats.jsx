@@ -4,13 +4,12 @@ import {fmt,localDay,shiftDay} from './foods.js';
 import {DAILY_REFERENCES,MINERAL_KEYS,NUTRIENTS,REFERENCE_SOURCES,VITAMIN_KEYS} from './nutrients.js';
 import {calendarWeek,nutritionReport,totalLabel} from './nutritionStats.js';
 import {GENERIC_NUTRITION_SOURCE} from './genericNutrition.js';
+import {MACRO_PRESENTATION} from './macroPresentation.js';
 import './nutrition-stats.css';
 
 const MACROS=[
   {key:'kcal',name:'Kalorie',unit:'kcal',color:'#b8ed87'},
-  {key:'protein',name:'Białko',unit:'g',color:'#a49bff'},
-  {key:'fat',name:'Tłuszcze',unit:'g',color:'#efa6b1'},
-  {key:'carbs',name:'Węglowodany',unit:'g',color:'#efc17b'},
+  ...MACRO_PRESENTATION.map(m=>({...m,unit:'g'})),
 ];
 const shortDate=day=>new Date(day+'T12:00:00').toLocaleDateString('pl-PL',{day:'numeric',month:'short'});
 const ratio=(value,goal)=>value==null||!goal?null:value/goal*100;
@@ -18,8 +17,8 @@ const ratio=(value,goal)=>value==null||!goal?null:value/goal*100;
 function Coverage({summary,nutrient}) {
   const c=summary.coverage[nutrient];
   if (!c.total) return <span className="nutrition-coverage">Brak wpisów</span>;
-  if (!c.known) return <span className="nutrition-coverage">Brak danych · {c.total} wpisów</span>;
-  return <span className={`nutrition-coverage ${c.complete?'complete':''}`}>Dane: {c.known}/{c.total} wpisów{!c.complete?' · suma częściowa':''}</span>;
+  if (!c.known) return <span className="nutrition-coverage">Brak danych — {c.total} wpisów</span>;
+  return <span className={`nutrition-coverage ${c.complete?'complete':''}`}>Dane: {c.known}/{c.total} wpisów{!c.complete?' — suma częściowa':''}</span>;
 }
 
 function NutrientRows({title,subtitle,keys,report}) {
@@ -79,7 +78,7 @@ export default function NutritionStats({entries,daily,profile,day,onChangeDay}) 
   const week=useMemo(()=>period==='week'?report:nutritionReport({entries,daily,profile,day,period:'week',today}),[entries,daily,profile,day,period,today,report]);
   return <div className="nutrition-stats">
     <section className="panel nutrition-period-panel">
-      <div><span className="nutrition-eyebrow"><BarChart3 size={15}/> TWÓJ BILANS</span><h2>{period==='day'?'Podsumowanie dnia':'Podsumowanie tygodnia'}</h2><p>{shortDate(report.from)}{period==='week'?` – ${shortDate(report.to)}`:''} · {report.summary.entryCount} wpisów{period==='week'?` · ${report.loggedDays}/7 dni z wpisami`:''}</p></div>
+      <div><span className="nutrition-eyebrow"><BarChart3 size={15}/> TWÓJ BILANS</span><h2>{period==='day'?'Podsumowanie dnia':'Podsumowanie tygodnia'}</h2><p>{shortDate(report.from)}{period==='week'?` – ${shortDate(report.to)}`:''} — {report.summary.entryCount} wpisów{period==='week'?` — ${report.loggedDays}/7 dni z wpisami`:''}</p></div>
       <div className="nutrition-period-switch" aria-label="Okres statystyk"><button onClick={()=>setPeriod('day')} aria-pressed={period==='day'}>Dzień</button><button onClick={()=>setPeriod('week')} aria-pressed={period==='week'}>Tydzień</button></div>
     </section>
     {period==='week'&&onChangeDay&&<div className="nutrition-week-nav"><button className="button ghost compact" onClick={()=>onChangeDay(shiftDay(report.from,-7))}><ChevronLeft size={16}/> Poprzedni tydzień</button><button className="button ghost compact" disabled={report.from>=calendarWeek(today)[0]} onClick={()=>onChangeDay(shiftDay(report.from,7))}>Następny tydzień <ChevronRight size={16}/></button></div>}
@@ -88,7 +87,7 @@ export default function NutritionStats({entries,daily,profile,day,onChangeDay}) 
       const value=report.summary.totals[m.key],goal=report.goals[m.key];
       const percent=ratio(value,goal);
       return <section className="panel nutrition-macro-card" key={m.key} style={{'--metric-color':m.color}} data-macro={m.key}>
-        <span className="nutrition-metric-name"><i/>{m.name}</span>
+        <span className="nutrition-metric-name">{m.name}</span>
         <strong>{totalLabel(report.summary,m.key,m.key==='kcal'?0:1)}<small>{value!=null?m.unit:''}</small></strong>
         <p>Cel {period==='week'?'7 dni':'dnia'}: {fmt(goal)} {m.unit}</p>
         <div className="meter"><div style={{width:`${Math.min(percent||0,100)}%`,background:m.color}}/></div>
@@ -112,6 +111,6 @@ export default function NutritionStats({entries,daily,profile,day,onChangeDay}) 
 export function DailyNutrientPreview({summary}) {
   return <>{summary.genericEntryCount>0&&<p className="muted-note">Produkty ogólne uwzględniają szacunki z <a href={GENERIC_NUTRITION_SOURCE.url} target="_blank" rel="noreferrer">USDA FoodData Central ↗</a>.</p>}<div className="micros-grid">{NUTRIENTS.map(([key,name,unit])=>{
     const value=summary.totals[key],reference=DAILY_REFERENCES[key];
-    return <div className="micro-item" key={key}><span>{name}</span><strong>{totalLabel(summary,key,2)}{value!=null?` ${unit}`:''}</strong><small>{value==null?'Brak danych':`${summary.coverage[key].complete?'':'≈ '}${fmt(value/reference.value*100)}% · ${reference.source}`}</small></div>;
+    return <div className="micro-item" key={key}><span>{name}</span><strong>{totalLabel(summary,key,2)}{value!=null?` ${unit}`:''}</strong><small>{value==null?'Brak danych':`${summary.coverage[key].complete?'':'≈ '}${fmt(value/reference.value*100)}% — ${reference.source}`}</small></div>;
   })}</div></>;
 }

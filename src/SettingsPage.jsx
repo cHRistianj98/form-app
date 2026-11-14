@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Check, CircleHelp, Download, Info, LogOut, ShieldCheck, Target} from 'lucide-react';
 import {calcTargets, fmt, parseNum} from './foods.js';
 import {ACTIVITY_LEVELS, NUTRITION_SOURCES} from './profile.js';
+import MacroValues from './MacroValues.jsx';
 
 export default function SettingsPage({profile, currentWeight, onSave, onExport, local, onLogout}) {
   const [form,setForm]=useState({...profile});
@@ -31,7 +32,7 @@ export default function SettingsPage({profile, currentWeight, onSave, onExport, 
     <div className="panel">
       <div className="section-heading"><div><h2>Twój plan żywieniowy</h2><p>Dane, założenia i wyliczenia w jednym miejscu.</p></div></div>
       <form onSubmit={submit}>
-        <div className="plan-preset"><Target size={22}/><div><strong>Twój punkt startowy</strong><span>2600 kcal · 180 g białka dziennie</span></div><button type="button" className="text-link" onClick={()=>setForm(p=>({...p,manualCalories:2600,manualProtein:180}))}>Ustaw</button></div>
+        <div className="plan-preset"><Target size={22}/><div><strong>Twój punkt startowy</strong><span>2600 kcal — 180 g białka dziennie</span></div><button type="button" className="text-link" onClick={()=>setForm(p=>({...p,manualCalories:2600,manualProtein:180}))}>Ustaw</button></div>
         <div className="field-row">
           <label className="field"><span>Wzrost (cm)</span><input type="number" required min="100" max="250" value={form.height} onChange={e=>change('height',e.target.value)}/></label>
           <label className="field"><span>Wiek (lata)</span><input type="number" required min="19" max="110" step="1" value={form.age} onChange={e=>change('age',e.target.value)}/></label>
@@ -44,10 +45,10 @@ export default function SettingsPage({profile, currentWeight, onSave, onExport, 
         <p className="help-note">Wyliczenia dla {fmt(preview.weight,1)} kg {currentWeight?'z ostatniego pomiaru do wybranego dnia.':'z wagi początkowej.'} Sprawdź wiek i poziom aktywności — wpływają na szacunek zapotrzebowania.</p>
         <div className="subsection-title">Jak wyznaczać zapotrzebowanie?</div>
         <label className="field"><span>Metoda obliczeń</span><select value={form.energyMethod} onChange={e=>change('energyMethod',e.target.value)}><option value="mifflin">Mifflin–St Jeor + aktywność</option><option value="eer2023">EER — normy DRI 2023</option></select></label>
-        <label className="field"><span>Twoja przeciętna aktywność w całym tygodniu</span><select value={form.activityLevel} onChange={e=>change('activityLevel',e.target.value)}>{ACTIVITY_LEVELS.map(a=><option key={a.id} value={a.id}>{a.name} · PAL {fmt(a.pal,2)}</option>)}</select><small className="field-hint">{preview.activity.description}</small></label>
+        <label className="field"><span>Twoja przeciętna aktywność w całym tygodniu</span><select value={form.activityLevel} onChange={e=>change('activityLevel',e.target.value)}>{ACTIVITY_LEVELS.map(a=><option key={a.id} value={a.id}>{a.name} — PAL {fmt(a.pal,2)}</option>)}</select><small className="field-hint">{preview.activity.description}</small></label>
         <div className="field-row">
           <label className="field"><span>Rodzaj deficytu</span><select value={form.deficitMode} onChange={e=>change('deficitMode',e.target.value)}><option value="percent">Procent zapotrzebowania</option><option value="kcal">Stała liczba kcal</option></select></label>
-          {form.deficitMode==='percent'?<label className="field"><span>Deficyt (%) · 0 = utrzymanie</span><input type="number" required min="0" max="25" step="1" value={form.deficitPercent} onChange={e=>change('deficitPercent',e.target.value)}/></label>:<label className="field"><span>Deficyt (kcal / dzień)</span><input type="number" required min="0" max="1300" step="1" value={form.deficit} onChange={e=>change('deficit',e.target.value)}/></label>}
+          {form.deficitMode==='percent'?<label className="field"><span>Deficyt (%) — 0 = utrzymanie</span><input type="number" required min="0" max="25" step="1" value={form.deficitPercent} onChange={e=>change('deficitPercent',e.target.value)}/></label>:<label className="field"><span>Deficyt (kcal / dzień)</span><input type="number" required min="0" max="1300" step="1" value={form.deficit} onChange={e=>change('deficit',e.target.value)}/></label>}
         </div>
         <div className="calculation-card" aria-live="polite">
           <div className="calculation-heading"><span>WYLICZENIE Z TWOICH DANYCH</span><span>{preview.method==='mifflin'?'Mifflin–St Jeor':'EER / DRI 2023'}</span></div>
@@ -63,7 +64,7 @@ export default function SettingsPage({profile, currentWeight, onSave, onExport, 
           <label className="field"><span>Tłuszcze (g / kg wagi docelowej)</span><input type="number" required min="0.3" max="2" step="0.1" value={form.fatFactor} onChange={e=>change('fatFactor',e.target.value)}/></label>
         </div>
         <p className="help-note">Białko: {fmt(preview.protein/preview.weight,2)} g/kg aktualnej wagi. Węglowodany wypełniają pozostałe kalorie (4 kcal/g białka i węgli, 9 kcal/g tłuszczu).</p>
-        <div className="profile-preview"><Target size={21}/><div><strong>{fmt(preview.calories)} kcal / dzień · {preview.manual?'Twój cel':'z kalkulatora'}</strong><span>B {fmt(preview.protein)} g · W {fmt(preview.carbs)} g · T {fmt(preview.fat)} g</span></div></div>
+        <div className="profile-preview"><Target size={21}/><div><strong>{fmt(preview.calories)} kcal / dzień — {preview.manual?'Twój cel':'z kalkulatora'}</strong><MacroValues values={preview}/></div></div>
         {(!preview.macrosFit||error)&&<p className="form-error" role="alert">{error||'Wybrane białko i tłuszcze przekraczają cel kalorii. Zmień kalorie lub makro.'}</p>}
         <button type="submit" className="button primary" disabled={saving||!preview.macrosFit}><Check size={18}/>{saving?'Zapisywanie…':'Zapisz ustawienia'}</button>
       </form>

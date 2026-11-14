@@ -1,0 +1,12 @@
+{
+  "type": "AI-generated illustrative meal photographs",
+  "tool": "Built-in imagegen",
+  "usage": "Decorative thumbnails for meal categories, not photographs of the user's actual meals.",
+  "basePrompt": "Photorealistic premium food photograph for a nutrition app meal thumbnail. Square composition, overhead view, one complete round matte ivory ceramic plate fully visible centered with generous dark charcoal teal table margin. Soft natural side lighting, realistic appetizing textures, calm professional food styling. No text, no logos, no hands, no cutlery, no decorative dots or interface. Must remain recognizable at 72 pixels.",
+  "images": [
+    {"image":"/meals/breakfast.webp","subject":"Breakfast plate with scrambled eggs, one slice of wholegrain avocado toast and a few cherry tomatoes."},
+    {"image":"/meals/lunch.webp","subject":"Lunch plate with grilled chicken breast slices, a neat portion of white rice, broccoli florets and roasted carrot."},
+    {"image":"/meals/dinner.webp","subject":"Dinner plate with a roasted salmon fillet and a fresh green salad with cucumber and tomato."}
+  ],
+  "changes": "Resized to 320 pixels and converted to WebP. No source image edits."
+}

@@ -1,0 +1,15 @@
+{
+  "family": "Manrope",
+  "stylesheet": "https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap",
+  "license": "https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/OFL.txt",
+  "files": [
+    {
+      "file": "manrope-latin-ext.woff2",
+      "source": "https://fonts.gstatic.com/s/manrope/v23/xn7gYHE41ni1AdIRggmxSuXd.woff2"
+    },
+    {
+      "file": "manrope-latin.woff2",
+      "source": "https://fonts.gstatic.com/s/manrope/v23/xn7gYHE41ni1AdIRggexSg.woff2"
+    }
+  ]
+}

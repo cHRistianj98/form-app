@@ -154,6 +154,14 @@ Jednostki są zgodne z europejskimi odniesieniami: witamina A w µg RE = retinol
 
 Źródła przeliczeń: [EFSA — witamina A, RE](https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2024.8814), [EFSA — niacyna, NE](https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2014.3759), [rozporządzenie UE 1169/2011 — definicja soli](https://eur-lex.europa.eu/eli/reg/2011/1169/oj/eng).
 
+## Typografia, makro i grafiki posiłków
+
+Aplikacja używa lokalnego, zmiennego fontu Manrope (400–800, polskie znaki), z większymi tekstami i opisami. Fonty WOFF2, źródła i licencja SIL OFL są w `public/fonts/`; ładowanie interfejsu nie wymaga połączenia z Google Fonts. `src/ui-polish.css` zawiera układ kart i typografię.
+
+Wspólna konfiguracja `src/macroPresentation.js` ustala kolejność: **węgle, białko, tłuszcze**. `MacroValues` pokazuje nazwy i wartości z jednostkami w trzech osobnych kolumnach: w bazie produktów, dzienniku, podglądzie porcji i planie w ustawieniach. Statystyki i podsumowanie dnia korzystają z tej samej kolejności. Nie używamy separatorów w postaci środkowych kropek ani pojedynczych liter W/B/T; pozostałe opisy mają zdania, odstępy lub osobne wiersze. Dawne separatory w marce zapisanego wpisu są formatowane przy wyświetlaniu, bez zmiany danych.
+
+Śniadanie, obiad i kolacja mają poglądowe grafiki wygenerowane wbudowanym narzędziem imagegen i zapisane lokalnie jako `public/meals/breakfast.webp`, `lunch.webp`, `dinner.webp` (320 × 320, łącznie około 70 kB). Nie przedstawiają rzeczywistych posiłków użytkownika. Pełne prompty i pochodzenie: `public/meals/credits.json`. Konwersję oryginalnych plików PNG umożliwia `scripts/prepare-meal-images.py` z Pillow; skrypt zachowuje oryginały.
+
 ## Dane i bezpieczeństwo
 
 - Dostęp do API wymaga zalogowania. Login weryfikuje hasło po stronie serwera; hasło **nie** trafia do frontendu poza chwilą logowania.

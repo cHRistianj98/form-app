@@ -135,7 +135,7 @@ def main():
         }
 
     output = {
-        'dataset': 'USDA FoodData Central · SR Legacy, April 2018',
+        'dataset': 'USDA FoodData Central — SR Legacy, April 2018',
         'url': 'https://fdc.nal.usda.gov/download-datasets/',
         'downloadUrl': URL,
         'sha256': hashlib.sha256(archive_path.read_bytes()).hexdigest(),

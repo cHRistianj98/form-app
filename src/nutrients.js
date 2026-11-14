@@ -4,9 +4,9 @@ export const NUTRIENTS = [
   ['calcium','Wapń','mg'], ['iron','Żelazo','mg'], ['potassium','Potas','mg'], ['magnesium','Magnez','mg'],
   ['vitaminA','Witamina A','µg RE'], ['vitaminC','Witamina C','mg'], ['vitaminD','Witamina D','µg'],
   ['vitaminE','Witamina E','mg'], ['vitaminK','Witamina K','µg'],
-  ['b1','B1 · tiamina','mg'], ['b2','B2 · ryboflawina','mg'], ['b3','B3 · niacyna','mg NE'],
-  ['b5','B5 · kwas pantotenowy','mg'], ['b6','Witamina B6','mg'], ['biotin','B7 · biotyna','µg'],
-  ['folate','B9 · foliany','µg'], ['b12','Witamina B12','µg'],
+  ['b1','B1 — tiamina','mg'], ['b2','B2 — ryboflawina','mg'], ['b3','B3 — niacyna','mg NE'],
+  ['b5','B5 — kwas pantotenowy','mg'], ['b6','Witamina B6','mg'], ['biotin','B7 — biotyna','µg'],
+  ['folate','B9 — foliany','µg'], ['b12','Witamina B12','µg'],
 ];
 export const MACRO_FIELDS = ['kcal','protein','carbs','fat'];
 export const NUTRIENT_FIELDS = [...MACRO_FIELDS,...NUTRIENTS.map(([key])=>key)];
@@ -19,8 +19,8 @@ export const REFERENCE_SOURCES = [
 ];
 // Label reference intakes, not personalised requirements or tolerable upper limits.
 export const DAILY_REFERENCES = {
-  fiber:{value:25,source:'EFSA'}, sugars:{value:90,source:'RWS UE · 2000 kcal'},
-  saturatedFat:{value:20,source:'RWS UE · 2000 kcal'}, salt:{value:6,source:'RWS UE · 2000 kcal'},
+  fiber:{value:25,source:'EFSA'}, sugars:{value:90,source:'RWS UE — 2000 kcal'},
+  saturatedFat:{value:20,source:'RWS UE — 2000 kcal'}, salt:{value:6,source:'RWS UE — 2000 kcal'},
   calcium:{value:800,source:'RWS UE'},iron:{value:14,source:'RWS UE'},
   potassium:{value:2000,source:'RWS UE'},magnesium:{value:375,source:'RWS UE'},
   vitaminA:{value:800,source:'RWS UE'},vitaminC:{value:80,source:'RWS UE'},vitaminD:{value:5,source:'RWS UE'},
