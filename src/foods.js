@@ -2,11 +2,12 @@ import {ACTIVITY_LEVELS, DEFAULT_PROFILE} from './profile.js';
 import {FAVORITE_FOODS} from './favoriteFoods.js';
 export {FAVORITE_FOODS} from './favoriteFoods.js';
 import {NUTRIENTS,NUTRIENT_FIELDS} from './nutrients.js';
+import {enrichGenericFood} from './genericNutrition.js';
 export {NUTRIENTS} from './nutrients.js';
 
-// Orientacyjne wartości na 100 g. Dane mikroskładników podawane są tylko tam,
-// gdzie mamy rozsądny szacunek; brak danych nigdy nie oznacza zera.
-const f = (id, name, kcal, protein, carbs, fat, extra = {}) => ({
+// Orientacyjne wartości na 100 g. Brakujące składniki uzupełniamy z jawnie
+// dopasowanych rekordów USDA; niedostępne dane nigdy nie oznaczają zera.
+const f = (id, name, kcal, protein, carbs, fat, extra = {}) => enrichGenericFood({
   id: `base:${id}`, name, brand: '', source: 'Orientacyjne', image: `/foods/${id}.webp`,
   kcal, protein, carbs, fat, ...extra,
 });
@@ -30,7 +31,7 @@ export const BASE_FOODS = [
   f('butter','Masło',717,0.9,0.1,81.1,{saturatedFat:51.4}),
   f('tomato','Pomidor',18,0.9,3.9,0.2,{fiber:1.2,sugars:2.6,potassium:237,vitaminC:13.7}),
   f('cucumber','Ogórek',15,0.7,3.6,0.1,{fiber:0.5,potassium:147}),
-  f('lettuce','Sałata',15,1.4,2.9,0.2,{fiber:1.3}),
+  f('lettuce','Sałata zielona liściasta',15,1.4,2.9,0.2,{fiber:1.3}),
   f('carrot','Marchew',41,0.9,9.6,0.2,{fiber:2.8,sugars:4.7,potassium:320}),
   f('tuna','Tuńczyk w sosie własnym',116,25.5,0,0.8,{salt:0.9,b12:2.2}),
   f('pasta','Makaron pszenny, suchy',350,12.0,72.0,1.5,{fiber:3.2}),
@@ -65,7 +66,8 @@ export const foodUnit = food => food.unit === 'tablet' ? 'tabl.' : food.unit ===
 export const foodBasis = food => food.unit === 'tablet' ? 1 : 100;
 export const foodBasisLabel = food => `${foodBasis(food)} ${foodUnit(food)}`;
 export function scaleFood(food, quantity) {
-  return Object.fromEntries(NUTRIENT_FIELDS.map((k) => [k, food[k] == null || food[k] === '' ? null : Number(food[k]) * Number(quantity || 0) / foodBasis(food)]));
+  const resolved=enrichGenericFood(food);
+  return Object.fromEntries(NUTRIENT_FIELDS.map((k) => [k, resolved[k] == null || resolved[k] === '' ? null : Number(resolved[k]) * Number(quantity || 0) / foodBasis(resolved)]));
 }
 export const fmt = (n, digits = 0) => Number(n || 0).toLocaleString('pl-PL',{maximumFractionDigits:digits,minimumFractionDigits:0});
 export function nutrientLabel(value, lessThan=false, digits=1) {

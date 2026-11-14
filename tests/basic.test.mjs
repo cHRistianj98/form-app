@@ -22,7 +22,7 @@ test('food portion scales linearly',()=>{
   const onion=BASE_FOODS.find(f=>f.name==='Cebula');
   assert.equal(scaleFood(onion,50).kcal,20);
   assert.equal(scaleFood(onion,50).carbs,4.65);
-  assert.equal(scaleFood(onion,50).iron,null);
+  assert.equal(scaleFood(onion,50).iron,0.105);
 });
 test('targets start from 186cm/93kg/28y and allow edits',()=>{
   const p={...DEFAULT_PROFILE};

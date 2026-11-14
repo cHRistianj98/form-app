@@ -94,6 +94,8 @@ button { color: inherit; }
 .own-foods-panel { margin-bottom: 20px; }
 .favorite-foods-panel .food-search-info strong { white-space: normal; line-height: 1.4; }
 .food-product-note { color: var(--muted); font-size: 11px; line-height: 1.7; margin: -10px 0 20px; }
+.food-product-note.generic-nutrition-note { margin: 12px 0 14px; }
+.generic-nutrition-note a, .generic-nutrition-summary a, .muted-note a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .fat-bound-note { margin: 12px 0 0; }
 .food-search-row { background: #192327; border-color: var(--border); padding: 13px; gap: 13px; }
 .food-search-row:hover { background: #21312f; border-color: #607d57; }

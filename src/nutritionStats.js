@@ -1,5 +1,6 @@
 import {calcTargets,fmt,localDay,nutrientLabel,scaleFood,shiftDay} from './foods.js';
 import {NUTRIENT_FIELDS} from './nutrients.js';
+import {genericNutritionInfo} from './genericNutrition.js';
 
 export function sumNutrition(entries) {
   const rows=entries.map(entry=>scaleFood(entry.food,entry.grams));
@@ -10,7 +11,7 @@ export function sumNutrition(entries) {
     coverage[key]={known:known.length,total:entries.length,complete:entries.length>0&&known.length===entries.length,
       upper:key==='fat'&&entries.some(entry=>entry.food.fatLessThan===true)};
   }
-  return {totals,coverage,entryCount:entries.length};
+  return {totals,coverage,entryCount:entries.length,genericEntryCount:entries.filter(entry=>genericNutritionInfo(entry.food)).length};
 }
 
 export function totalLabel(summary,key,digits=1,divisor=1) {

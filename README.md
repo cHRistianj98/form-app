@@ -136,9 +136,23 @@ Cele tygodnia są sumą celów na 7 dni, a cel danego dnia korzysta z ostatniej 
 
 Witaminy i minerały porównujemy do **RWS UE dla dorosłych**, według załącznika XIII rozporządzenia 1169/2011. Dla cukrów ogółem, nasyconych i soli pokazujemy etykietowe odniesienie dla 2000 kcal; nie są to cele do uzupełnienia. Dla błonnika stosujemy 25 g/dzień (EFSA). Tydzień porównuje sumę do 7 × dziennego odniesienia. RWS nie jest indywidualną oceną potrzeb ani górnym bezpiecznym limitem, a procenty nie diagnozują niedoborów. Dotyczy to również etykietowego RWS witaminy D 5 µg, które nie jest zaleceniem suplementacji.
 
-Każdy składnik ma licznik wpisów z danymi. Wszystkie wartości nieznane dają `—`; znane zero pozostaje zerem. Częściową sumę pokazujemy z `≥` (zaokrąglenie w dół), a połączenie braków z górną granicą z etykiety z `≈`. Dawne wpisy zachowują swoje snapshoty — nie uzupełniamy ich automatycznie nowymi wartościami etykiet.
+Każdy składnik ma licznik wpisów z danymi. Wszystkie wartości nieznane dają `—`; znane zero pozostaje zerem. Częściową sumę pokazujemy z `≥` (zaokrąglenie w dół), a połączenie braków z górną granicą z etykiety z `≈`. Dawne wpisy zachowują swoje snapshoty — nie uzupełniamy ich automatycznie nowymi wartościami etykiet. Dla produktów ogólnych obliczenia mogą uzupełniać brakujące składniki tabelą USDA, według zasad poniżej.
 
 Źródła: [RWS UE — załącznik XIII](https://eur-lex.europa.eu/eli/reg/2011/1169/oj/eng), [EFSA — błonnik](https://www.efsa.europa.eu/en/efsajournal/pub/1462). Źródła i objaśnienia są dostępne również w aplikacji.
+
+## Mikroskładniki produktów ogólnych
+
+Sprawdzono wszystkie 43 produkty podstawowe. Dla 37 dopasowano rekordy [USDA FoodData Central, SR Legacy (kwiecień 2018)](https://fdc.nal.usda.gov/download-datasets/), m.in. pomidora, sałatę zieloną liściastą, ogórka ze skórką, marchew, cebulę, brokuły i wszystkie owoce. Szacunki dotyczą 100 g części jadalnej; dopasowania rozróżniają produkt surowy, suchy i ugotowany. Szczegóły porcji pokazują przyjęty wariant oraz link do konkretnego rekordu USDA. Są to ogólne wartości tabelaryczne, nie analiza konkretnego produktu; odmiana, uprawa i obróbka wpływają na skład.
+
+`src/genericFoodNutrients.json` zawiera wyłącznie sprawdzony podzbiór, identyfikatory FDC, opisy źródłowe, parametry przeliczeń i sumę SHA-256 archiwum. `scripts/prepare-generic-nutrients.py` odtwarza go z oficjalnego CSV (Python, bez zależności; opcjonalnie ścieżka ZIP jako argument). Dane są dołączone do aplikacji: build ani telefon nie pobierają tabel z internetu. Nie importujemy wzbogacanych odpowiedników ryżu, makaronu czy mleka; chleb pełnoziarnisty ma ogólną recepturę USDA bez dodanego kwasu foliowego.
+
+`enrichGenericFood` uzupełnia tylko brakujące pola rozpoznanych `base:*` w gramach, bez marki i z ogólnym źródłem. Nie zmienia kalorii, makro ani już podanych składników, w tym zera. Ten sam mechanizm działa przy liczeniu i edycji wcześniejszych wpisów ogólnych, dzięki czemu ich brakujące mikroskładniki trafiają do dnia i tygodnia. Odczyt nie modyfikuje snapshotów w D1 ani lokalnego backupu. Statystyki oznaczają obecność tabelarycznych szacunków. Produkty `favorite:*`, `own:*`, Open Food Facts, napoje w ml i suplementy na tabletki nie otrzymują takich uzupełnień.
+
+Brak biotyny lub innego składnika w źródle pozostaje nieznany (`null` po przeliczeniu), a jawne zero z tabeli jest zachowane. Dla sześciu pozycji nie znaleziono odpowiedniego ogólnego rekordu: chleba pszennego, bułki pszennej, tortilli, twarogu półtłustego, skyru i kefiru. Zachowujemy ich wcześniejsze dane i wyświetlamy powód braku uzupełnienia. Nie zastępujemy polskiego twarogu serkiem cottage ani skyru jogurtem greckim.
+
+Jednostki są zgodne z europejskimi odniesieniami: witamina A w µg RE = retinol + β-karoten / 6 + (α-karoten + β-kryptoksantyna) / 12, a niacyna w mg NE = niacyna + tryptofan w mg / 60. Jeśli brakuje składnika przeliczenia, wynik pozostaje nieznany; nie kopiujemy amerykańskiego RAE lub IU jako RE. Sól w g = sód w mg × 2,5 / 1000. Foliany to całkowite foliany w µg, nie DFE; witamina D w µg, E jako α-tokoferol w mg, K jako filochinon w µg. Etykiety użytkownika zachowują oryginalne wartości.
+
+Źródła przeliczeń: [EFSA — witamina A, RE](https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2024.8814), [EFSA — niacyna, NE](https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2014.3759), [rozporządzenie UE 1169/2011 — definicja soli](https://eur-lex.europa.eu/eli/reg/2011/1169/oj/eng).
 
 ## Dane i bezpieczeństwo
 
@@ -146,7 +160,7 @@ Każdy składnik ma licznik wpisów z danymi. Wszystkie wartości nieznane dają
 - Nie dodawaj sekretów do plików `src/`, `.env` z prefiksem `VITE_` ani do repozytorium. Sekrety konfiguruj w Cloudflare Pages.
 - Przy korzystaniu z darmowych planów Cloudflare obowiązują limity. Dla prywatnej aplikacji jednego użytkownika są wysokie w stosunku do typowego zużycia, ale **nie gwarantują bezwarunkowo nielimitowanej darmowości**.
 - Eksport w zakładce Ustawienia tworzy plik JSON. **Import z backupu do bazy nie jest jeszcze zaimplementowany**; plik warto przechowywać jako niezależną kopię.
-- Wpisy jedzenia zapisują wartości odżywcze produktu w chwili dodania. Późniejsze zmiany bazy produktów nie zmieniają wcześniejszych dzienników.
+- Wpisy jedzenia zapisują wartości odżywcze produktu w chwili dodania. Późniejsze etykiety nie nadpisują wcześniejszych snapshotów; brakujące składniki rozpoznanych produktów ogólnych mogą być uzupełniane z USDA podczas obliczeń.
 - Dane z Open Food Facts na licencji **Open Database License (ODbL)**. Źródło: https://world.openfoodfacts.org ; dokumentacja https://openfoodfacts.github.io/openfoodfacts-server/api/ . Informacje od społeczności mogą być błędne lub niepełne. Proste produkty bazowe są przybliżeniami i nie zastępują etykiet.
 
 ## Struktura
@@ -159,6 +173,8 @@ src/styles.css              styl responsywny, w tym wersja mobilna
 src/dark-theme.css          ciemna paleta i nowe elementy kalkulatora
 src/foods.js                baza żywności i funkcje kalkulacji
 src/favoriteFoods.js        16 produktów z tabel użytkownika
+src/genericNutrition.js     uzupełnianie brakujących składników produktów ogólnych
+src/genericFoodNutrients.json  sprawdzony podzbiór USDA z pochodzeniem danych
 src/nutrients.js            składniki, jednostki i wartości referencyjne
 src/nutritionStats.js       sumowanie, kompletność danych, dzień i tydzień
 src/NutritionStats.jsx      statystyki, wykres i porównania do RWS

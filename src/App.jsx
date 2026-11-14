@@ -17,6 +17,7 @@ import SettingsPage from './SettingsPage.jsx';
 import Modal, {allowFieldAutofocus} from './Modal.jsx';
 import NutritionStats, {DailyNutrientPreview} from './NutritionStats.jsx';
 import {sumNutrition,totalLabel} from './nutritionStats.js';
+import {enrichGenericFood,genericNutritionInfo,genericNutritionGap} from './genericNutrition.js';
 
 const nav = [
   {id:'dashboard',label:'Pulpit',icon:BarChart3},
@@ -84,7 +85,7 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
   const [remote,setRemote]=useState([]);
   const [busy,setBusy]=useState(false);
   const [remoteError,setRemoteError]=useState(false);
-  const [selected,setSelected]=useState(editing?.food||initialFood||null);
+  const [selected,setSelected]=useState(()=>enrichGenericFood(editing?.food||initialFood||null));
   const [grams,setGrams]=useState(String(editing?.grams??foodBasis(editing?.food||initialFood||{})));
   const [meal,setMeal]=useState(editing?.meal||initialMeal);
   const [custom,setCustom]=useState(false);
@@ -99,7 +100,9 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
   }
   const options=useMemo(()=>foodOptions(query,personal,remote),[query,personal,remote]);
   const scaled=selected?scaleFood(selected,parseNum(grams)):null;
-  function selectFood(food){setSelected(food);setGrams(String(foodBasis(food)));}
+  const nutritionInfo=genericNutritionInfo(selected);
+  const nutritionGap=genericNutritionGap(selected);
+  function selectFood(food){setSelected(enrichGenericFood(food));setGrams(String(foodBasis(food)));}
   async function submit(e){e.preventDefault();if(!selected||parseNum(grams)<=0||parseNum(grams)>100000)return;setSaving(true);try{await onAdd({id:editing?.id||uuid('entry'),day,meal,grams:parseNum(grams),food:selected});onClose();}finally{setSaving(false)}}
   async function saveCustom(e){e.preventDefault();if(!form.name.trim())return;
     const product={id:uuid('own'),name:form.name.trim(),brand:form.brand.trim(),unit:form.unit,source:'Własny'};
@@ -115,6 +118,7 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
         <button type="button" className="text-link" onClick={()=>{setSelected(null);setQuery('')}}>Zmień</button>
       </div>
       {(selected.source==='Twoja tabela'||selected.imageNote)&&<p className="food-product-note">{selected.source==='Twoja tabela'?'Kalorie i makro z Twojej tabeli. ':''}{selected.imageNote}</p>}
+      {nutritionGap&&<p className="food-product-note">{nutritionGap} Nieznane składniki pozostają bez wartości.</p>}
       <div className="field-row">
         <label className="field"><span>Ilość ({selected.unit==='tablet'?'tabletki':foodUnit(selected)==='ml'?'mililitry':'gramy'})</span><div className="with-unit"><input type="number" inputMode={selected.unit==='tablet'?'numeric':'decimal'} min={selected.unit==='tablet'?1:0.1} max="100000" step={selected.unit==='tablet'?1:0.1} required value={grams} onChange={e=>setGrams(e.target.value)} autoFocus={allowFieldAutofocus()}/><span>{foodUnit(selected)}</span></div></label>
         <label className="field"><span>Posiłek</span><select value={meal} onChange={e=>setMeal(e.target.value)}>{MEALS.map(m=><option key={m.id} value={m.id}>{m.name}</option>)}</select></label>
@@ -125,7 +129,7 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
         {[['Białko','protein'],['Węgle','carbs'],['Tłuszcze','fat']].map(([name,key])=><div key={key} className="portion-macro"><span>{name}</span><b>{nutrientLabel(scaled[key],key==='fat'&&selected.fatLessThan)} g</b></div>)}
       </div>
       {['kcal','protein','carbs','fat'].some(key=>selected[key]==null)&&<p className="help-note fat-bound-note">W przekazanych danych brakuje kalorii lub części makro. Zapiszemy je jako nieznane (—), nie jako zero.</p>}
-      {NUTRIENTS.some(([key])=>selected[key]!=null)&&<details className="food-nutrient-details"><summary>Witaminy i pozostałe składniki tej porcji</summary><div className="micros-grid">{NUTRIENTS.filter(([key])=>selected[key]!=null).map(([key,name,unit])=><div className="micro-item" key={key}><span>{name}</span><strong>{nutrientLabel(scaled[key],false,2)} {unit}</strong></div>)}</div></details>}
+      {NUTRIENTS.some(([key])=>selected[key]!=null)&&<details className="food-nutrient-details"><summary>Witaminy i pozostałe składniki tej porcji{nutritionInfo?' · szacunek USDA':''}</summary>{nutritionInfo&&<p className="food-product-note generic-nutrition-note">Szacunek dla: {nutritionInfo.variant}. Brakujące składniki uzupełniono z <a href={nutritionInfo.url} target="_blank" rel="noreferrer">USDA FoodData Central ↗</a>. Wartości zależą od odmiany i przygotowania.</p>}<div className="micros-grid">{NUTRIENTS.filter(([key])=>selected[key]!=null).map(([key,name,unit])=><div className="micro-item" key={key}><span>{name}</span><strong>{nutrientLabel(scaled[key],false,2)} {unit}</strong></div>)}</div></details>}
       {selected.fatLessThan&&<p className="help-note fat-bound-note">Tłuszcz: &lt; 0,5 g na 100 {foodUnit(selected)}. Do bilansu przyjmujemy górną granicę 0,5 g na 100 {foodUnit(selected)}; kalorie pozostają zgodne z tabelą.</p>}
       <div className="modal-actions"><button type="button" className="button ghost" onClick={onClose}>Anuluj</button><button className="button primary" disabled={saving||parseNum(grams)<=0}><Check size={18}/>{saving?'Zapisywanie...':editing?'Zapisz zmiany':'Dodaj do dziennika'}</button></div>
     </form>:

@@ -2,9 +2,9 @@
 export const NUTRIENTS = [
   ['fiber','Błonnik','g'], ['sugars','Cukry ogółem','g'], ['saturatedFat','Tłuszcze nasycone','g'], ['salt','Sól','g'],
   ['calcium','Wapń','mg'], ['iron','Żelazo','mg'], ['potassium','Potas','mg'], ['magnesium','Magnez','mg'],
-  ['vitaminA','Witamina A','µg'], ['vitaminC','Witamina C','mg'], ['vitaminD','Witamina D','µg'],
+  ['vitaminA','Witamina A','µg RE'], ['vitaminC','Witamina C','mg'], ['vitaminD','Witamina D','µg'],
   ['vitaminE','Witamina E','mg'], ['vitaminK','Witamina K','µg'],
-  ['b1','B1 · tiamina','mg'], ['b2','B2 · ryboflawina','mg'], ['b3','B3 · niacyna','mg'],
+  ['b1','B1 · tiamina','mg'], ['b2','B2 · ryboflawina','mg'], ['b3','B3 · niacyna','mg NE'],
   ['b5','B5 · kwas pantotenowy','mg'], ['b6','Witamina B6','mg'], ['biotin','B7 · biotyna','µg'],
   ['folate','B9 · foliany','µg'], ['b12','Witamina B12','µg'],
 ];
