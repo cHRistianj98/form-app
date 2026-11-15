@@ -4,9 +4,9 @@
 .nutrition-eyebrow { display:flex; align-items:center; gap:7px; color:var(--accent); font-size:12px; font-weight:800; letter-spacing:.1em; margin-bottom:10px; }
 .nutrition-period-panel h2 { font-size:24px; }
 .nutrition-period-panel p { color:var(--muted); font-size:14px; margin-top:8px; }
-.nutrition-period-switch { display:flex; gap:4px; padding:4px; border:1px solid var(--border); background:#10191d; border-radius:12px; }
+.nutrition-period-switch { display:flex; gap:4px; padding:4px; border:1px solid var(--border); background:#0e151f; border-radius:12px; }
 .nutrition-period-switch button,.nutrition-chart-tabs button { background:transparent; color:var(--muted); border:0; padding:10px 15px; border-radius:9px; font-size:14px; font-weight:700; }
-.nutrition-period-switch button[aria-pressed=true],.nutrition-chart-tabs button.active { color:var(--accent); background:#2a3d2c; }
+.nutrition-period-switch button[aria-pressed=true],.nutrition-chart-tabs button.active { color:var(--accent); background:#203047; }
 .nutrition-week-nav { display:flex; justify-content:space-between; gap:8px; margin:0 0 18px; }
 .nutrition-macro-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:18px; }
 .nutrition-macro-card { padding:21px; min-width:0; }
@@ -30,7 +30,7 @@
 .nutrition-chart-labels>div { flex:1; min-width:0; text-align:center; display:flex; flex-direction:column; gap:7px; font-size:13px; }
 .nutrition-chart-labels small { font-size:11px; color:var(--muted); }
 .nutrition-chart-labels .future { opacity:.5; }
-.nutrition-chart-goal { position:absolute; left:0; right:0; border-top:1px dashed #59744b; pointer-events:none; z-index:1; }
+.nutrition-chart-goal { position:absolute; left:0; right:0; border-top:1px dashed #3b5884; pointer-events:none; z-index:1; }
 .nutrition-chart-goal>span { position:absolute; right:0; bottom:5px; font-size:11px; color:var(--muted); background:var(--surface); padding-left:5px; }
 .nutrition-day-column { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:8px; font-size:13px; color:var(--text); }
 .nutrition-day-bar { display:flex; flex:1; width:100%; min-height:0; align-items:flex-end; justify-content:center; position:relative; }
@@ -45,7 +45,7 @@
 .nutrition-table-row { padding:16px 0; border-top:1px solid var(--border); align-items:center; font-size:14px; }
 .nutrition-table-row>div { min-width:0; }
 .nutrition-table-row>div:first-child>strong { display:block; font-size:14px; margin-bottom:7px; }
-.nutrition-table-row>div:first-child>b { display:block; color:var(--green); font-size:17px; margin-bottom:5px; }
+.nutrition-table-row>div:first-child>b { display:block; color:var(--blue); font-size:17px; margin-bottom:5px; }
 .nutrition-table-row>div>small { display:block; font-size:12px; color:var(--muted); line-height:1.6; margin-top:6px; }
 .nutrition-table-row>div:last-child { text-align:right; }
 .nutrition-table-row>div:last-child .meter { margin-top:9px; height:5px; }
@@ -55,11 +55,11 @@
 .micro-item>small { font-size:12px; line-height:1.5; color:var(--muted); }
 .serving-presets { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 17px; }
 .serving-presets button { padding:9px 12px; border:1px solid var(--border); background:var(--raised); border-radius:9px; color:var(--muted); font-size:13px; min-height:38px; }
-.serving-presets button[aria-pressed=true] { border-color:#72955c; color:var(--accent); background:#2b3d2c; }
+.serving-presets button[aria-pressed=true] { border-color:#57729a; color:var(--accent); background:#203048; }
 .nutrition-partial-note { display:flex; align-items:flex-start; gap:8px; color:#d8c799; font-size:13px; line-height:1.7; margin:0 0 20px; }
 .nutrition-partial-note svg { flex-shrink:0; margin-top:2px; }
 .food-nutrient-details { margin:16px 0; }
-.food-nutrient-details summary { color:var(--green); font-size:13px; cursor:pointer; line-height:1.6; }
+.food-nutrient-details summary { color:var(--blue); font-size:13px; cursor:pointer; line-height:1.6; }
 .food-nutrient-details .micros-grid { grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:12px; }
 @media(max-width:1200px) { .nutrition-reference-grid { grid-template-columns:1fr; } .nutrition-macro-card { padding:17px; } }
 @media(max-width:780px) { .nutrition-macro-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }

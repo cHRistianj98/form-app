@@ -3,6 +3,8 @@ import {Check, CircleHelp, Download, Info, LogOut, ShieldCheck, Target} from 'lu
 import {calcTargets, fmt, parseNum} from './foods.js';
 import {ACTIVITY_LEVELS, NUTRITION_SOURCES} from './profile.js';
 import MacroValues from './MacroValues.jsx';
+import WeightInput from './WeightInput.jsx';
+import {formatWeight, parseWeight, weightError} from './weight.js';
 
 export default function SettingsPage({profile, currentWeight, onSave, onExport, local, onLogout}) {
   const [form,setForm]=useState({...profile});
@@ -12,10 +14,12 @@ export default function SettingsPage({profile, currentWeight, onSave, onExport, 
   useEffect(()=>setForm({...profile}),[profile]);
   function change(key,value) {setForm(p=>({...p,[key]:value})); setError('');}
   const numeric=['height','startWeight','targetWeight','age','deficit','deficitPercent','proteinFactor','fatFactor','manualCalories','manualProtein'];
-  const parsed=Object.fromEntries(Object.entries(form).map(([k,v])=>[k,numeric.includes(k)?parseNum(v):v]));
+  const parsed=Object.fromEntries(Object.entries(form).map(([k,v])=>[k,['startWeight','targetWeight'].includes(k)?parseWeight(v):numeric.includes(k)?parseNum(v):v]));
   const preview=calcTargets(parsed,currentWeight || parsed.startWeight);
   async function submit(e) {
     e.preventDefault(); setError('');
+    const invalidWeight=weightError(form.startWeight,true)||weightError(form.targetWeight,true);
+    if (invalidWeight) {setError(invalidWeight); return;}
     if (!preview.macrosFit || preview.calories<=0) {setError('Cel kalorii musi pokrywać wybrane białko i tłuszcze. Zwiększ kalorie lub zmień makro.'); return;}
     setSaving(true);
     try {await onSave(parsed);} catch(err) {setError(err.message);} finally {setSaving(false);}
@@ -38,11 +42,11 @@ export default function SettingsPage({profile, currentWeight, onSave, onExport, 
           <label className="field"><span>Wiek (lata)</span><input type="number" required min="19" max="110" step="1" value={form.age} onChange={e=>change('age',e.target.value)}/></label>
         </div>
         <label className="field"><span>Płeć używana we wzorach</span><select value={form.sex} onChange={e=>change('sex',e.target.value)}><option value="male">Mężczyzna</option><option value="female">Kobieta</option></select></label>
-        <div className="field-row">
-          <label className="field"><span>Waga początkowa (kg)</span><input type="number" required min="20" max="500" step="0.1" value={form.startWeight} onChange={e=>change('startWeight',e.target.value)}/></label>
-          <label className="field"><span>Waga docelowa (kg)</span><input type="number" required min="20" max="500" step="0.1" value={form.targetWeight} onChange={e=>change('targetWeight',e.target.value)}/></label>
+        <div className="field-row weight-profile-row">
+          <WeightInput label="Waga początkowa (kg)" required value={form.startWeight} onChange={value=>change('startWeight',value)}/>
+          <WeightInput label="Waga docelowa (kg)" required value={form.targetWeight} onChange={value=>change('targetWeight',value)}/>
         </div>
-        <p className="help-note">Wyliczenia dla {fmt(preview.weight,1)} kg {currentWeight?'z ostatniego pomiaru do wybranego dnia.':'z wagi początkowej.'} Sprawdź wiek i poziom aktywności — wpływają na szacunek zapotrzebowania.</p>
+        <p className="help-note">Wyliczenia dla {formatWeight(preview.weight)} kg {currentWeight?'z ostatniego pomiaru do wybranego dnia.':'z wagi początkowej.'} Sprawdź wiek i poziom aktywności — wpływają na szacunek zapotrzebowania.</p>
         <div className="subsection-title">Jak wyznaczać zapotrzebowanie?</div>
         <label className="field"><span>Metoda obliczeń</span><select value={form.energyMethod} onChange={e=>change('energyMethod',e.target.value)}><option value="mifflin">Mifflin–St Jeor + aktywność</option><option value="eer2023">EER — normy DRI 2023</option></select></label>
         <label className="field"><span>Twoja przeciętna aktywność w całym tygodniu</span><select value={form.activityLevel} onChange={e=>change('activityLevel',e.target.value)}>{ACTIVITY_LEVELS.map(a=><option key={a.id} value={a.id}>{a.name} — PAL {fmt(a.pal,2)}</option>)}</select><small className="field-hint">{preview.activity.description}</small></label>

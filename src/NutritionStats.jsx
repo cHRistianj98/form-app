@@ -8,7 +8,7 @@ import {MACRO_PRESENTATION} from './macroPresentation.js';
 import './nutrition-stats.css';
 
 const MACROS=[
-  {key:'kcal',name:'Kalorie',unit:'kcal',color:'#b8ed87'},
+  {key:'kcal',name:'Kalorie',unit:'kcal',color:'var(--accent)'},
   ...MACRO_PRESENTATION.map(m=>({...m,unit:'g'})),
 ];
 const shortDate=day=>new Date(day+'T12:00:00').toLocaleDateString('pl-PL',{day:'numeric',month:'short'});

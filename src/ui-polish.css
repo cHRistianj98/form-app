@@ -45,7 +45,7 @@ strong,b { font-weight:750; }
 
 /* Each macro has a name, value and its own space. No letter abbreviations. */
 .macro-values { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; min-width:0; width:100%; }
-.macro-value { display:flex; flex-direction:column; gap:5px; min-width:0; padding:10px 12px; border-radius:10px; background:#10191d80; border-top:2px solid color-mix(in srgb,var(--macro-color) 60%,transparent); }
+.macro-value { display:flex; flex-direction:column; gap:5px; min-width:0; padding:10px 12px; border-radius:10px; background:#0e151f80; border-top:2px solid color-mix(in srgb,var(--macro-color) 60%,transparent); }
 .macro-value-name { font-size:12px; line-height:1.4; font-weight:600; color:var(--muted); }
 .macro-value>strong { font-size:17px; line-height:1.35; font-variant-numeric:tabular-nums; color:var(--macro-color); white-space:nowrap; }
 .macro-value>strong small { font-size:12px; font-weight:500; color:var(--muted); }

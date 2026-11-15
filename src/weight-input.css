@@ -1,0 +1,25 @@
+.weight-field>label { font-size:14px; line-height:1.4; color:#c5d5ee; font-weight:800; }
+.weight-entry { display:grid; grid-template-columns:44px minmax(0,1fr) 44px; gap:9px; align-items:center; }
+.weight-entry .with-unit { min-width:0; }
+.weight-field .weight-entry input { text-align:center; font-size:24px; font-weight:750; font-variant-numeric:tabular-nums; padding:10px 4px; }
+.weight-entry input::placeholder { font-size:15px; font-weight:500; }
+.weight-step { width:44px; height:44px; display:grid; place-items:center; border:1px solid var(--border); border-radius:12px; background:var(--raised); color:var(--accent); }
+.weight-step:hover { background:#254776; border-color:var(--accent); }
+.weight-step:disabled { opacity:.4; cursor:default; }
+.weight-step:focus-visible, .weight-range:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.weight-entry .with-unit:focus-within { border-color:var(--accent); box-shadow:0 0 0 3px #78b4ff20; }
+.weight-ruler { position:relative; padding:0 10px 9px; border:1px solid var(--border); border-radius:12px; background:#0d192d; overflow:hidden; }
+.weight-ruler-ticks { position:absolute; top:12px; left:12px; right:12px; height:30px; background:repeating-linear-gradient(90deg,var(--border) 0 1px,transparent 1px 2.5%); pointer-events:none; }
+.weight-ruler-ticks::after { content:''; position:absolute; inset:0; background:repeating-linear-gradient(90deg,#6f90b9 0 1px,transparent 1px 25%); }
+.weight-field .weight-range { display:block; position:relative; width:100%; height:52px; margin:0; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; appearance:none; -webkit-appearance:none; cursor:ew-resize; touch-action:pan-y; }
+.weight-range::-webkit-slider-runnable-track { height:40px; background:transparent; }
+.weight-range::-webkit-slider-thumb { appearance:none; -webkit-appearance:none; width:4px; height:40px; border:0; border-radius:4px; background:var(--accent); box-shadow:0 0 12px #78b4ff60; }
+.weight-range::-moz-range-track { height:40px; background:transparent; }
+.weight-range::-moz-range-thumb { width:4px; height:40px; border:0; border-radius:4px; background:var(--accent); box-shadow:0 0 12px #78b4ff60; }
+.weight-ruler-labels { display:flex; justify-content:space-between; color:var(--muted); font-size:11px; font-variant-numeric:tabular-nums; line-height:1.5; }
+.weight-field .field-hint { font-size:12px; }
+@media(max-width:600px) {
+  .field-row.weight-profile-row { grid-template-columns:1fr; gap:0; }
+  .weight-entry { gap:6px; }
+  .weight-field .weight-entry input { font-size:22px; }
+}
