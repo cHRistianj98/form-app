@@ -46,6 +46,11 @@ function validFood(food) {
   if (food.aliases != null && (!Array.isArray(food.aliases)||food.aliases.length>12||!food.aliases.every(s=>typeof s==='string'&&s.length<=100))) return false;
   if (food.servingSizes != null && (!Array.isArray(food.servingSizes)||food.servingSizes.length>12||!food.servingSizes.every(s=>s&&typeof s.label==='string'&&s.label.length<=100&&finite(s.quantity,0.1,100000)&&(food.unit!=='tablet'||Number.isInteger(s.quantity))))) return false;
   if (food.fatLessThan != null && typeof food.fatLessThan !== 'boolean') return false;
+  for(const field of ['partialNutrients','upperBoundNutrients']) {
+    if(food[field]!=null&&(!Array.isArray(food[field])||food[field].length>nutrients.length||new Set(food[field]).size!==food[field].length||!food[field].every(key=>nutrients.includes(key)&&finite(food[key],0,100000)))) return false;
+  }
+  if(food.upperBoundNutrients?.some(key=>food[key]<=0)) return false;
+  if(food.estimateNotes!=null&&(typeof food.estimateNotes!=='string'||food.estimateNotes.length>1800)) return false;
   if (food.imageFit != null && !['contain','cover'].includes(food.imageFit)) return false;
   if (food.imageNote != null && (typeof food.imageNote !== 'string' || food.imageNote.length>240)) return false;
   for (const k of nutrients) if (food[k] != null && !finite(food[k],0,100000)) return false;
@@ -59,6 +64,9 @@ function cleanFood(food) {
   if (food.aliases != null) result.aliases = food.aliases;
   if (food.servingSizes != null) result.servingSizes = food.servingSizes.map(({label,quantity})=>({label,quantity}));
   if (food.fatLessThan != null) result.fatLessThan = food.fatLessThan;
+  if (food.partialNutrients != null) result.partialNutrients = [...food.partialNutrients];
+  if (food.upperBoundNutrients != null) result.upperBoundNutrients = [...food.upperBoundNutrients];
+  if (food.estimateNotes != null) result.estimateNotes = food.estimateNotes;
   if (food.imageFit != null) result.imageFit = food.imageFit;
   if (food.imageNote != null) result.imageNote = food.imageNote;
   if (typeof food.image === 'string' && (/^\/foods\/[a-z][a-z0-9-]*\.webp$/.test(food.image) || /^https:\/\/images\.openfoodfacts\.org\/[\w/.-]+$/.test(food.image))) result.image = food.image;

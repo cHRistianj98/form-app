@@ -529,5 +529,41 @@
     "license": "Materiał produktowy — prawa zastrzeżone",
     "licenseUrl": "",
     "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "dish:rosol-noodles": {
+    "image": "/foods/dish-rosol-noodles.webp",
+    "title": "Domowe danie: rosol-noodles",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "dish:italian-pizza": {
+    "image": "/foods/dish-italian-pizza.webp",
+    "title": "Domowe danie: italian-pizza",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "dish:crepes-nutella": {
+    "image": "/foods/dish-crepes-nutella.webp",
+    "title": "Domowe danie: crepes-nutella",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "dish:crepes-jam": {
+    "image": "/foods/dish-crepes-jam.webp",
+    "title": "Domowe danie: crepes-jam",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
   }
 }

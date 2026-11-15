@@ -5,7 +5,7 @@ Responsywna aplikacja React + Vite + Cloudflare Pages Functions + D1. Jeden uży
 ## Co działa
 
 - Dziennik posiłków: śniadanie, obiad, kolacja, przekąski; każdy składnik dodajesz osobno z ilością w g lub ml, możesz poprawić porcję lub ją usunąć.
-- **43 podstawowe produkty ze zdjęciami WebP**, **16 produktów z listy użytkownika ze zdjęciami** i produkty własne z etykiety. Wartości produktów bazowych są orientacyjne; produkty z listy zachowują podaną tabelę. Wyszukiwanie marki i nazwy przez **Open Food Facts** z przycisku (bez żądań na każde naciśnięcie klawisza).
+- **43 podstawowe produkty ze zdjęciami WebP**, **17 produktów z listy użytkownika ze zdjęciami**, **4 dania domowe liczone w gramach** i produkty własne z etykiety. Wartości produktów bazowych i dań są orientacyjne; produkty z listy zachowują podaną tabelę. Wyszukiwanie marki i nazwy przez **Open Food Facts** z przycisku (bez żądań na każde naciśnięcie klawisza).
 - Kalorie, białko, węglowodany, tłuszcze, błonnik, cukry, nasycone kwasy tłuszczowe, sól, wapń, żelazo, potas, magnez, witamina C, D, B12 — te składniki, dla których produkt ma dane. Brak danych = `—`, nigdy nie jest prezentowany jako zero.
 - Kroki, trening siłowy, bieganie, spacer, rower, inny trening, szacunkowy wydatek energetyczny; mechanizm ograniczający podwójne liczenie kroków z biegu i spaceru.
 - Ciemny interfejs na komputerze i telefonie. Profil: start 93 kg, cel 85 kg, wzrost 186 cm; punkt startowy **2600 kcal i 180 g białka**. Wiek, płeć, aktywność, metoda obliczeń i cele są edytowalne.
@@ -122,11 +122,28 @@ Autorzy, źródła, licencje i informacja o konwersji: `public/foods/credits.jso
 
 ## Produkty z listy użytkownika
 
-`src/favoriteFoods.js` zawiera 16 pozycji: wcześniejsze siedem produktów oraz masło Łaciate, orzechy Alesto, Olimp Whey Isolate 95, mąkę Basia, kakao, wędlinę z indyka, dwa aerozole śmietany i Plusssz 100% Multiwitamina. Są dostępne od razu w zakładce Produkty oraz w wyszukiwarce dodawania jedzenia, niezależnie od rekordów własnych w D1. Wyszukiwanie obsługuje także `aliases`, a `servingSizes` daje szybki wybór porcji.
+`src/favoriteFoods.js` zawiera 17 pozycji: wcześniejsze siedem produktów oraz masło Łaciate, orzechy Alesto, Olimp Whey Isolate 95, mąkę Basia, kakao, wędlinę z indyka, dwa aerozole śmietany, Plusssz 100% Multiwitamina oraz sos Mutti do pizzy z czosnkiem i bazylią. Są dostępne od razu w zakładce Produkty oraz w wyszukiwarce dodawania jedzenia, niezależnie od rekordów własnych w D1. Wyszukiwanie obsługuje także `aliases`, a `servingSizes` daje szybki wybór porcji.
 
 Kalorie, makro i pozostałe podane składniki pochodzą z tabel użytkownika; zdjęcie ani dane z internetu nie zastępują tych wartości. Dla mleka i napoju podstawą jest 100 ml, dla żywności 100 g. Plusssz ma `unit: 'tablet'`, `basisQuantity: 1` i witaminy na jedną tabletkę. Jego niepodane kalorie i makro są `null`. Witaminy mają stałe jednostki w `src/nutrients.js`: mg albo µg. Formularz obsługuje tabletki, g i ml, pokazuje skład porcji i zapisuje jednostkę oraz wszystkie witaminy w `food_json`. Kolumna `entries.grams` nadal przechowuje liczbową ilość porcji dla zgodności ze starymi danymi; nie przeliczamy ml na g i nie zmieniamy schematu D1. Starsze produkty bez jednostki pozostają w gramach.
 
 Mleko proteinowe ma oznaczenie `fatLessThan: true` oraz liczbową górną granicę 0,5 g tłuszczu na 100 ml. Listy, porcja i suma zachowują znak `<`, zaokrąglając granicę w górę przy wyświetlaniu. Kalorii z tabeli nie wyliczamy ponownie z makro. Brakujące składniki pozostają nieznane, także w produktach własnych.
+
+## Dania domowe w gramach
+
+Sekcja **Twoje dania domowe** i wyszukiwarka zawierają rosół z makaronem, pizzę włoską z mozzarellą i salami, naleśniki z Nutellą oraz naleśniki z dżemem. Wszystkie wartości dotyczą **100 g gotowego dania**; porcja obejmuje wywar z makaronem, pizzę z dodatkami albo naleśnik z nadzieniem. Zakładane ilości są widoczne po rozwinięciu „Jak policzono to danie?” i utrwalane jako `estimateNotes` w snapshotach wpisów.
+
+Przyjęte założenia:
+
+- Rosół: 80 g domowego wywaru drobiowego + 20 g ugotowanego, solonego makaronu jajecznego na 100 g. Tabelaryczny wywar nie obejmuje osobno dodawanego mięsa. Około 56 kcal, 7,9 g węgli, 2,9 g białka, 1,4 g tłuszczu na 100 g.
+- Pizza: ciasto z [podanego przepisu Monsieur Cuisine](https://www.monsieur-cuisine.com/pl/recipe/pizza-wloska): 400 g mąki (przyjęto etykietę Basia), 220 ml wody, 4 g świeżych drożdży, 5 g cukru, 6 g soli, 20 g oliwy. Dodatki: 200 g sosu Mutti według przekazanej etykiety, 250 g ogólnej mozzarelli pełnotłustej i 100 g ogólnego salami. Założona masa całej partii po pieczeniu: **1000 g**, niezależnie od liczby pizz. Około 275 kcal, 30,7 g węgli, 12,4 g białka i <11,2 g tłuszczu na 100 g w tym modelu.
+- Ciasto naleśnikowe: 350 ml mleka Łaciate 3,2%, 2 jajka = 100 g części jadalnej, 300 g mąki pszennej niewzbogacanej, 4 ml oliwy = 3,64 g przy założeniu 0,91 g/ml. **650 g usmażonych placków** w całej partii, bez dodatkowego tłuszczu, cukru lub soli. Mleko liczymy z etykiety na 100 ml, nie z 350 g; masa gotowych placków jest osobnym założeniem.
+- Gotowe naleśniki: **80 g placka + 20 g nadzienia na każde 100 g**, zgodnie z wyborem użytkownika. Nutella: [oficjalna etykieta producenta](https://www.nutella.com/pl/pl/produkty/krem/nutella), 539 kcal/100 g; dżem: ogólna tabela tradycyjnego dżemu z cukrem USDA, nie wariant niskosłodzony. Około 290 kcal z Nutellą lub 237 kcal z dżemem na 100 g.
+
+`src/homemadeFoods.js` zawiera skład i założenia, a `calculateDish` sumuje składniki i dzieli przez masę po przygotowaniu. Nie przelicza energii ponownie z makro. `src/dishIngredients.json` jest sprawdzonym podzbiorem USDA SR Legacy z identyfikatorami i źródłami, odtwarzanym przez `scripts/prepare-dish-ingredients.py`. Dane mleka, mąki Basia i Mutti pochodzą z etykiet użytkownika; braków nie uzupełniamy dowolnymi odpowiednikami. Dla mąki smażonej, jaj smażonych i sera pieczonego stosujemy wybrane współczynniki [USDA Retention Factors release 6](https://www.ars.usda.gov/ARSUserFiles/80400530/pdf/retn06.pdf) (0305, 0103, 0001). Pozostałe straty nie są modelowane. Są to jawne przybliżenia zależne od odparowania wody, ilości tłuszczu i faktycznych dodatków.
+
+`partialNutrients` oznacza znane, niepełne sumy składników dania. Podgląd porcji i statystyki dnia/tygodnia pokazują je z `≥`, z zachowaniem częściowej kompletności także wtedy, gdy wpis ma jakąś wartość liczbową. Brak wszystkich danych lub wyłącznie znane zera z wody przy pozostałych brakach daje `null`. Prawdziwe kompletne zero pozostaje zerem. `upperBoundNutrients` przenosi granice z etykiet: Mutti ma tłuszcz <0,5 g i nasycone <0,1 g/100 g. Wartości liczbowe są górnymi granicami, zachowanymi również po zsumowaniu pizzy; połączenie granicy z brakami danych daje `≈`. API waliduje i utrwala obie listy w JSON bez migracji D1.
+
+Dania mają lokalne grafiki WebP `public/foods/dish-*.webp`, wygenerowane wbudowanym imagegen; nie są zdjęciami rzeczywistych porcji. Oba warianty naleśników dzielą poglądową grafikę z różnymi nadzieniami. Prompty i ścieżki: `public/foods/dish-image-prompts.json`, źródło: `scripts/dish-image-prompts.json`. Konwersja: `scripts/prepare-dish-images.py`; informacje trafiają również do zbiorczych źródeł zdjęć w ustawieniach.
 
 ## Statystyki i wartości odniesienia
 
@@ -180,7 +197,9 @@ src/profile.js              domyślny profil i migracja ustawień
 src/styles.css              styl responsywny, w tym wersja mobilna
 src/dark-theme.css          ciemna paleta i nowe elementy kalkulatora
 src/foods.js                baza żywności i funkcje kalkulacji
-src/favoriteFoods.js        16 produktów z tabel użytkownika
+src/favoriteFoods.js        17 produktów z tabel użytkownika
+src/homemadeFoods.js        4 dania domowe, ich skład i założenia masy po obróbce
+src/dishNutrition.js        obliczenia na 100 g i przenoszenie braków oraz granic
 src/genericNutrition.js     uzupełnianie brakujących składników produktów ogólnych
 src/genericFoodNutrients.json  sprawdzony podzbiór USDA z pochodzeniem danych
 src/nutrients.js            składniki, jednostki i wartości referencyjne

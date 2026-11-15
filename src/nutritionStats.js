@@ -1,6 +1,7 @@
 import {calcTargets,fmt,localDay,nutrientLabel,scaleFood,shiftDay} from './foods.js';
 import {NUTRIENT_FIELDS} from './nutrients.js';
 import {genericNutritionInfo} from './genericNutrition.js';
+import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
 
 export function sumNutrition(entries) {
   const rows=entries.map(entry=>scaleFood(entry.food,entry.grams));
@@ -8,8 +9,8 @@ export function sumNutrition(entries) {
   for (const key of NUTRIENT_FIELDS) {
     const known=rows.filter(row=>row[key]!=null&&Number.isFinite(row[key]));
     totals[key]=known.length?known.reduce((sum,row)=>sum+row[key],0):null;
-    coverage[key]={known:known.length,total:entries.length,complete:entries.length>0&&known.length===entries.length,
-      upper:key==='fat'&&entries.some(entry=>entry.food.fatLessThan===true)};
+    coverage[key]={known:known.length,total:entries.length,complete:entries.length>0&&known.length===entries.length&&!entries.some(entry=>isPartialNutrient(entry.food,key)),
+      upper:entries.some(entry=>isUpperBoundNutrient(entry.food,key))};
   }
   return {totals,coverage,entryCount:entries.length,genericEntryCount:entries.filter(entry=>genericNutritionInfo(entry.food)).length};
 }

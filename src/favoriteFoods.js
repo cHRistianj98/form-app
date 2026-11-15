@@ -64,4 +64,12 @@ export const FAVORITE_FOODS = [
     aliases:['plussz','plusssz','multiwitamina','tabletka musująca','pomarańcza mango'],
     servingSizes:[{label:'1 tabletka',quantity:1}],
   }),
+  labelled('mutti-pizza-sauce','Sos do pizzy z czosnkiem i bazylią','Mutti','g',33,1.7,5.2,0.5,{
+    sugars:4.6,saturatedFat:0.1,fiber:null,salt:0.69,
+    fatLessThan:true,upperBoundNutrients:['saturatedFat'],
+    image:'/foods/tomato.webp',imageFit:'cover',
+    imageNote:'Poglądowe zdjęcie pomidorów. Tłuszcz <0,5 g i nasycone <0,1 g na 100 g według Twojej etykiety.',
+    aliases:['mutti','sos pomidorowy','sos do pizzy','czosnek bazylia'],
+    servingSizes:[{label:'100 g',quantity:100},{label:'200 g — pół puszki',quantity:200},{label:'400 g — puszka',quantity:400}],
+  }),
 ];

@@ -3,6 +3,8 @@ import {FAVORITE_FOODS} from './favoriteFoods.js';
 export {FAVORITE_FOODS} from './favoriteFoods.js';
 import {NUTRIENTS,NUTRIENT_FIELDS} from './nutrients.js';
 import {enrichGenericFood} from './genericNutrition.js';
+import {createHomemadeFoods} from './homemadeFoods.js';
+import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
 export {NUTRIENTS} from './nutrients.js';
 
 // Orientacyjne wartości na 100 g. Brakujące składniki uzupełniamy z jawnie
@@ -57,6 +59,8 @@ export const BASE_FOODS = [
   f('cottage','Serek wiejski',97,11.4,3,4.3,{calcium:80,salt:0.7}),
 ];
 
+export const HOMEMADE_FOODS=createHomemadeFoods(BASE_FOODS,FAVORITE_FOODS);
+
 export function canonicalText(text = '') {
   return text.toLocaleLowerCase('pl').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g,'l').trim();
 }
@@ -77,8 +81,18 @@ export function nutrientLabel(value, lessThan=false, digits=1) {
   return lessThan ? `< ${fmt(upper,digits)}` : fmt(value,digits);
 }
 
+export function foodNutrientLabel(food,key,value=food[key],digits=1) {
+  if(value==null) return '—';
+  const partial=isPartialNutrient(food,key),upper=isUpperBoundNutrient(food,key);
+  if(partial) {
+    const lower=Math.floor(value*10**digits)/10**digits;
+    return `${upper?'≈':'≥'} ${fmt(upper?value:lower,digits)}`;
+  }
+  return nutrientLabel(value,upper,digits);
+}
+
 export function foodOptions(query='',personal=[],remote=[]) {
-  const all=[...personal,...FAVORITE_FOODS,...BASE_FOODS,...remote];
+  const all=[...personal,...FAVORITE_FOODS,...HOMEMADE_FOODS,...BASE_FOODS,...remote];
   const seen=new Set();
   const terms=canonicalText(query).split(/\s+/).filter(Boolean);
   return all.filter(food=>{
@@ -157,7 +171,7 @@ export function calcDailyBalance(targets, eaten) {
 export function foodImage(food) {
   // Resolve the current image even for old diary snapshots that lack this field.
   if (typeof food.image === 'string' && (/^\/foods\/[a-z][a-z0-9-]*\.webp$/.test(food.image) || /^https:\/\/images\.openfoodfacts\.org\//.test(food.image))) return food.image;
-  const catalog = [...FAVORITE_FOODS,...BASE_FOODS];
+  const catalog = [...FAVORITE_FOODS,...HOMEMADE_FOODS,...BASE_FOODS];
   const base = catalog.find(f=>f.id===food.id) || catalog.find(f=>canonicalText(f.name)===canonicalText(food.name));
   return base?.image || null;
 }

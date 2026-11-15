@@ -1,0 +1,10 @@
+{
+  "tool":"Built-in imagegen",
+  "usage":"Illustrative homemade dishes, not photographs of the user's actual meals. Both crepe variants intentionally share a photograph with different fillings.",
+  "basePrompt":"Square, premium photorealistic food thumbnail for a dark nutrition app. Overhead view, complete ivory ceramic dish centered on a dark charcoal teal table, natural soft lighting, appetizing realistic textures, clean margins. No text, no logos, no people, no hands, no props. Readable when reduced to 64 pixels.",
+  "images":[
+    {"files":["/foods/dish-rosol-noodles.webp"],"subject":"A bowl of Polish clear chicken broth rosół with fine egg noodles and a few thin cooked carrot slices. Clear golden soup, restrained parsley garnish. No big meat chunks."},
+    {"files":["/foods/dish-italian-pizza.webp"],"subject":"An entire Italian homemade thin crust pizza with tomato sauce, melted mozzarella and sliced salami. No extra vegetables."},
+    {"files":["/foods/dish-crepes-nutella.webp","/foods/dish-crepes-jam.webp"],"subject":"Three thin Polish crêpes naleśniki folded into triangles on a plate, one showing a thin layer of chocolate hazelnut filling and another showing strawberry jam. No powdered sugar, no cream, no fruit garnish."}
+  ]
+}
