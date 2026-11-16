@@ -40,6 +40,35 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
   // Keep the selected 6% variant explicit and never invent its micronutrients.
   const pilosQuark={kcal:108,protein:9,carbs:4.5,fat:6,saturatedFat:4,sugars:3.5,fiber:0};
   return [
+    make('chicken-mushroom-roulade','Rolada z piersi kurczaka z pieczarkami',[
+      part(generic('chickenRoasted'),80),part(generic('mushroomsCooked'),18),
+      part(base('oil'),1.5),part(generic('garlicPowder'),.1),part(generic('pepper'),.1),part({...zero,salt:100},.3),
+    ],100,{
+      aliases:['rolada','rolada mięsna','rolada miesna','rolada drobiowa','kurczak z pieczarkami','rolada z kurczaka'],
+      servingSizes:[{label:'100 g',quantity:100},{label:'150 g',quantity:150},{label:'200 g',quantity:200}],
+      estimateNotes:'Pieczona rolada z piersi kurczaka z nadzieniem z pieczarek, bez sera, boczku, panierki i sosu. Szacunek na 100 g GOTOWEJ rolady: 80 g upieczonej piersi bez skóry, 18 g ugotowanych pieczarek, 1,5 g oleju rzepakowego pozostałego po przygotowaniu, 0,1 g czosnku suszonego, 0,1 g pieprzu i 0,3 g soli. Pieczarki po obróbce oszacowano tabelą gotowanych pieczarek; tłuszcz doliczono osobno. Proporcje nadzienia, ilość oleju i odparowanie zmieniają wynik. Waż całą gotową roladę lub jej plastry, razem z farszem.',
+      recipeSources:[source('chickenRoasted'),source('mushroomsCooked'),source('garlicPowder'),source('pepper')],
+    }),
+    make('roasted-chicken-breast','Pierś z kurczaka pieczona z przyprawami',[
+      part(generic('chickenRoasted'),98.5),part(generic('garlicPowder'),.3),
+      part(generic('paprika'),.3),part(generic('pepper'),.1),part({...zero,salt:100},.8),
+    ],100,{
+      aliases:['pierś pieczona','piers pieczona','pieczony kurczak','kurczak pieczony','pierś z przyprawą do kurczaka','czosnek sól pieprz'],
+      servingSizes:[{label:'100 g',quantity:100},{label:'150 g',quantity:150},{label:'200 g',quantity:200}],
+      estimateNotes:'Pierś z kurczaka bez skóry, pieczona z przyprawą do kurczaka, czosnkiem, solą i pieprzem. Szacunek na 100 g GOTOWEGO mięsa z przyprawami: 98,5 g upieczonej piersi, 0,3 g czosnku suszonego, 0,3 g papryki, 0,1 g pieprzu i 0,8 g soli łącznie. Nie znamy marki mieszanki, więc przyprawę do kurczaka zastąpiono takim orientacyjnym składem; sól z mieszanki jest już wliczona. Wariant bez panierki, sosu i dodanego oleju. Olej lub masło użyte do pieczenia dopisz osobno. Waż gotowe mięso po pieczeniu, nie surową pierś.',
+      recipeSources:[source('chickenRoasted'),source('garlicPowder'),source('paprika'),source('pepper')],
+    }),
+    make('boiled-potatoes','Ziemniaki gotowane',[
+      part(base('potato'),100),
+    ],100,{
+      // Promote the existing potato entry to the ready-to-log list without
+      // creating a duplicate in search or changing its established nutrition.
+      id:'base:potato',
+      aliases:['ziemniaki','ziemniaki gotowane','kartofle','ziemniaki bez masła'],
+      servingSizes:[{label:'150 g',quantity:150},{label:'200 g',quantity:200},{label:'300 g',quantity:300}],
+      estimateNotes:'Porcja ugotowanych ziemniaków bez dodatku masła, śmietany, oleju i sosu. Wartości tej samej pozycji z podstawowej bazy są podane na 100 g gotowych ziemniaków. Waż ziemniaki po ugotowaniu i odcedzeniu. Dodane tłuszcze i sól zapisuj osobno; odmiana ziemniaków i zawartość wody wpływają na wynik.',
+      recipeSources:[{name:'USDA: ziemniaki gotowane, bez soli',url:'https://fdc.nal.usda.gov/food-details/170438/nutrients'}],
+    }),
     make('cocoa-crumble-cheesecake','Sernik z kakaową kruszonką (bez rodzynek)',[
       part(pilosQuark,1000),part(generic('flour'),400),part(favorite('laciate-butter'),400),
       part(generic('sugar'),280),part(base('egg'),250),part(generic('eggYolk'),34),

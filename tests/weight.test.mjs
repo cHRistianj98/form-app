@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {formatWeight, parseWeight, stepWeight, weightError, weightRange} from '../src/weight.js';
+import {formatWeight, parseWeight, stepWeight, weightError, weightRange, weightJourney} from '../src/weight.js';
 import worker from '../worker/index.js';
 import {DEFAULT_PROFILE} from '../src/profile.js';
 
@@ -25,6 +25,18 @@ test('weight formatting retains the second decimal in readings and changes', () 
   assert.equal(formatWeight(93.4), '93,4');
   assert.equal(formatWeight(93), '93');
   assert.equal(formatWeight(93.45 - 85.2), '8,25');
+});
+
+test('weight journey reports actual change and direction for loss, gain, unchanged and reached goals',()=>{
+  const rising=weightJourney(93,85,94.7);
+  assert.equal(rising.change,1.7);assert.equal(rising.progress,0);assert.equal(rising.reached,false);
+  assert.equal(formatWeight(rising.remaining),'9,7');
+  assert.deepEqual(weightJourney(93,85,93),{change:0,reached:false,progress:0,remaining:8});
+  assert.deepEqual(weightJourney(93,85,92),{change:-1,reached:false,progress:12.5,remaining:7});
+  assert.deepEqual(weightJourney(93,85,84),{change:-9,reached:true,progress:100,remaining:0});
+  assert.deepEqual(weightJourney(85,93,90),{change:5,reached:false,progress:62.5,remaining:3});
+  assert.equal(weightJourney(85,85,85).reached,true);
+  assert.equal(weightJourney(85,85,86).reached,false);
 });
 
 test('fine adjustments use hundredths without floating-point drift or leaving bounds', () => {

@@ -35,6 +35,27 @@
       ],
       "subject": "Polish tomato soup with cooked noodles, ivory ceramic bowl on a dark navy tabletop. The recipe used in the app excludes cream.",
       "prompt": "Use case: photorealistic-natural. Asset type: square food photograph thumbnail for a dark navy-blue Polish nutrition diary. Primary request: Polish homemade tomato soup pomidorowa with cooked small thin egg noodles visibly mixed into the soup, not dry pasta. Rich warm red-orange tomato broth, lightly creamy appearance without a cream swirl, restrained natural surface sheen. Composition: one complete round ivory ceramic soup bowl centered, overhead view, clean margins, soup and noodles clearly legible at 64px. Background: plain dark charcoal navy tabletop matching a dark blue nutrition app. Soft natural food-photography lighting, appetizing realistic homemade textures. No meat chunks, rice, chunky raw tomatoes, croutons, cheese topping, basil leaves, fruit, utensils, props, napkins, people, hands, text, logos or watermark. Generate one square image, not a collage."
+    },
+    {
+      "files": [
+        "/foods/dish-chicken-mushroom-roulade.webp"
+      ],
+      "subject": "Roasted chicken breast roulade stuffed with mushrooms only.",
+      "prompt": "Use case: photorealistic-natural. Asset type: square food thumbnail for a Polish nutrition diary with a dark navy UI. One complete ivory ceramic dinner plate centered on a plain dark charcoal navy tabletop. Close overhead three-quarter view, with clean margins and realistic soft natural lighting. Appetizing homemade food photography, readable at 64px. No text, logos, watermarks, utensils, napkins, hands, people or unrelated props. One square image, no collage. Subject: Polish roasted chicken breast roulade stuffed with finely chopped sautéed brown mushrooms (pieczarki). Three thick round slices neatly arranged with one small uncut end piece behind them; slices clearly reveal pale cooked chicken wrapped around a brown mushroom filling in a spiral. Lightly golden roasted exterior, moist fully cooked ivory meat. No cheese, spinach, bacon, ham, breading, sauce, potato or vegetables. The filling is mushrooms only."
+    },
+    {
+      "files": [
+        "/foods/dish-boiled-potatoes.webp"
+      ],
+      "subject": "Plain peeled boiled potatoes without added fats.",
+      "prompt": "Use case: photorealistic-natural. Asset type: square food thumbnail for a Polish nutrition diary with a dark navy UI. One complete ivory ceramic dinner plate centered on a plain dark charcoal navy tabletop. Close overhead three-quarter view, with clean margins and realistic soft natural lighting. Appetizing homemade food photography, readable at 64px. No text, logos, watermarks, utensils, napkins, hands, people or unrelated props. One square image, no collage. Subject: peeled boiled potatoes, five to six natural medium potato pieces, some halved, soft pale warm yellow color and subtly crumbly cooked edges. A simple plate of plain Polish boiled potatoes. No butter, oil, cream, herbs, parsley, dill, sauce, meat or additional garnish. Do not show fried or roasted potatoes, crispy browned edges, potato skins, mashed potatoes or french fries."
+    },
+    {
+      "files": [
+        "/foods/dish-roasted-chicken-breast.webp"
+      ],
+      "subject": "Roasted skinless chicken breast with garlic, chicken seasoning, salt and pepper.",
+      "prompt": "Use case: photorealistic-natural. Asset type: square food thumbnail for a Polish nutrition diary with a dark navy UI. One complete ivory ceramic dinner plate centered on a plain dark charcoal navy tabletop. Close overhead three-quarter view, with clean margins and realistic soft natural lighting. Appetizing homemade food photography, readable at 64px. No text, logos, watermarks, utensils, napkins, hands, people or unrelated props. One square image, no collage. Subject: one oven-roasted boneless skinless chicken breast, lightly coated with paprika-based chicken seasoning, dried garlic, salt and black pepper. Three thick slices cut from one end reveal fully cooked moist white chicken meat, arranged next to the remaining breast. The surface is warm golden and lightly speckled with paprika, garlic and pepper. No stuffing, mushrooms, cheese, breading, cream, sauce, potatoes, vegetables or green garnish."
     }
   ]
 }

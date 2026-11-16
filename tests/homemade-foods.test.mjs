@@ -13,8 +13,8 @@ const favorite=id=>FAVORITE_FOODS.find(f=>f.id===`favorite:${id}`);
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-9,`${a} != ${b}`);
 const entry=(food,grams,day='2026-11-15')=>({id:`entry:${food.id}`,food,grams,day,meal:'lunch'});
 
-test('six homemade dishes are discoverable by Polish names, aliases and gram quantities',()=>{
-  assert.equal(HOMEMADE_FOODS.length,6);
+test('nine ready dishes are discoverable by Polish names, aliases and gram quantities',()=>{
+  assert.equal(HOMEMADE_FOODS.length,9);
   for(const food of HOMEMADE_FOODS) {
     assert.equal(food.unit,'g');assert.equal(foodBasis(food),100);
     assert.equal(foodOptions(food.name)[0].id,food.id);
@@ -32,6 +32,32 @@ test('six homemade dishes are discoverable by Polish names, aliases and gram qua
   assert.equal(foodOptions('sernik krolewski')[0].id,get('cocoa-crumble-cheesecake').id);
   assert.equal(foodOptions('pomidorowka')[0].id,get('tomato-soup-noodles').id);
   assert.equal(foodOptions('lidlomix pomidorowa')[0].id,get('tomato-soup-noodles').id);
+});
+
+test('mushroom roulade and seasoned breast use cooked chicken and scale finished portions',()=>{
+  const roll=get('chicken-mushroom-roulade'),breast=get('roasted-chicken-breast');
+  near(roll.kcal,165*.8+28*.18+884*.015+331*.001+251*.001);
+  near(scaleFood(roll,150).kcal,roll.kcal*1.5);
+  assert.match(roll.estimateNotes,/nadzieniem z pieczarek/);
+  assert.match(roll.estimateNotes,/GOTOWEJ rolady/);
+  assert.match(roll.estimateNotes,/bez sera, boczku, panierki/);
+  near(breast.kcal,165*.985+331*.003+282*.003+251*.001);
+  near(scaleFood(breast,175).kcal,breast.kcal*1.75);
+  assert.match(breast.estimateNotes,/sól z mieszanki jest już wliczona/);
+  assert.match(breast.estimateNotes,/nie surową pierś/);
+  for(const food of [roll,breast])assert.ok(food.recipeSources.some(s=>s.url.includes('/171477/')));
+  assert.equal(foodOptions('rolada')[0].id,roll.id);
+  assert.equal(foodOptions('piers pieczona')[0].id,breast.id);
+});
+
+test('boiled potatoes reuse the established food identity, nutrients and new image without duplicate search results',()=>{
+  const potato=HOMEMADE_FOODS.find(f=>f.id==='base:potato');
+  const base=BASE_FOODS.find(f=>f.id===potato.id);
+  assert.deepEqual(foodOptions('ziemniaki gotowane').map(f=>f.id),['base:potato']);
+  for(const key of ['kcal','protein','carbs','fat','salt'])assert.equal(potato[key],base[key],key);
+  near(scaleFood(potato,200).kcal,174);
+  assert.equal(foodImage({id:'base:potato'}),'/foods/dish-boiled-potatoes.webp');
+  assert.match(potato.estimateNotes,/po ugotowaniu i odcedzeniu/);
 });
 
 test('cheesecake includes cocoa crumble and Pilos bucket curd with explicit assumptions and no raisins',()=>{

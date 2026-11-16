@@ -1,6 +1,14 @@
 export const MIN_WEIGHT = 20;
 export const MAX_WEIGHT = 500;
 
+export function weightJourney(start,target,current) {
+  const change=Math.round((current-start)*100)/100;
+  const direction=Math.sign(target-start);
+  const reached=direction===0?Math.abs(current-target)<.005:direction*(current-target)>=-.005;
+  const progress=direction===0?(reached?100:0):Math.max(0,Math.min(100,(current-start)/(target-start)*100));
+  return {change,reached,progress,remaining:reached?0:Math.abs(current-target)};
+}
+
 // Keep decimal input strict: Number() alone also accepts exponents and hex.
 export function parseWeight(value) {
   const text = String(value ?? '').trim();

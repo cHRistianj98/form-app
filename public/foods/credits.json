@@ -54,6 +54,15 @@
     "changes": "Resized and converted to WebP; cropped in the interface."
   },
   "potato": {
+    "image": "/foods/dish-boiled-potatoes.webp",
+    "title": "Ziemniaki gotowane",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "potato-original": {
     "image": "/foods/potato.webp",
     "title": "Salzkartoffeln.jpg",
     "author": "MarkusHagenlocher",
@@ -637,5 +646,32 @@
     "source": "https://essensey.com/witaminy/witamina-d3-forte-w-90-kapsulkach.html",
     "licenseUrl": "https://essensey.com/witaminy/witamina-d3-forte-w-90-kapsulkach.html",
     "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
+  },
+  "dish:chicken-mushroom-roulade": {
+    "image": "/foods/dish-chicken-mushroom-roulade.webp",
+    "title": "Domowe danie: chicken-mushroom-roulade",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "dish:boiled-potatoes": {
+    "image": "/foods/dish-boiled-potatoes.webp",
+    "title": "Domowe danie: boiled-potatoes",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "dish:roasted-chicken-breast": {
+    "image": "/foods/dish-roasted-chicken-breast.webp",
+    "title": "Domowe danie: roasted-chicken-breast",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
   }
 }

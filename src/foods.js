@@ -21,7 +21,7 @@ export const BASE_FOODS = [
   f('chicken','Pierś z kurczaka, surowa',110,23.1,0,1.2,{salt:0.19,potassium:256}),
   f('rice','Ryż biały, suchy',360,7.1,79.5,0.7,{fiber:1.3}),
   f('ricec','Ryż biały, ugotowany',130,2.7,28.2,0.3,{fiber:0.4}),
-  f('potato','Ziemniaki, gotowane',87,1.9,20.1,0.1,{fiber:1.8,potassium:379,vitaminC:7}),
+  f('potato','Ziemniaki, gotowane',87,1.9,20.1,0.1,{fiber:1.8,potassium:379,vitaminC:7,image:'/foods/dish-boiled-potatoes.webp'}),
   f('salmon','Łosoś',208,20.4,0,13.4,{b12:3.2,vitaminD:10.9,potassium:363}),
   f('oats','Płatki owsiane',389,16.9,66.3,6.9,{fiber:10.6,iron:4.7,magnesium:177}),
   f('apple','Jabłko',52,0.3,13.8,0.2,{fiber:2.4,sugars:10.4,potassium:107}),
