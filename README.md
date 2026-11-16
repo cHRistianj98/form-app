@@ -4,7 +4,7 @@ Responsywna aplikacja React + Vite + Cloudflare Pages Functions + D1. Jeden uży
 
 ## Co działa
 
-- Dziennik posiłków: śniadanie, obiad, kolacja, przekąski; każdy składnik dodajesz osobno z ilością w g lub ml, możesz poprawić porcję lub ją usunąć.
+- Dziennik posiłków: śniadanie, obiad, kolacja i przekąski w zwiniętych wierszach ze zdjęciem, kaloriami i przyciskiem dodawania. Strzałka rozwija składniki z edycją i usuwaniem. Wyszukiwarka jedzenia pokazuje zdjęcie i nazwę, a osobna strzałka odsłania wartości. Kliknięcie lub dotknięcie pola ilości zaznacza całą liczbę do zastąpienia; gramy i ml można wpisać przecinkiem albo kropką.
 - **43 podstawowe produkty ze zdjęciami WebP**, **17 produktów z listy użytkownika ze zdjęciami**, **9 gotowych dań liczonych w gramach** i produkty własne z etykiety. Wśród dań są rolada z piersi kurczaka z pieczarkami, pieczona pierś z przyprawami, ziemniaki gotowane, sernik z kakaową kruszonką bez rodzynek oraz pomidorowa z makaronem bez śmietany. Ziemniaki zachowują identyfikator z bazy podstawowej, bez duplikatu w wyszukiwarce. Wartości produktów bazowych i dań są orientacyjne; produkty z listy zachowują podaną tabelę. Wyszukiwanie marki i nazwy przez **Open Food Facts** z przycisku (bez żądań na każde naciśnięcie klawisza).
 - Kalorie, białko, węglowodany, tłuszcze, błonnik, cukry, nasycone kwasy tłuszczowe, sól, wapń, żelazo, potas, magnez, witamina C, D, B12 — te składniki, dla których produkt ma dane. Brak danych = `—`, nigdy nie jest prezentowany jako zero.
 - Kroki, trening siłowy, bieganie, spacer, rower, inny trening, szacunkowy wydatek energetyczny; mechanizm ograniczający podwójne liczenie kroków z biegu i spaceru.
@@ -126,6 +126,8 @@ Autorzy, źródła, licencje i informacja o konwersji: `public/foods/credits.jso
 ## Produkty z listy użytkownika
 
 `src/favoriteFoods.js` zawiera 17 pozycji: wcześniejsze siedem produktów oraz masło Łaciate, orzechy Alesto, Olimp Whey Isolate 95, mąkę Basia, kakao, wędlinę z indyka, dwa aerozole śmietany, Plusssz 100% Multiwitamina oraz sos Mutti do pizzy z czosnkiem i bazylią. Są dostępne od razu w zakładce Produkty oraz w wyszukiwarce dodawania jedzenia, niezależnie od rekordów własnych w D1. Wyszukiwanie obsługuje także `aliases`, a `servingSizes` daje szybki wybór porcji.
+
+Gouda Hochland ma plaster **16 g**, a ser wysokobiałkowy Milbona plaster **14 g**, zgodnie z informacją użytkownika. Przełącznik „Gramy / Plastry” i szybkie porcje ułatwiają wpisywanie; podgląd oraz dziennik liczą rzeczywiste gramy, nadal według tabeli na 100 g. `sliceGrams` jest walidowane i zachowywane przez API bez migracji D1. Starsze wpisy tych serów mogą korzystać z nowej porcji po identyfikatorze, bez zmiany zapisanych wartości odżywczych.
 
 Kalorie, makro i pozostałe podane składniki pochodzą z tabel użytkownika; zdjęcie ani dane z internetu nie zastępują tych wartości. Dla mleka i napoju podstawą jest 100 ml, dla żywności 100 g. Plusssz ma `unit: 'tablet'`, `basisQuantity: 1` i witaminy na jedną tabletkę. Jego niepodane kalorie i makro są `null`. Witaminy mają stałe jednostki w `src/nutrients.js`: mg albo µg. Formularz obsługuje tabletki, g i ml, pokazuje skład porcji i zapisuje jednostkę oraz wszystkie witaminy w `food_json`. Kolumna `entries.grams` nadal przechowuje liczbową ilość porcji dla zgodności ze starymi danymi; nie przeliczamy ml na g i nie zmieniamy schematu D1. Starsze produkty bez jednostki pozostają w gramach.
 

@@ -103,6 +103,10 @@ test('Worker saves and reloads product snapshots with units, images, qualifiers 
   for(const change of [{unit:'l'},{fatLessThan:'true'},{imageFit:'invalid'}]) {
     assert.equal((await ask('entries','POST',{id:'entry:bad',day:'2026-11-14',meal:'breakfast',grams:100,food:{...custom,...change}})).status,400);
   }
+  const cheese=FAVORITE_FOODS.find(food=>food.id==='favorite:hochland-gouda');
+  for(const change of [{sliceGrams:0},{sliceGrams:-16},{sliceGrams:'16'},{sliceGrams:100001},{unit:'ml'}]) {
+    assert.equal((await ask('entries','POST',{id:'entry:bad-slice',day:'2026-11-14',meal:'breakfast',grams:32,food:{...cheese,...change}})).status,400);
+  }
   const tablet=FAVORITE_FOODS.find(food=>food.unit==='tablet');
   const record={id:'entry:tablet',day:'2026-11-14',meal:'breakfast',grams:1,food:tablet};
   assert.equal((await ask('entries','POST',{...record,grams:0.5})).status,400);

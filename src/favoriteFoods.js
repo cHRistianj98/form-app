@@ -11,8 +11,14 @@ const labelled = (...args) => ({...Object.fromEntries(NUTRIENT_FIELDS.map(key=>[
 export const FAVORITE_FOODS = [
   product('lidl-protein-milk','Mleko wysokobiałkowe','Lidl — Pilos High Protein','ml',54,8,4.7,0.5,{fatLessThan:true}),
   product('piatnica-cream-18','Śmietana 18%','Piątnica','g',191,2.5,4.8,18),
-  product('hochland-gouda','Gouda','Hochland','g',243,16,6.6,17),
-  product('lidl-protein-cheese','Ser wysokobiałkowy','Lidl — Milbona High Protein','g',198,31,0,8.2),
+  product('hochland-gouda','Gouda','Hochland','g',243,16,6.6,17,{
+    sliceGrams:16,aliases:['serek topiony gouda','gouda w plastrach'],
+    servingSizes:[{label:'1 plaster — 16 g',quantity:16},{label:'2 plastry — 32 g',quantity:32},{label:'3 plastry — 48 g',quantity:48}],
+  }),
+  product('lidl-protein-cheese','Ser wysokobiałkowy','Lidl — Milbona High Protein','g',198,31,0,8.2,{
+    sliceGrams:14,aliases:['ser high protein','ser wysokobiałkowy w plastrach'],
+    servingSizes:[{label:'1 plaster — 14 g',quantity:14},{label:'2 plastry — 28 g',quantity:28},{label:'3 plastry — 42 g',quantity:42}],
+  }),
   product('lidl-protein-cup','High Protein, kubek','Lidl','g',71,10,6.7,0.3,{
     imageNote:'Zdjęcie poglądowe serii High Protein. Smak kubka nie został określony.',
   }),

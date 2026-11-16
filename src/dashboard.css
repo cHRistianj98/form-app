@@ -14,7 +14,7 @@
 .balance-gauge-track { stroke:var(--raised); }
 .balance-gauge-fill { stroke:currentColor; transition:stroke-dasharray .3s ease; }
 .balance-gauge.over { color:#f39f9c; }
-.balance-gauge-value { position:absolute; inset:0 0 15%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+.balance-gauge-value { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; text-align:center; }
 .balance-gauge-value strong { color:var(--text); font-size:43px; line-height:1.15; font-weight:800; letter-spacing:-.06em; font-variant-numeric:tabular-nums; }
 .balance-gauge.over .balance-gauge-value strong { color:#f39f9c; }
 .balance-gauge-value>span { color:var(--muted); font-size:13px; }
@@ -23,12 +23,12 @@
 .balance-target strong { color:var(--text); }
 .balance-macros { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; border-top:1px solid var(--border); padding-top:18px; }
 .balance-macro { min-width:0; }
-.balance-macro>div:first-child { display:flex; align-items:center; justify-content:space-between; gap:6px; font-size:13px; color:var(--muted); margin-bottom:8px; }
+.balance-macro>div:first-child { position:relative; display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px; color:var(--muted); margin-bottom:8px; }
 .balance-macro-track { height:7px; background:var(--raised); border-radius:10px; overflow:hidden; }
 .balance-macro-track>span { display:block; height:100%; background:var(--accent); border-radius:10px; transition:width .25s ease; }
 .balance-macro.done .balance-macro-track>span { background:var(--success); }
-.balance-macro.done>div:first-child>svg { color:var(--success); flex-shrink:0; }
-.balance-macro p { color:var(--muted); font-size:12px; margin-top:8px; line-height:1.5; font-variant-numeric:tabular-nums; }
+.balance-macro.done>div:first-child>svg { position:absolute; right:0; color:var(--success); flex-shrink:0; }
+.balance-macro p { text-align:center; color:var(--muted); font-size:12px; margin-top:8px; line-height:1.5; font-variant-numeric:tabular-nums; }
 .balance-macro p>strong { color:var(--text); font-size:15px; }
 .balance-notes { color:var(--muted); font-size:12px; margin-top:16px; }
 .balance-notes summary { cursor:pointer; }
@@ -40,14 +40,18 @@
 @container daily-supplements (min-width:440px) {
   .daily-tools .supplement-panel-compact .supplement-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
-.weight-summary.panel { padding:20px; border-radius:19px; min-width:0; }
-.weight-summary>summary { display:grid; grid-template-columns:minmax(0,1fr) auto 20px; gap:16px; align-items:center; cursor:pointer; list-style:none; }
+.weight-summary.panel { padding:20px; border-radius:19px; min-width:0; background:linear-gradient(125deg,#162942,var(--surface) 70%); }
+.weight-summary>summary { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) 20px; gap:16px; align-items:center; cursor:pointer; list-style:none; }
 .weight-summary>summary::-webkit-details-marker { display:none; }
 .weight-summary>summary::marker { content:''; }
 .weight-summary>summary>div>span { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
 .weight-summary>summary>div>strong { font-size:27px; color:var(--text); line-height:1.2; letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
 .weight-summary>summary>div>strong>small { font-size:14px; font-weight:600; }
-.weight-summary>summary .weight-target { background:#1d3557; border:1px solid #3c6295; border-radius:12px; padding:9px 13px; }
+.weight-summary>summary .weight-current { text-align:center; }
+.weight-summary>summary .weight-current>span { display:flex; align-items:center; justify-content:center; gap:5px; }
+.weight-summary>summary .weight-current>span>svg { color:var(--accent); }
+.weight-summary>summary .weight-current>strong { font-size:32px; font-weight:800; }
+.weight-summary>summary .weight-target { text-align:center; background:#1d3557; border:1px solid #3c6295; border-radius:12px; padding:9px 13px; }
 .weight-summary>summary .weight-target>span { color:#bed6f8; font-size:11px; margin-bottom:2px; }
 .weight-summary>summary .weight-target>strong { font-size:20px; color:#d9eaff; }
 .weight-expand-icon { color:var(--muted); transition:transform .2s; }
@@ -86,4 +90,6 @@
   .balance-side strong { font-size:18px; }
   .balance-gauge-value strong { font-size:30px; }
   .balance-macros { gap:9px; }
+  .balance-macro>div:first-child { font-size:11px; }
+  .balance-macro.done>div:first-child>svg { width:12px; height:12px; }
 }

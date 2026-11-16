@@ -27,6 +27,9 @@ import SupplementsPage, {SupplementPanel} from './SupplementsPage.jsx';
 import {isSupplement, supplementLogId} from './supplements.js';
 import DailyBalance from './DailyBalance.jsx';
 import WeightSummary from './WeightSummary.jsx';
+import QuantityInput from './QuantityInput.jsx';
+import {sliceGrams,quantityInBaseUnits} from './foodPortions.js';
+import './food-journal.css';
 
 const nav = [
   {id:'dashboard',label:'Pulpit',icon:BarChart3},
@@ -61,17 +64,21 @@ function Topline({day,setDay,view}) {
   return <div className="topline"><div className="topline-left"><span className="today-marker"><ClipboardList size={15} aria-hidden="true"/> TWÓJ DZIENNIK</span><h1>{({dashboard:'Dzień dobry! 👋',foods:'Baza produktów',activity:'Twoja aktywność',progress:'Statystyki żywienia',supplements:'Suplementy',settings:'Ustawienia'})[view]}</h1><p className="page-subtitle">{({dashboard:'Każdy dobry wybór przybliża Cię do celu.',foods:'Wszystko, co jesz, w jednym miejscu.',activity:'Każdy ruch ma znaczenie.',progress:'Twój bilans dnia i tygodnia, makro i witaminy.',supplements:'Zapisuj przyjęte kapsułki i sprawdzaj sumy składników.',settings:'Dopasuj licznik do siebie.'})[view]}</p></div><div className="date-nav"><button className="icon-button" onClick={()=>setDay(shiftDay(day,-1))} aria-label="Poprzedni dzień"><ChevronLeft size={19}/></button><div className="date-text"><CalendarDays size={16}/><span>{day===today?'Dzisiaj':dateTitle(day)}</span></div><button className="icon-button" onClick={()=>setDay(shiftDay(day,1))} disabled={day>=today} aria-label="Następny dzień"><ChevronRight size={19}/></button></div></div>;
 }
 function MealCard({meal,entries,onAdd,onEdit,onRemove}) {
+  const [expanded,setExpanded]=useState(false);
   const Icon = mealIcons[meal.id];
   const mealNutrition=sumNutrition(entries);
-  return <div className="meal-card">
-    <div className="meal-head"><div className="meal-name">
+  return <div className={`meal-card meal-collapsible ${expanded?'expanded':''}`}>
+    <div className="meal-head"><button className="meal-toggle" aria-expanded={expanded} aria-controls={`meal-entries-${meal.id}`} onClick={()=>setExpanded(!expanded)}><span className="meal-name">
       {mealImages[meal.id]?<img className="meal-photo" src={mealImages[meal.id]} alt="" width="76" height="76" decoding="async"/>:<IconBadge Icon={Icon} color={meal.id}/>}
-      <div><h3>{meal.name}</h3><span>{entries.length?`${totalLabel(mealNutrition,'kcal',0)} kcal, ${entries.length} ${entries.length===1?'produkt':'produktów'}`:'Jeszcze nic nie dodano'}</span></div>
-    </div><button className="small-add" onClick={()=>onAdd(meal.id)} aria-label={`Dodaj do ${meal.name}`}><Plus size={20}/></button></div>
-    {entries.map(e=>{const n=scaleFood(e.food,e.grams);return <div className="meal-entry" key={e.id}>
+      <span className="meal-summary-text"><strong>{meal.name}</strong><span>{entries.length?`${totalLabel(mealNutrition,'kcal',0)} kcal · ${entries.length} ${entries.length===1?'produkt':'produktów'}`:'0 kcal · Brak wpisów'}</span></span>
+    </span><ChevronDown className="meal-expand-icon" size={18}/></button><button className="small-add" onClick={()=>onAdd(meal.id)} aria-label={`Dodaj do ${meal.name}`}><Plus size={22}/></button></div>
+    <div id={`meal-entries-${meal.id}`} className="meal-contents" hidden={!expanded}>
+    {expanded&&entries.map(e=>{const n=scaleFood(e.food,e.grams);return <div className="meal-entry" key={e.id}>
       <button className="entry-main" onClick={()=>onEdit(e)}><FoodPhoto food={e.food}/><span className="entry-text"><strong>{e.food.name}</strong><small>{fmt(e.grams,1)} {foodUnit(e.food)}{e.food.brand?`, ${displayText(e.food.brand)}`:''}</small></span><span className="entry-calories">{nutrientLabel(n.kcal,false,0)} <small>kcal</small></span><MacroValues values={n} food={e.food} className="entry-macros"/></button>
       <button className="remove-button" onClick={()=>onRemove(e)} aria-label={`Usuń ${e.food.name}`}><Trash2 size={17}/></button>
     </div>})}
+    {expanded&&!entries.length&&<div className="meal-empty"><p>Dodaj pierwszy produkt do tego posiłku.</p><button className="button outline compact" onClick={()=>onAdd(meal.id)}><Plus size={16}/> Dodaj jedzenie</button></div>}
+    </div>
   </div>;
 }
 function FoodRow({food,onClick,extra}) {
@@ -84,6 +91,14 @@ function FoodRow({food,onClick,extra}) {
     {extra || <Plus size={18} className="food-row-plus"/>}
     <MacroValues values={food} food={food}/>
   </button>;
+}
+function FoodSearchResult({food,onSelect}) {
+  const [expanded,setExpanded]=useState(false);
+  const detailsId=React.useId();
+  return <div className={`food-result ${expanded?'expanded':''}`}>
+    <div className="food-result-head"><button className="food-result-select" onClick={()=>onSelect(food)}><FoodPhoto food={food}/><strong>{food.name}</strong></button><button className="food-result-expand" aria-label={`${expanded?'Zwiń':'Rozwiń'} szczegóły: ${food.name}`} aria-expanded={expanded} aria-controls={detailsId} onClick={()=>setExpanded(!expanded)}><ChevronDown size={18}/></button></div>
+    {expanded&&<div id={detailsId} className="food-result-details"><div className="food-result-description"><span>{displayText(food.brand||food.source)}<small>Na {foodBasisLabel(food)}</small></span><strong>{nutrientLabel(food.kcal,false,0)} <small>kcal</small></strong></div><MacroValues values={food} food={food}/><button className="food-result-add" onClick={()=>onSelect(food)}>Podaj ilość <ArrowRight size={16}/></button></div>}
+  </div>;
 }
 function FavoriteFoodsPanel({onSelect}) {
   return <section className="panel favorite-foods-panel">
@@ -105,7 +120,8 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
   const [busy,setBusy]=useState(false);
   const [remoteError,setRemoteError]=useState(false);
   const [selected,setSelected]=useState(()=>enrichGenericFood(editing?.food||initialFood||null));
-  const [grams,setGrams]=useState(String(editing?.grams??foodBasis(editing?.food||initialFood||{})));
+  const [amount,setAmount]=useState(String(editing?.grams??foodBasis(editing?.food||initialFood||{})));
+  const [quantityMode,setQuantityMode]=useState('base');
   const [meal,setMeal]=useState(editing?.meal||initialMeal);
   const [custom,setCustom]=useState(false);
   const [saving,setSaving]=useState(false);
@@ -118,19 +134,26 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
     catch {setRemoteError(true)} finally {setBusy(false)}
   }
   const options=useMemo(()=>foodOptions(query,personal.filter(food=>!isSupplement(food)),remote),[query,personal,remote]);
-  const scaled=selected?scaleFood(selected,parseNum(grams)):null;
+  const sliceSize=sliceGrams(selected);
+  const quantity=quantityInBaseUnits(amount,selected,quantityMode);
+  const scaled=selected?scaleFood(selected,quantity||0):null;
   const nutritionInfo=genericNutritionInfo(selected);
   const nutritionGap=genericNutritionGap(selected);
   const recipeSources=HOMEMADE_FOODS.find(food=>food.id===selected?.id)?.recipeSources||[];
-  function selectFood(food){setSelected(enrichGenericFood(food));setGrams(String(foodBasis(food)));}
-  async function submit(e){e.preventDefault();if(!selected||parseNum(grams)<=0||parseNum(grams)>100000)return;setSaving(true);try{await onAdd({id:editing?.id||uuid('entry'),day,meal,grams:parseNum(grams),food:selected});onClose();}finally{setSaving(false)}}
+  function selectFood(food){setSelected(enrichGenericFood(food));setAmount(String(foodBasis(food)));setQuantityMode('base');}
+  function changeQuantityMode(mode){
+    if(mode===quantityMode)return;
+    setAmount(String(mode==='slice'?(quantity&&Number.isInteger(quantity/sliceSize)?quantity/sliceSize:1):(quantity||foodBasis(selected))));
+    setQuantityMode(mode);
+  }
+  async function submit(e){e.preventDefault();if(!selected||quantity==null)return;setSaving(true);try{await onAdd({id:editing?.id||uuid('entry'),day,meal,grams:quantity,food:selected});onClose();}finally{setSaving(false)}}
   async function saveCustom(e){e.preventDefault();if(!form.name.trim())return;
     const product={id:uuid('own'),name:form.name.trim(),brand:form.brand.trim(),unit:form.unit,source:'Własny'};
     for(const key of ['kcal','protein','carbs','fat',...NUTRIENTS.map(x=>x[0])]){if(form[key]!==''&&form[key]!=null)product[key]=parseNum(form[key]);}
     for(const k of ['kcal','protein','carbs','fat'])if(product[k]===undefined)product[k]=null;
     setSaving(true);try{await onSaveFood(product);selectFood(product);setCustom(false);}finally{setSaving(false)}
   }
-  return <Modal title={editing?'Edytuj posiłek':selected?'Dodaj produkt':custom?'Nowy produkt':'Dodaj jedzenie'} subtitle={selected?`Wpisz ilość produktu w ${foodUnit(selected)}.`:'Wyszukaj produkt lub dodaj własne wartości.'} onClose={onClose} wide>
+  return <Modal title={editing?'Edytuj posiłek':selected?'Dodaj produkt':custom?'Nowy produkt':'Dodaj jedzenie'} subtitle={selected?(sliceSize?'Podaj liczbę plastrów lub masę w gramach.':`Wpisz ilość produktu w ${foodUnit(selected)}.`):'Wyszukaj produkt lub dodaj własne wartości.'} onClose={onClose} wide>
     {selected?<form onSubmit={submit}>
       <div className="selected-food">
         <FoodPhoto food={selected} size="big"/>
@@ -139,11 +162,13 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
       </div>
       {(selected.source==='Twoja tabela'||selected.imageNote)&&<p className="food-product-note">{selected.source==='Twoja tabela'?'Kalorie i makro z Twojej tabeli. ':''}{selected.imageNote}</p>}
       {nutritionGap&&<p className="food-product-note">{nutritionGap} Nieznane składniki pozostają bez wartości.</p>}
+      {sliceSize&&<div className="quantity-unit-toggle" role="group" aria-label="Jednostka porcji"><button type="button" aria-pressed={quantityMode==='base'} onClick={()=>changeQuantityMode('base')}>Gramy</button><button type="button" aria-pressed={quantityMode==='slice'} onClick={()=>changeQuantityMode('slice')}>Plastry</button><span>1 plaster = {sliceSize} g</span></div>}
       <div className="field-row">
-        <label className="field"><span>Ilość ({selected.unit==='tablet'?'tabletki':foodUnit(selected)==='ml'?'mililitry':'gramy'})</span><div className="with-unit"><input type="number" inputMode={selected.unit==='tablet'?'numeric':'decimal'} min={selected.unit==='tablet'?1:0.1} max="100000" step={selected.unit==='tablet'?1:0.1} required value={grams} onChange={e=>setGrams(e.target.value)} autoFocus={allowFieldAutofocus()}/><span>{foodUnit(selected)}</span></div></label>
+        <label className="field"><span>Ilość ({quantityMode==='slice'?'plastry':selected.unit==='tablet'?'tabletki':foodUnit(selected)==='ml'?'mililitry':'gramy'})</span><div className="with-unit"><QuantityInput value={amount} onChange={setAmount} whole={['tablet','capsule'].includes(selected.unit)} min={quantityMode==='slice'?.1/sliceSize:.1} max={quantityMode==='slice'?100000/sliceSize:100000} autoFocus={allowFieldAutofocus()}/><span>{quantityMode==='slice'?'pl.':foodUnit(selected)}</span></div></label>
         <label className="field"><span>Posiłek</span><select value={meal} onChange={e=>setMeal(e.target.value)}>{MEALS.map(m=><option key={m.id} value={m.id}>{m.name}</option>)}</select></label>
       </div>
-      {selected.servingSizes?.length>0&&<div className="serving-presets" aria-label="Szybkie porcje">{selected.servingSizes.map(portion=><button type="button" key={portion.label} aria-pressed={parseNum(grams)===portion.quantity} onClick={()=>setGrams(String(portion.quantity))}>{portion.label}</button>)}</div>}
+      {quantityMode==='slice'&&<p className="portion-equivalence">Porcja: <strong>{quantity==null?'—':fmt(quantity,2)} g</strong></p>}
+      {selected.servingSizes?.length>0&&<div className={`serving-presets ${sliceSize?'slice-presets':''}`} aria-label="Szybkie porcje">{selected.servingSizes.map(portion=><button type="button" key={portion.label} title={portion.label} aria-pressed={quantity===portion.quantity} onClick={()=>{setQuantityMode(sliceSize?'slice':'base');setAmount(String(sliceSize?portion.quantity/sliceSize:portion.quantity));}}>{sliceSize?portion.label.split(' \u2014 ')[0]:portion.label}</button>)}</div>}
       <div className="portion-preview">
         <div className="portion-energy"><strong>{nutrientLabel(scaled.kcal,false,0)}</strong><span>kcal</span></div>
         <MacroValues values={scaled} food={selected}/>
@@ -152,10 +177,10 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
       {selected.estimateNotes&&<details className="recipe-estimate"><summary>Jak policzono to danie?</summary><p>{readableNutritionNote(selected.estimateNotes)}</p><p>Wartości są orientacyjne. Masa po przygotowaniu jest założeniem — inna ilość odparowanej wody zmienia wartości na 100 g.</p><div className="nutrition-sources">{recipeSources.map(s=><a key={s.url} href={s.url} target="_blank" rel="noreferrer">{s.name} ↗</a>)}</div></details>}
       {NUTRIENTS.some(([key])=>selected[key]!=null)&&<details className="food-nutrient-details"><summary>Witaminy i pozostałe składniki tej porcji{nutritionInfo?' — szacunek USDA':''}</summary>{nutritionInfo&&<p className="food-product-note generic-nutrition-note">Szacunek dla: {nutritionInfo.variant}. Brakujące składniki uzupełniono z <a href={nutritionInfo.url} target="_blank" rel="noreferrer">USDA FoodData Central ↗</a>. Wartości zależą od odmiany i przygotowania.</p>}{selected.partialNutrients?.length>0&&<p className="food-product-note generic-nutrition-note">Wartości mogą obejmować tylko znaną część składnika. Nie wszystkie użyte etykiety podają pełny skład; brakujących wartości nie liczymy jako zero.</p>}<div className="micros-grid">{NUTRIENTS.filter(([key])=>selected[key]!=null).map(([key,name,unit])=><div className="micro-item" key={key}><span>{name}</span><strong>{foodNutrientLabel(selected,key,scaled[key],2)} {unit}</strong></div>)}</div></details>}
       {(selected.fatLessThan||selected.upperBoundNutrients?.length>0)&&<p className="help-note fat-bound-note">Dla tego produktu część wartości oznacza górną granicę podaną na etykiecie. Do sumy przyjmujemy tę granicę; kalorie pozostają zgodne z podanymi wartościami. Przy połączeniu granicy z brakami danych używamy ≈.</p>}
-      <div className="modal-actions"><button type="button" className="button ghost" onClick={onClose}>Anuluj</button><button className="button primary" disabled={saving||parseNum(grams)<=0}><Check size={18}/>{saving?'Zapisywanie...':editing?'Zapisz zmiany':'Dodaj do dziennika'}</button></div>
+      <div className="modal-actions"><button type="button" className="button ghost" onClick={onClose}>Anuluj</button><button className="button primary" disabled={saving||quantity==null}><Check size={18}/>{saving?'Zapisywanie...':editing?'Zapisz zmiany':'Dodaj do dziennika'}</button></div>
     </form>:
     custom?<form onSubmit={saveCustom}><p className="help-note">Podawaj wartości <strong>na {foodBasisLabel({unit:form.unit})} produktu</strong>, zgodnie z etykietą. Możesz uzupełnić również mikroskładniki.</p><div className="field-row"><label className="field"><span>Nazwa produktu *</span><input value={form.name} required maxLength={180} placeholder="np. Moje spaghetti" onChange={e=>setForm({...form,name:e.target.value})}/></label><label className="field"><span>Marka (opcjonalnie)</span><input value={form.brand} maxLength={120} placeholder="np. własny przepis" onChange={e=>setForm({...form,brand:e.target.value})}/></label></div><label className="field"><span>Wartości odżywcze podane na</span><select value={form.unit} onChange={e=>setForm({...form,unit:e.target.value})}><option value="g">100 g — masa produktu</option><option value="ml">100 ml — objętość napoju</option><option value="tablet">1 tabletka — skład suplementu</option></select></label><div className="nutrient-editor">{[['kcal','Kalorie','kcal'],...MACRO_PRESENTATION.map(m=>[m.key,m.fullName,'g']),...NUTRIENTS.map(([k,n,u])=>[k,n,u])].map(([key,label,unit])=><label className="field" key={key}><span>{label}</span><div className="with-unit"><input type="number" step="any" min="0" max="100000" placeholder="—" value={form[key]} onChange={e=>setForm({...form,[key]:e.target.value})}/><span>{unit}</span></div></label>)}</div><div className="modal-actions"><button type="button" className="button ghost" onClick={()=>setCustom(false)}>Wróć</button><button className="button primary" disabled={saving}>{saving?'Zapisywanie...':'Zapisz produkt i dodaj'}</button></div></form>:
-    <><div className="search-field"><Search size={20}/><input autoFocus={allowFieldAutofocus()} value={query} placeholder="Szukaj: jajko, cebula, skyr, marka..." onChange={e=>setQuery(e.target.value)}/>{query&&<button onClick={()=>setQuery('')} aria-label="Wyczyść"><X size={17}/></button>}</div><div className="search-meta"><span>{query?'WYNIKI WYSZUKIWANIA':'POPULARNE I TWOJE PRODUKTY'}</span><button className="text-link" onClick={()=>setCustom(true)}><Plus size={15}/> Własny produkt</button></div>{!local&&query.trim().length>=3&&<button className="online-search-button" disabled={busy} onClick={searchOnline}><Search size={16}/>{busy?'Wyszukuję...':'Szukaj też w Open Food Facts'}</button>}{local&&query.length>=3&&<p className="inline-hint">Tryb lokalny: wyszukiwanie online jest dostępne po wdrożeniu do Cloudflare.</p>}{busy&&<p className="inline-hint">Szukam produktów w Open Food Facts...</p>}{remoteError&&<p className="inline-hint">Baza zewnętrzna chwilowo niedostępna. Możesz dodać własny produkt.</p>}<div className="food-results">{options.length?options.map(food=><FoodRow key={food.id} food={food} onClick={selectFood}/>):<div className="empty-search"><Search size={26}/><strong>Brak pasujących produktów</strong><p>Spróbuj innej nazwy lub dodaj własny produkt.</p></div>}</div><div className="source-note"><Info size={15}/> Własne i podstawowe produkty pozostają dostępne. Dane z Open Food Facts mogą być niepełne — sprawdzaj etykiety.</div></>}
+    <><div className="search-field"><Search size={20}/><input autoFocus={allowFieldAutofocus()} value={query} placeholder="Szukaj: jajko, cebula, skyr, marka..." onChange={e=>setQuery(e.target.value)}/>{query&&<button onClick={()=>setQuery('')} aria-label="Wyczyść"><X size={17}/></button>}</div><div className="search-meta food-search-meta"><span>{query?'WYNIKI WYSZUKIWANIA':'POPULARNE I TWOJE PRODUKTY'}</span><button className="new-food-button" onClick={()=>setCustom(true)}><Plus size={17}/><span>Własny produkt</span></button></div>{!local&&query.trim().length>=3&&<button className="online-search-button" disabled={busy} onClick={searchOnline}><Search size={16}/>{busy?'Wyszukuję...':'Szukaj też w Open Food Facts'}</button>}{local&&query.length>=3&&<p className="inline-hint">Tryb lokalny: wyszukiwanie online jest dostępne po wdrożeniu do Cloudflare.</p>}{busy&&<p className="inline-hint">Szukam produktów w Open Food Facts...</p>}{remoteError&&<p className="inline-hint">Baza zewnętrzna chwilowo niedostępna. Możesz dodać własny produkt.</p>}<div className="food-results">{options.length?options.map(food=><FoodSearchResult key={food.id} food={food} onSelect={selectFood}/>):<div className="empty-search"><Search size={26}/><strong>Brak pasujących produktów</strong><p>Spróbuj innej nazwy lub dodaj własny produkt.</p></div>}</div><div className="source-note"><Info size={15}/> Własne i podstawowe produkty pozostają dostępne. Dane z Open Food Facts mogą być niepełne — sprawdzaj etykiety.</div></>}
   </Modal>;
 }
 function ActivityModal({onClose,onSave,day,weight}) {
