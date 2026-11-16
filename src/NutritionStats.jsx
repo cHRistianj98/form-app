@@ -5,6 +5,8 @@ import {DAILY_REFERENCES,MINERAL_KEYS,NUTRIENTS,REFERENCE_SOURCES,SUPPLEMENT_COM
 import {calendarWeek,nutritionReport,totalLabel} from './nutritionStats.js';
 import {GENERIC_NUTRITION_SOURCE} from './genericNutrition.js';
 import {MACRO_PRESENTATION} from './macroPresentation.js';
+import ProgressRing from './ProgressRing.jsx';
+import {REFERENCE_LIMITS} from './progressPresentation.js';
 import './nutrition-stats.css';
 
 const MACROS=[
@@ -31,14 +33,13 @@ function NutrientRows({title,subtitle,keys,report}) {
         const reference=DAILY_REFERENCES[key];
         const goal=reference.value*report.dayCount;
         const value=report.summary.totals[key];
-        const percent=ratio(value,goal);
         const partial=!report.summary.coverage[key].complete;
         return <div className="nutrition-table-row" role="row" key={key} data-nutrient={key}>
           <div role="cell"><strong>{name}</strong><b>{totalLabel(report.summary,key,2)}{value!=null?` ${unit}`:''}</b><Coverage summary={report.summary} nutrient={key}/>
             {report.period==='week'&&value!=null&&<small>Śr. znana: {totalLabel(report.summary,key,2,report.loggedDays)} {unit}/dzień z wpisami</small>}
           </div>
           <div role="cell"><b>{fmt(goal,2)} {unit}</b><small>{reference.source}{report.period==='week'?' × 7':''}</small></div>
-          <div role="cell"><b>{percent==null?'—':`${partial?'≈ ':''}${fmt(percent)}%`}</b><div className="meter"><div style={{width:`${Math.min(percent||0,100)}%`,background:'#85c6ab'}}/></div></div>
+          <div role="cell"><ProgressRing value={value} target={goal} label={name} mode={REFERENCE_LIMITS.has(key)?'limit':'reference'} partial={partial} upper={report.summary.coverage[key].upper}/></div>
         </div>;
       })}
     </div>
@@ -87,7 +88,7 @@ export default function NutritionStats({entries,daily,profile,day,onChangeDay}) 
       const value=report.summary.totals[m.key],goal=report.goals[m.key];
       const percent=ratio(value,goal);
       return <section className="panel nutrition-macro-card" key={m.key} style={{'--metric-color':m.color}} data-macro={m.key}>
-        <span className="nutrition-metric-name">{m.name}</span>
+        <span className="nutrition-metric-name"><span>{m.name}</span><ProgressRing value={value} target={goal} label={m.name} mode={m.key==='kcal'?'limit':'goal'} partial={!report.summary.coverage[m.key].complete} upper={report.summary.coverage[m.key].upper}/></span>
         <strong>{totalLabel(report.summary,m.key,m.key==='kcal'?0:1)}<small>{value!=null?m.unit:''}</small></strong>
         <p>Cel {period==='week'?'7 dni':'dnia'}: {fmt(goal)} {m.unit}</p>
         <div className="meter"><div style={{width:`${Math.min(percent||0,100)}%`,background:m.color}}/></div>
@@ -112,6 +113,6 @@ export default function NutritionStats({entries,daily,profile,day,onChangeDay}) 
 export function DailyNutrientPreview({summary}) {
   return <>{summary.genericEntryCount>0&&<p className="muted-note">Produkty ogólne uwzględniają szacunki z <a href={GENERIC_NUTRITION_SOURCE.url} target="_blank" rel="noreferrer">USDA FoodData Central ↗</a>.</p>}<div className="micros-grid">{NUTRIENTS.map(([key,name,unit])=>{
     const value=summary.totals[key],reference=DAILY_REFERENCES[key];
-    return <div className="micro-item" key={key}><span>{name}</span><strong>{totalLabel(summary,key,2)}{value!=null?` ${unit}`:''}</strong><small>{value==null?'Brak danych':reference?`${summary.coverage[key].complete?'':'≈ '}${fmt(value/reference.value*100)}% — ${reference.source}`:'Znana ilość, bez wartości RWS'}</small></div>;
+    return <div className={`micro-item ${reference?'has-reference-progress':''}`} key={key} data-nutrient={key}><span>{name}</span><strong>{totalLabel(summary,key,2)}{value!=null?` ${unit}`:''}</strong>{reference?<div className="micro-reference-progress"><ProgressRing value={value} target={reference.value} label={name} mode={REFERENCE_LIMITS.has(key)?'limit':'reference'} partial={!summary.coverage[key].complete} upper={summary.coverage[key].upper} size={48}/><small>{value==null?'Brak danych':reference.source}</small></div>:<small>{value==null?'Brak danych':'Znana ilość, bez wartości RWS'}</small>}</div>;
   })}</div></>;
 }

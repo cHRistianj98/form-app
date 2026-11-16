@@ -5,8 +5,9 @@ import {ACTIVITY_LEVELS, NUTRITION_SOURCES} from './profile.js';
 import MacroValues from './MacroValues.jsx';
 import WeightInput from './WeightInput.jsx';
 import {formatWeight, parseWeight, weightError} from './weight.js';
+import SupplementPlanSettings from './SupplementPlanSettings.jsx';
 
-export default function SettingsPage({profile, currentWeight, onSave, onExport, local, onLogout}) {
+export default function SettingsPage({profile, currentWeight, personal=[], onSave, onExport, local, onLogout}) {
   const [form,setForm]=useState({...profile});
   const [saving,setSaving]=useState(false);
   const [error,setError]=useState('');
@@ -32,7 +33,7 @@ export default function SettingsPage({profile, currentWeight, onSave, onExport, 
       setCredits(await response.json());
     } catch {setCredits(false);}
   }
-  return <div className="settings-grid">
+  return <><SupplementPlanSettings profile={profile} personal={personal} onSave={onSave}/><div className="settings-grid">
     <div className="panel">
       <div className="section-heading"><div><h2>Twój plan żywieniowy</h2><p>Dane, założenia i wyliczenia w jednym miejscu.</p></div></div>
       <form onSubmit={submit}>
@@ -78,5 +79,5 @@ export default function SettingsPage({profile, currentWeight, onSave, onExport, 
       <div className="panel"><span className="icon-badge mint"><ShieldCheck size={22}/></span><h3>Twoje dane, Twoja kontrola</h3><p>{local?'Pracujesz lokalnie — dane zapisują się w tej przeglądarce.':'Dziennik jest przechowywany w prywatnej bazie Cloudflare D1. Dostęp wymaga hasła.'}</p><button className="button outline full" onClick={onExport}><Download size={17}/> Eksportuj dane do JSON</button>{!local&&<button className="button ghost full" onClick={onLogout}><LogOut size={17}/> Wyloguj się</button>}</div>
       <div className="panel photo-credits"><span className="icon-badge mint"><Info size={22}/></span><h3>Zdjęcia produktów</h3><p>Zdjęcia z Wikimedia Commons, Open Food Facts oraz stron produktowych, zapisane lokalnie jako WebP. Przy produktach z Twojej listy wartości pochodzą z podanej tabeli. Zdjęcie opakowania lub serii jest poglądowe — sprawdzaj wariant i etykietę.</p><details onToggle={showCredits}><summary>Autorzy, źródła i licencje zdjęć</summary>{credits===null?<p>Wczytywanie…</p>:credits===false?<a href="/foods/credits.json">Otwórz pełne informacje o zdjęciach</a>:Object.values(credits).map(c=><div className="photo-credit" key={c.image}><a href={c.source} target="_blank" rel="noreferrer">{c.title}</a><span>{c.author}</span><a href={c.licenseUrl||c.source} target="_blank" rel="noreferrer">{c.license}</a><small>{c.changes}</small></div>)}</details></div>
     </aside>
-  </div>;
+  </div></>;
 }

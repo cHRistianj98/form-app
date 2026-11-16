@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
-import {ArrowRight, Check, Minus, Pill, Plus} from 'lucide-react';
+import {ArrowRight, Check, ChevronDown, Minus, Pill, Plus, Settings2} from 'lucide-react';
 import Modal from './Modal.jsx';
 import {fmt, foodImage, localDay, parseNum} from './foods.js';
 import {NUTRIENTS, NUTRIENT_FIELDS} from './nutrients.js';
-import {supplementCatalog, supplementCount} from './supplements.js';
+import {supplementCatalog} from './supplements.js';
+import {supplementPlanProgress} from './supplementPlan.js';
+import ProgressRing from './ProgressRing.jsx';
 import './supplements.css';
 
 function Photo({food}) {
@@ -15,31 +17,36 @@ function Components({food,quantity=1,compact=false}) {
   return <div className={compact?'supplement-chips':'supplement-components'}>{(compact?fields.slice(0,3):fields).map(([key,name,unit])=><span key={key} data-supplement-nutrient={key}><span>{name}</span><strong>{fmt(food[key]*quantity,2)} {unit}{key==='vitaminD'?` / ${fmt(food[key]*quantity*40)} IU`:''}</strong></span>)}</div>;
 }
 
-export function SupplementPanel({entries,personal,day,onAdjust,onOpen,compact=false}) {
+export function SupplementPanel({entries,personal,day,plan,onAdjust,onOpen,onSettings,compact=false}) {
   const [pending,setPending]=useState(new Set());
   const [error,setError]=useState('');
   const catalog=supplementCatalog(personal);
-  const counts=catalog.map(food=>supplementCount(entries,day,food.id));
-  const total=counts.reduce((sum,n)=>sum+n,0);
+  const progress=supplementPlanProgress(catalog,entries,day,plan);
+  const Container=compact?'details':'section';
   async function adjust(food,delta) {
     if(pending.has(food.id))return;
     setPending(previous=>new Set(previous).add(food.id));setError('');
     try{await onAdjust(food,delta);}catch(err){setError(err.message);}
     finally{setPending(previous=>{const next=new Set(previous);next.delete(food.id);return next;});}
   }
-  return <section className={`panel supplement-panel ${compact?'supplement-panel-compact':''}`}>
-    <div className="section-heading"><div><h2><Pill size={21}/> {compact?'Twoje suplementy':'Zapisz przyjęte suplementy'}</h2><p>{day===localDay()?'Dzisiaj':'Wybrany dzień'}: {total} szt. z {counts.filter(n=>n>0).length} produktów. Plus dodaje jedną kapsułkę lub tabletkę.</p></div>{compact&&<button className="text-link" onClick={onOpen}>Wszystkie <ArrowRight size={16}/></button>}</div>
-    <div className="supplement-grid">{catalog.map((food,index)=><article key={food.id} className={`supplement-card ${counts[index]>0?'taken':''}`} data-supplement-id={food.id}>
+  const heading=<><div><h2>{compact?'Twoje suplementy':'Zapisz przyjęte suplementy'}</h2><p>{progress.planned?`${progress.completedProducts}/${progress.plannedProducts} produktów · ${progress.completed}/${progress.planned} szt. z planu`:'Na ten dzień nie masz zaplanowanych suplementów.'}</p><small>{progress.done?'Plan wykonany ✓':`${day===localDay()?'Dzisiaj':'Wybrany dzień'}: przyjęto ${progress.taken} szt.`}{compact&&<> · <span className="supplement-when-closed">Rozwiń listę</span><span className="supplement-when-open">Zwiń listę</span></>}</small></div><ProgressRing value={progress.completed} target={progress.planned} label="Plan suplementów" size={56}/></>;
+  return <Container className={`panel supplement-panel ${compact?'supplement-panel-compact':''} ${progress.done?'plan-complete':''}`}>
+    {compact?<summary className="supplement-summary">{heading}<ChevronDown className="supplement-expand-icon" size={20}/></summary>:<div className="supplement-summary">{heading}</div>}
+    <div className="supplement-panel-body">
+    <div className="supplement-panel-links">{onSettings&&<button className="text-link" onClick={onSettings}><Settings2 size={15}/> Ustaw plan</button>}{compact&&<button className="text-link" onClick={onOpen}>Pełny widok <ArrowRight size={16}/></button>}</div>
+    <div className="supplement-grid">{progress.rows.map(({food,count,target,done})=><article key={food.id} className={`supplement-card ${count>0?'taken':''} ${done?'done':''} ${!target?'not-due':''}`} data-supplement-id={food.id} data-supplement-state={done?'done':target?'pending':'not-due'}>
       <Photo food={food}/><div className="supplement-info"><small>{food.brand||'Własny suplement'}</small><h3>{food.name}</h3><Components food={food} compact/>{!compact&&<button className="text-link" onClick={()=>onOpen(food)}>Skład i źródło</button>}</div>
       <div className="supplement-counter" aria-label={`Przyjęto: ${food.name}`}>
-        <button type="button" onClick={()=>adjust(food,-1)} disabled={!counts[index]||pending.has(food.id)} aria-label={`Odejmij jedną: ${food.name}`}><Minus size={20}/></button>
-        <output aria-live="polite"><strong>{counts[index]}</strong><small>{food.unit==='tablet'?'tabl.':'kaps.'}</small></output>
+        <button type="button" onClick={()=>adjust(food,-1)} disabled={!count||pending.has(food.id)} aria-label={`Odejmij jedną: ${food.name}`}><Minus size={20}/></button>
+        <output aria-live="polite"><strong>{count}{target>0&&<span> / {target}</span>}</strong><small>{food.unit==='tablet'?'tabl.':'kaps.'}</small></output>
         <button type="button" onClick={()=>adjust(food,1)} disabled={pending.has(food.id)} aria-label={`Dodaj jedną: ${food.name}`}><Plus size={20}/></button>
       </div>
+      <div className="supplement-plan-status">{done?<><Check size={15}/> Plan wykonany</>:target?`Pozostało ${Math.max(0,target-count)} szt.`:'Brak planu na ten dzień'}</div>
     </article>)}</div>
     {error&&<p className="form-error" role="alert">{error}</p>}
     {!compact&&<p className="muted-note">Liczniki zapisują się dla daty wybranej u góry. Nowy dzień zaczyna się od zera; zapisane składniki trafiają do statystyk dnia i tygodnia. To zapis przyjętych ilości.</p>}
-  </section>;
+    </div>
+  </Container>;
 }
 
 async function photoAsWebP(file) {
@@ -91,11 +98,11 @@ function SupplementForm({onSave,onClose}) {
   </form></Modal>;
 }
 
-export default function SupplementsPage({entries,personal,day,onAdjust,onSave}) {
+export default function SupplementsPage({entries,personal,day,plan,onAdjust,onSave,onSettings}) {
   const [details,setDetails]=useState(null),[adding,setAdding]=useState(false);
   return <>
     <div className="supplement-intro"><div><h2>Twoja codzienna lista</h2><p>Skład na jedną kapsułkę. Zaznaczaj tylko to, co przyjąłeś.</p></div><button className="button primary" onClick={()=>setAdding(true)}><Plus size={18}/> Dodaj suplement</button></div>
-    <SupplementPanel entries={entries} personal={personal} day={day} onAdjust={onAdjust} onOpen={setDetails}/>
+    <SupplementPanel entries={entries} personal={personal} day={day} plan={plan} onAdjust={onAdjust} onOpen={setDetails} onSettings={onSettings}/>
     {details&&<Modal title={details.name} subtitle={`${details.brand||'Własny suplement'} · skład na 1 ${details.unit==='tablet'?'tabletkę':'kapsułkę'}`} onClose={()=>setDetails(null)}>
       <div className="supplement-detail-head"><Photo food={details}/><p className="help-note">{details.labelNote||'Dane z Twojej etykiety.'}</p></div>
       <Components food={details}/>

@@ -3,6 +3,7 @@
 import {normalizeProfile, ACTIVITY_LEVELS} from '../../src/profile.js';
 import {calcTargets} from '../../src/foods.js';
 import {NUTRIENT_FIELDS,MACRO_FIELDS} from '../../src/nutrients.js';
+import {validSupplementPlan} from '../../src/supplementPlan.js';
 
 const json = (value, status = 200, headers = {}) => new Response(JSON.stringify(value), {
   status, headers: { 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff', ...headers }
@@ -208,13 +209,14 @@ export async function onRequest(context) {
     }
     if (path[0]==='profile' && method==='POST') {
       const b=await readBody(req);
+      if(b.supplementPlan!==undefined&&!validSupplementPlan(b.supplementPlan))return json({error:'Niepoprawny plan suplementów'},400);
       if (!finite(b.height,100,250)||!Number.isInteger(b.age)||b.age<15||b.age>110||!['male','female'].includes(b.sex)||!finite(b.startWeight,20,500)||!finite(b.targetWeight,20,500)||!finite(b.deficit,0,1300)||!finite(b.proteinFactor,0.5,3.5)||!finite(b.fatFactor,0.3,2)||!finite(b.manualCalories,0,6000)) return json({error:'Niepoprawny profil'},400);
       const p=normalizeProfile(b);
       if (p.nutritionVersion!==2 || !['mifflin','eer2023'].includes(p.energyMethod) || !ACTIVITY_LEVELS.some(a=>a.id===p.activityLevel) || !['percent','kcal'].includes(p.deficitMode) || !finite(p.deficitPercent,0,25) || !finite(p.manualProtein,0,400) || (p.energyMethod==='eer2023' && p.age<19)) return json({error:'Niepoprawne ustawienia wyliczania kalorii'},400);
       const weights=await env.DB.prepare('SELECT weight FROM daily_metrics WHERE weight IS NOT NULL ORDER BY day DESC LIMIT 1').first();
       const targets=calcTargets(p,weights?.weight || p.startWeight);
       if (targets.calories<=0 || !targets.macrosFit) return json({error:'Cel kalorii musi pokrywać wybrane białko i tłuszcze. Zwiększ kalorie lub zmień makro.'},400);
-      const fields=['nutritionVersion','height','age','sex','startWeight','targetWeight','deficit','proteinFactor','fatFactor','manualCalories','energyMethod','activityLevel','deficitMode','deficitPercent','manualProtein'];
+      const fields=['nutritionVersion','height','age','sex','startWeight','targetWeight','deficit','proteinFactor','fatFactor','manualCalories','energyMethod','activityLevel','deficitMode','deficitPercent','manualProtein','supplementPlan'];
       await env.DB.prepare("INSERT INTO settings (key,value_json) VALUES ('profile',?) ON CONFLICT(key) DO UPDATE SET value_json=excluded.value_json")
         .bind(JSON.stringify(Object.fromEntries(fields.map(k=>[k,p[k]])))).run();return json({ok:true});
     }

@@ -1,16 +1,19 @@
 // Shared by the browser and the Worker so persisted profiles use the same model.
+import {DEFAULT_SUPPLEMENT_PLAN,normalizeSupplementPlan} from './supplementPlan.js';
 export const DEFAULT_PROFILE = {
   nutritionVersion: 2,
   height: 186, startWeight: 93, targetWeight: 85, age: 28, sex: 'male',
   energyMethod: 'mifflin', activityLevel: 'low',
   deficitMode: 'percent', deficitPercent: 15, deficit: 450,
   manualCalories: 2600, manualProtein: 180, proteinFactor: 2, fatFactor: 0.8,
+  supplementPlan: DEFAULT_SUPPLEMENT_PLAN,
 };
 
 export function normalizeProfile(profile) {
-  if (!profile) return {...DEFAULT_PROFILE};
-  if (profile.nutritionVersion === 2) return {...DEFAULT_PROFILE, ...profile};
-  const p = {...DEFAULT_PROFILE, ...profile, nutritionVersion: 2};
+  const supplementPlan=normalizeSupplementPlan(profile?.supplementPlan);
+  if (!profile) return {...DEFAULT_PROFILE,supplementPlan};
+  if (profile.nutritionVersion === 2) return {...DEFAULT_PROFILE, ...profile,supplementPlan};
+  const p = {...DEFAULT_PROFILE, ...profile, nutritionVersion: 2,supplementPlan};
   // Replace the previous built-in 1899 kcal / 153 g starting plan. Preserve
   // explicitly chosen calories, deficits and protein factors from older profiles.
   p.manualCalories = Number(profile.manualCalories) > 0 ? Number(profile.manualCalories) : 2600;

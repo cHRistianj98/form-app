@@ -2,10 +2,42 @@
 .supplement-intro h2 { font-size:22px; }
 .supplement-intro p { color:var(--muted); font-size:14px; margin-top:7px; }
 .supplement-panel { margin-bottom:22px; }
+.supplement-summary { display:grid; grid-template-columns:minmax(0,1fr) 56px; align-items:center; gap:14px; margin-bottom:18px; }
+.supplement-summary h2 { font-size:20px; }
+.supplement-summary p { color:var(--muted); font-size:13px; margin-top:7px; line-height:1.6; }
+.supplement-summary small { display:block; color:var(--muted); font-size:12px; margin-top:5px; line-height:1.5; }
+.supplement-panel-compact>.supplement-summary { grid-template-columns:minmax(0,1fr) 56px 20px; cursor:pointer; list-style:none; margin-bottom:0; }
+.supplement-summary::-webkit-details-marker { display:none; }
+.supplement-summary::marker { content:''; }
+.supplement-summary:focus-visible { outline:2px solid var(--accent); outline-offset:8px; border-radius:8px; }
+.supplement-expand-icon { color:var(--muted); transition:transform .2s; }
+.supplement-panel-compact[open] .supplement-expand-icon { transform:rotate(180deg); }
+.supplement-panel-compact[open]>.supplement-summary { margin-bottom:18px; }
+.supplement-panel-compact:not([open]) .supplement-panel-body { display:none; }
+.supplement-panel-compact[open] .supplement-when-closed, .supplement-panel-compact:not([open]) .supplement-when-open { display:none; }
+.supplement-panel-links { display:flex; gap:18px; justify-content:space-between; flex-wrap:wrap; margin-bottom:14px; }
+.supplement-panel.plan-complete { border-color:var(--success-border); }
+.supplement-panel.plan-complete .supplement-summary small { color:var(--success); }
 .supplement-panel h2 { display:flex; align-items:center; gap:9px; }
 .supplement-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
 .supplement-card { display:grid; grid-template-columns:92px minmax(0,1fr); gap:16px; padding:18px; border:1px solid var(--border); border-radius:16px; background:#0d192d; min-width:0; }
 .supplement-card.taken { border-color:#4777b7; background:#142944; }
+.supplement-card.done { border-color:var(--success-border); background:var(--success-surface); }
+.supplement-card.done .supplement-counter { border-color:var(--success-border); }
+.supplement-card.done .supplement-counter button:last-child { background:var(--success); border-color:var(--success); }
+.supplement-counter output strong>span { font-size:17px; font-weight:600; color:var(--muted); }
+.supplement-plan-status { grid-column:1/-1; color:var(--muted); font-size:12px; display:flex; align-items:center; gap:6px; margin-top:-6px; }
+.supplement-card.done .supplement-plan-status { color:var(--success); }
+.supplement-plan-settings { margin-bottom:24px; }
+.supplement-plan-settings .section-heading h2 { display:flex; align-items:center; gap:9px; }
+.supplement-plan-row { display:grid; grid-template-columns:minmax(0,1fr) 105px minmax(180px,.8fr); gap:20px; align-items:center; padding:16px 0; border-top:1px solid var(--border); }
+.supplement-plan-row>div { min-width:0; }
+.supplement-plan-row>div>strong { display:block; font-size:15px; }
+.supplement-plan-row>div>small { display:block; color:var(--muted); margin-top:4px; font-size:12px; }
+.supplement-plan-row>.field { margin-bottom:0; }
+.supplement-plan-settings .help-note { margin-top:16px; }
+.supplement-plan-actions { display:flex; align-items:center; flex-wrap:wrap; gap:14px; }
+.supplement-plan-saved { color:var(--success); display:flex; align-items:center; gap:6px; font-size:14px; }
 .supplement-photo { width:92px; height:120px; border-radius:12px; padding:7px; background:#fff; display:grid; place-items:center; overflow:hidden; color:#27496e; flex-shrink:0; }
 .supplement-photo img { width:100%; height:100%; object-fit:contain; display:block; }
 .supplement-info { min-width:0; }
@@ -43,6 +75,13 @@
   .app-layout .mobile-nav small { font-size:10px; }
 }
 @media(max-width:600px) {
+  .supplement-summary { gap:10px; }
+  .supplement-summary h2 { font-size:18px; }
+  .supplement-panel-compact>.supplement-summary { grid-template-columns:minmax(0,1fr) 48px 18px; gap:8px; }
+  .supplement-panel-compact>.supplement-summary>.progress-ring { width:48px; height:48px; }
+  .supplement-plan-row { grid-template-columns:85px minmax(0,1fr); gap:12px; }
+  .supplement-plan-row>div { grid-column:1/-1; }
+  .supplement-plan-row label>span { font-size:12px; }
   .supplement-intro { align-items:flex-start; flex-direction:column; gap:14px; }
   .supplement-grid { grid-template-columns:1fr; }
   .supplement-panel { padding:17px; }
