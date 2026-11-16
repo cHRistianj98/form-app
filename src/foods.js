@@ -5,6 +5,7 @@ import {NUTRIENTS,NUTRIENT_FIELDS} from './nutrients.js';
 import {enrichGenericFood} from './genericNutrition.js';
 import {createHomemadeFoods} from './homemadeFoods.js';
 import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
+import {SUPPLEMENTS} from './supplements.js';
 export {NUTRIENTS} from './nutrients.js';
 
 // Orientacyjne wartości na 100 g. Brakujące składniki uzupełniamy z jawnie
@@ -66,8 +67,8 @@ export function canonicalText(text = '') {
 }
 // The legacy entries.grams column stores the amount in the food's unit.
 // No density conversion: data per 100 ml scales directly by ml, per 100 g by g.
-export const foodUnit = food => food.unit === 'tablet' ? 'tabl.' : food.unit === 'ml' ? 'ml' : 'g';
-export const foodBasis = food => food.unit === 'tablet' ? 1 : 100;
+export const foodUnit = food => food.unit === 'capsule' ? 'kaps.' : food.unit === 'tablet' ? 'tabl.' : food.unit === 'ml' ? 'ml' : 'g';
+export const foodBasis = food => ['capsule','tablet'].includes(food.unit) ? 1 : 100;
 export const foodBasisLabel = food => `${foodBasis(food)} ${foodUnit(food)}`;
 export function scaleFood(food, quantity) {
   const resolved=enrichGenericFood(food);
@@ -171,7 +172,8 @@ export function calcDailyBalance(targets, eaten) {
 export function foodImage(food) {
   // Resolve the current image even for old diary snapshots that lack this field.
   if (typeof food.image === 'string' && (/^\/foods\/[a-z][a-z0-9-]*\.webp$/.test(food.image) || /^https:\/\/images\.openfoodfacts\.org\//.test(food.image))) return food.image;
-  const catalog = [...FAVORITE_FOODS,...HOMEMADE_FOODS,...BASE_FOODS];
+  if (typeof food.image==='string' && food.image.length<=160000 && /^data:image\/webp;base64,[A-Za-z0-9+/]+=*$/.test(food.image)) return food.image;
+  const catalog = [...SUPPLEMENTS,...FAVORITE_FOODS,...HOMEMADE_FOODS,...BASE_FOODS];
   const base = catalog.find(f=>f.id===food.id) || catalog.find(f=>canonicalText(f.name)===canonicalText(food.name));
   return base?.image || null;
 }

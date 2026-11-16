@@ -583,5 +583,59 @@
     "source": "/foods/dish-image-prompts.json",
     "licenseUrl": "/foods/dish-image-prompts.json",
     "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "supplement:essensey-ashwagandha-forte": {
+    "image": "/foods/supp-essensey-ashwagandha-forte.webp",
+    "title": "Essensey Ashwagandha Forte, 90 kapsułek",
+    "author": "Essensey / Trec Nutrition",
+    "license": "Zdjęcie producenta — prawa zastrzeżone; identyfikacja produktu w prywatnym dzienniku.",
+    "source": "https://essensey.com/adaptogeny/ashwagandha-forte-w-90-kapsulkach.html",
+    "licenseUrl": "https://essensey.com/adaptogeny/ashwagandha-forte-w-90-kapsulkach.html",
+    "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
+  },
+  "supplement:essensey-magnesium-b6": {
+    "image": "/foods/supp-essensey-magnesium-b6.webp",
+    "title": "Essensey Magnez + B6, 90 kapsułek",
+    "author": "Essensey / Trec Nutrition",
+    "license": "Zdjęcie producenta — prawa zastrzeżone; identyfikacja produktu w prywatnym dzienniku.",
+    "source": "https://essensey.com/witaminy-i-mineraly/magnez-z-witamina-b6-w-90-kapsulkach.html",
+    "licenseUrl": "https://essensey.com/witaminy-i-mineraly/magnez-z-witamina-b6-w-90-kapsulkach.html",
+    "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
+  },
+  "supplement:now-omega-3": {
+    "image": "/foods/supp-now-omega-3.webp",
+    "title": "NOW Foods Omega-3 1000 mg, 100 softgels",
+    "author": "NOW Foods",
+    "license": "Zdjęcie producenta — prawa zastrzeżone; identyfikacja produktu w prywatnym dzienniku.",
+    "source": "https://www.nowfoods.com/products/supplements/omega-3-fish-oil-molecularly-distilled-softgels",
+    "licenseUrl": "https://www.nowfoods.com/products/supplements/omega-3-fish-oil-molecularly-distilled-softgels",
+    "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
+  },
+  "supplement:essensey-biotin-horsetail-zinc": {
+    "image": "/foods/supp-essensey-biotin-horsetail-zinc.webp",
+    "title": "Essensey Biotyna + Skrzyp, Cynk, 90 kapsułek",
+    "author": "Essensey / Trec Nutrition",
+    "license": "Zdjęcie producenta — prawa zastrzeżone; identyfikacja produktu w prywatnym dzienniku.",
+    "source": "https://essensey.com/na-skore-wlosy-paznokcie/biotyna-skrzyp-cynk-w-90-kapsulkach.html",
+    "licenseUrl": "https://essensey.com/na-skore-wlosy-paznokcie/biotyna-skrzyp-cynk-w-90-kapsulkach.html",
+    "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
+  },
+  "supplement:essensey-zinc": {
+    "image": "/foods/supp-essensey-zinc.webp",
+    "title": "Essensey Cynk organiczny, 120 kapsułek",
+    "author": "Essensey / Trec Nutrition",
+    "license": "Zdjęcie producenta — prawa zastrzeżone; identyfikacja produktu w prywatnym dzienniku.",
+    "source": "https://essensey.com/witaminy-i-mineraly/cynk-organiczny-w-120-kapsulkach.html",
+    "licenseUrl": "https://essensey.com/witaminy-i-mineraly/cynk-organiczny-w-120-kapsulkach.html",
+    "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
+  },
+  "supplement:essensey-vitamin-d3-forte": {
+    "image": "/foods/supp-essensey-vitamin-d3-forte.webp",
+    "title": "Essensey Witamina D3 Forte 4000 IU, 90 kapsułek",
+    "author": "Essensey / Trec Nutrition",
+    "license": "Zdjęcie producenta — prawa zastrzeżone; identyfikacja produktu w prywatnym dzienniku.",
+    "source": "https://essensey.com/witaminy/witamina-d3-forte-w-90-kapsulkach.html",
+    "licenseUrl": "https://essensey.com/witaminy/witamina-d3-forte-w-90-kapsulkach.html",
+    "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
   }
 }

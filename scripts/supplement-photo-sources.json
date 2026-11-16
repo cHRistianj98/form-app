@@ -1,0 +1,38 @@
+{
+  "essensey-ashwagandha-forte": {
+    "name": "Essensey Ashwagandha Forte, 90 kapsułek",
+    "page": "https://essensey.com/adaptogeny/ashwagandha-forte-w-90-kapsulkach.html",
+    "author": "Essensey / Trec Nutrition",
+    "image": "https://essensey.com/9581-large_zoom/ashwagandha-forte-w-90-kapsulkach.jpg"
+  },
+  "essensey-magnesium-b6": {
+    "name": "Essensey Magnez + B6, 90 kapsułek",
+    "page": "https://essensey.com/witaminy-i-mineraly/magnez-z-witamina-b6-w-90-kapsulkach.html",
+    "author": "Essensey / Trec Nutrition",
+    "image": "https://essensey.com/9564-large_zoom/magnez-z-witamina-b6-w-90-kapsulkach.jpg"
+  },
+  "now-omega-3": {
+    "name": "NOW Foods Omega-3 1000 mg, 100 softgels",
+    "page": "https://www.nowfoods.com/products/supplements/omega-3-fish-oil-molecularly-distilled-softgels",
+    "image": "https://www.nowfoods.com/sites/default/files/styles/cloudzoom_image/public/2026-04/1650_v24.png?itok=j7g2920G",
+    "author": "NOW Foods"
+  },
+  "essensey-biotin-horsetail-zinc": {
+    "name": "Essensey Biotyna + Skrzyp, Cynk, 90 kapsułek",
+    "page": "https://essensey.com/na-skore-wlosy-paznokcie/biotyna-skrzyp-cynk-w-90-kapsulkach.html",
+    "author": "Essensey / Trec Nutrition",
+    "image": "https://essensey.com/9556-large_zoom/biotyna-skrzyp-cynk-w-90-kapsulkach.jpg"
+  },
+  "essensey-zinc": {
+    "name": "Essensey Cynk organiczny, 120 kapsułek",
+    "page": "https://essensey.com/witaminy-i-mineraly/cynk-organiczny-w-120-kapsulkach.html",
+    "author": "Essensey / Trec Nutrition",
+    "image": "https://essensey.com/9551-large_zoom/cynk-organiczny-w-120-kapsulkach.jpg"
+  },
+  "essensey-vitamin-d3-forte": {
+    "name": "Essensey Witamina D3 Forte 4000 IU, 90 kapsułek",
+    "page": "https://essensey.com/witaminy/witamina-d3-forte-w-90-kapsulkach.html",
+    "author": "Essensey / Trec Nutrition",
+    "image": "https://essensey.com/9570-large_zoom/witamina-d3-forte-w-90-kapsulkach.jpg"
+  }
+}

@@ -41,10 +41,16 @@ const nutrients = NUTRIENT_FIELDS;
 function validFood(food) {
   if (!food || !validId(food.id) || typeof food.name !== 'string' || !food.name.trim() || food.name.length>180) return false;
   if (food.brand != null && (typeof food.brand !== 'string' || food.brand.length>120)) return false;
-  if (food.unit != null && !['g','ml','tablet'].includes(food.unit)) return false;
-  if (food.basisQuantity != null && food.basisQuantity !== (food.unit==='tablet'?1:100)) return false;
+  if (food.unit != null && !['g','ml','tablet','capsule'].includes(food.unit)) return false;
+  if (food.kind != null && food.kind!=='supplement') return false;
+  if (food.unit==='capsule'&&food.kind!=='supplement') return false;
+  if (food.kind==='supplement'&&!['capsule','tablet'].includes(food.unit)) return false;
+  if (food.basisQuantity != null && food.basisQuantity !== (['tablet','capsule'].includes(food.unit)?1:100)) return false;
+  for(const [field,limit] of [['ingredients',1800],['labelNote',1000],['sourceUrl',500],['verifiedAt',10]]) if(food[field]!=null&&(typeof food[field]!=='string'||food[field].length>limit)) return false;
+  if(food.sourceUrl&&!/^https:\/\//.test(food.sourceUrl)) return false;
+  if(typeof food.image==='string'&&food.image.startsWith('data:')&&!(food.image.length<=160000&&/^data:image\/webp;base64,[A-Za-z0-9+/]+=*$/.test(food.image))) return false;
   if (food.aliases != null && (!Array.isArray(food.aliases)||food.aliases.length>12||!food.aliases.every(s=>typeof s==='string'&&s.length<=100))) return false;
-  if (food.servingSizes != null && (!Array.isArray(food.servingSizes)||food.servingSizes.length>12||!food.servingSizes.every(s=>s&&typeof s.label==='string'&&s.label.length<=100&&finite(s.quantity,0.1,100000)&&(food.unit!=='tablet'||Number.isInteger(s.quantity))))) return false;
+  if (food.servingSizes != null && (!Array.isArray(food.servingSizes)||food.servingSizes.length>12||!food.servingSizes.every(s=>s&&typeof s.label==='string'&&s.label.length<=100&&finite(s.quantity,0.1,100000)&&(!['tablet','capsule'].includes(food.unit)||Number.isInteger(s.quantity))))) return false;
   if (food.fatLessThan != null && typeof food.fatLessThan !== 'boolean') return false;
   for(const field of ['partialNutrients','upperBoundNutrients']) {
     if(food[field]!=null&&(!Array.isArray(food[field])||food[field].length>nutrients.length||new Set(food[field]).size!==food[field].length||!food[field].every(key=>nutrients.includes(key)&&finite(food[key],0,100000)))) return false;
@@ -60,6 +66,7 @@ function cleanFood(food) {
   const result = {id:food.id,name:food.name.trim(),brand:(food.brand||'').trim(),source: String(food.source||'Własny').slice(0,50)};
   for (const k of nutrients) if (food[k] !== undefined) result[k] = food[k];
   if (food.unit != null) result.unit = food.unit;
+  for(const field of ['kind','ingredients','labelNote','sourceUrl','verifiedAt']) if(food[field]!=null) result[field]=food[field];
   if (food.basisQuantity != null) result.basisQuantity = food.basisQuantity;
   if (food.aliases != null) result.aliases = food.aliases;
   if (food.servingSizes != null) result.servingSizes = food.servingSizes.map(({label,quantity})=>({label,quantity}));
@@ -70,6 +77,7 @@ function cleanFood(food) {
   if (food.imageFit != null) result.imageFit = food.imageFit;
   if (food.imageNote != null) result.imageNote = food.imageNote;
   if (typeof food.image === 'string' && (/^\/foods\/[a-z][a-z0-9-]*\.webp$/.test(food.image) || /^https:\/\/images\.openfoodfacts\.org\/[\w/.-]+$/.test(food.image))) result.image = food.image;
+  if (typeof food.image==='string' && food.image.length<=160000 && /^data:image\/webp;base64,[A-Za-z0-9+/]+=*$/.test(food.image)) result.image=food.image;
   return result;
 }
 async function readBody(req) {
@@ -162,8 +170,11 @@ export async function onRequest(context) {
     }
     if (path[0]==='entries' && method==='POST') {
       const b=await readBody(req);
-      if (!validId(b.id)||!validDay(b.day)||!['breakfast','lunch','dinner','snack'].includes(b.meal)||!finite(b.grams,0.1,100000)||!validFood(b.food)) return json({error:'Niepoprawny wpis jedzenia'},400);
-      if (b.food.unit==='tablet'&&!Number.isInteger(b.grams)) return json({error:'Podaj całkowitą liczbę tabletek'},400);
+      if (!validId(b.id)||!validDay(b.day)||!['breakfast','lunch','dinner','snack','supplements'].includes(b.meal)||!finite(b.grams,0.1,100000)||!validFood(b.food)) return json({error:'Niepoprawny wpis jedzenia'},400);
+      if (b.meal==='supplements'&&b.food.kind!=='supplement') return json({error:'W tym panelu zapisuj suplementy'},400);
+      if (b.meal==='supplements'&&b.id!==`intake:${b.day}:${b.food.id}`) return json({error:'Niepoprawny identyfikator zapisu suplementu'},400);
+      if (b.food.kind==='supplement'&&b.meal!=='supplements') return json({error:'Suplement zapisz w panelu suplementów'},400);
+      if (['tablet','capsule'].includes(b.food.unit)&&!Number.isInteger(b.grams)) return json({error:'Podaj całkowitą liczbę tabletek lub kapsułek'},400);
       await env.DB.prepare('INSERT INTO entries (id,day,meal,grams,food_json) VALUES (?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET day=excluded.day,meal=excluded.meal,grams=excluded.grams,food_json=excluded.food_json')
         .bind(b.id,b.day,b.meal,b.grams,JSON.stringify(cleanFood(b.food))).run();
       return json({ok:true});
