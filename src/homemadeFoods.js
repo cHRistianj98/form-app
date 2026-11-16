@@ -5,6 +5,9 @@ import {NUTRIENT_FIELDS} from './nutrients.js';
 const RETENTION_URL='https://www.ars.usda.gov/ARSUserFiles/80400530/pdf/retn06.pdf';
 const PIZZA_URL='https://www.monsieur-cuisine.com/pl/recipe/pizza-wloska';
 const NUTELLA_URL='https://www.nutella.com/pl/pl/produkty/krem/nutella';
+const TOMATO_SOUP_URL='https://www.monsieur-cuisine.com/pl/recipe/zupa-pomidorowa-z-makaronem-5';
+const CHEESECAKE_URL='https://aniagotuje.pl/przepis/sernik-krolewski';
+const PILOS_QUARK_URL='https://www.fitatu.com/catalog/pl/twarog-sernikowy-nie-wymaga-mielenia-6-tluszczu--115390620';
 // USDA Retention Factors release 6: 0305 flour/meal sauteed, 0103 eggs fried,
 // 0001 cheese baked. Only listed vitamin corrections are applied; this remains
 // an estimate, not an analysis of the user's cooking method.
@@ -33,7 +36,30 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
   const nutella={kcal:539,protein:6.3,carbs:57.5,fat:30.9,sugars:56.3,saturatedFat:10.6,salt:0.107};
   const crepeNotes='Ciasto na całą partię: 350 ml mleka Łaciate 3,2%, 2 jajka (100 g bez skorupek), około 300 g mąki pszennej i 4 ml oliwy (około 3,64 g). Założono 650 g usmażonych placków, bez dodatkowego tłuszczu, cukru ani soli. Zważ porcję razem z nadzieniem.';
   const vitaminsNote='Wybrane straty witamin oszacowano tabelami USDA; pozostałe składniki bez korekty strat. Braki na etykietach oznaczają częściowe sumy (≥), nie zero.';
+  // The user confirmed Pilos bucket curd, but not its label or fat variant.
+  // Keep the selected 6% variant explicit and never invent its micronutrients.
+  const pilosQuark={kcal:108,protein:9,carbs:4.5,fat:6,saturatedFat:4,sugars:3.5,fiber:0};
   return [
+    make('cocoa-crumble-cheesecake','Sernik z kakaową kruszonką (bez rodzynek)',[
+      part(pilosQuark,1000),part(generic('flour'),400),part(favorite('laciate-butter'),400),
+      part(generic('sugar'),280),part(base('egg'),250),part(generic('eggYolk'),34),
+      part(generic('cocoa'),40),part(generic('cornstarch'),40),part(generic('bakingPowder'),8),
+    ],2300,{
+      aliases:['sernik','sernik królewski','sernik krolewski','sernik Pilos','sernik z wiaderka','sernik kakao','sernik z kruszonką','ciasto serowe'],
+      servingSizes:[{label:'80 g',quantity:80},{label:'100 g',quantity:100},{label:'150 g',quantity:150}],
+      estimateNotes:'Sernik bez rodzynek, z kakaowym spodem i kruszonką. Receptura szacunkowa w stylu sernika królewskiego: 1 kg twarogu sernikowego Pilos z wiaderka, 400 g mąki, 400 g masła Łaciate (300 g w cieście i 100 g w masie), 280 g cukru, 5 jajek (250 g bez skorupek), 2 żółtka (34 g), 40 g kakao, 40 g skrobi zamiast budyniu bez cukru i 8 g proszku do pieczenia. Przyjęto 2300 g wystudzonego ciasta, bez polewy i skórki cytrynowej. Dla Pilos przyjęto wariant 6%: 108 kcal, 9 g białka, 4,5 g węgli i 6 g tłuszczu na 100 g według pomocniczej tabeli Fitatu, nie Twojej etykiety. Inny wariant twarogu, ilość masła, cukru lub masa po pieczeniu zmieniają wynik. Waż gotowy kawałek razem z kruszonką. Mikroskładniki z tabel surowców, bez korekty strat podczas pieczenia; nieznane dane twarogu pozostają brakujące.',
+      recipeSources:[{name:'Receptura porównawcza: sernik królewski AniaGotuje',url:CHEESECAKE_URL},{name:'Pilos 6%: pomocnicza tabela Fitatu — sprawdź etykietę wiaderka',url:PILOS_QUARK_URL},source('flour'),source('cocoa'),source('cornstarch'),source('eggYolk'),source('bakingPowder')],
+    }),
+    make('tomato-soup-noodles','Pomidorowa z makaronem (Lidlomix, bez śmietany)',[
+      part(generic('stock'),1000),part(generic('tomatoPuree'),150),part(base('pasta'),200),
+      part(generic('garlic'),3),part(generic('parsley'),2),part(generic('basil'),0.2),
+      part(generic('oregano'),0.2),part(generic('pepper'),0.1),
+    ],1300,{
+      aliases:['pomidorowa','zupa pomidorowa','pomidorowa z makaronem','pomidorowa bez śmietany','pomidorowka','pomidorówka','lidlomix pomidorowa','monsieur cuisine pomidorowa'],
+      servingSizes:[{label:'300 g',quantity:300},{label:'400 g',quantity:400},{label:'500 g',quantity:500}],
+      estimateNotes:'Według wskazanego przepisu Monsieur Cuisine „Zupa pomidorowa z makaronem”, w Twoim wariancie bez śmietany: 1000 g bulionu, 150 g przecieru pomidorowego i 200 g SUCHEGO makaronu gotowanego w zupie. Doliczono ząbek czosnku (3 g), listki z gałązki natki (2 g) oraz szczypty bazylii (0,2 g), oregano (0,2 g) i pieprzu (0,1 g). Pominięto 20 g śmietanki 30% z oryginału. Założono 1300 g gotowej zupy z makaronem po odparowaniu; wchłonięcie bulionu przez makaron nie zwiększa masy całej partii. Bulion oszacowano jak domowy wywar drobiowy USDA, a przecier jak purée pomidorowe bez dodatku soli. Inny bulion, koncentrat zamiast przecieru albo inna masa po gotowaniu zmienią wynik. Nie doliczono dodatkowej soli. Waż całą porcję zupy razem z ugotowanym makaronem; makaron jest już wliczony.',
+      recipeSources:[{name:'Twój przepis: Monsieur Cuisine — zupa pomidorowa z makaronem (pominięto śmietankę)',url:TOMATO_SOUP_URL},source('stock'),source('tomatoPuree'),{name:'Makaron pszenny suchy: tabela ogólna',url:'https://fdc.nal.usda.gov/food-details/168927/nutrients'},source('garlic'),source('parsley')],
+    }),
     make('rosol-noodles','Rosół z makaronem',[
       part(generic('stock'),80),part(generic('noodles'),20),
     ],100,{

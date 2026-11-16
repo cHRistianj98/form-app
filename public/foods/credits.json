@@ -565,5 +565,23 @@
     "source": "/foods/dish-image-prompts.json",
     "licenseUrl": "/foods/dish-image-prompts.json",
     "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "dish:cocoa-crumble-cheesecake": {
+    "image": "/foods/dish-cocoa-crumble-cheesecake.webp",
+    "title": "Domowe danie: cocoa-crumble-cheesecake",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "dish:tomato-soup-noodles": {
+    "image": "/foods/dish-tomato-soup-noodles.webp",
+    "title": "Domowe danie: tomato-soup-noodles",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
   }
 }

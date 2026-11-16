@@ -1,10 +1,40 @@
 {
-  "tool":"Built-in imagegen",
-  "usage":"Illustrative homemade dishes, not photographs of the user's actual meals. Both crepe variants intentionally share a photograph with different fillings.",
-  "basePrompt":"Square, premium photorealistic food thumbnail for a dark nutrition app. Overhead view, complete ivory ceramic dish centered on a dark charcoal teal table, natural soft lighting, appetizing realistic textures, clean margins. No text, no logos, no people, no hands, no props. Readable when reduced to 64 pixels.",
-  "images":[
-    {"files":["/foods/dish-rosol-noodles.webp"],"subject":"A bowl of Polish clear chicken broth rosół with fine egg noodles and a few thin cooked carrot slices. Clear golden soup, restrained parsley garnish. No big meat chunks."},
-    {"files":["/foods/dish-italian-pizza.webp"],"subject":"An entire Italian homemade thin crust pizza with tomato sauce, melted mozzarella and sliced salami. No extra vegetables."},
-    {"files":["/foods/dish-crepes-nutella.webp","/foods/dish-crepes-jam.webp"],"subject":"Three thin Polish crêpes naleśniki folded into triangles on a plate, one showing a thin layer of chocolate hazelnut filling and another showing strawberry jam. No powdered sugar, no cream, no fruit garnish."}
+  "tool": "Built-in imagegen",
+  "usage": "Illustrative homemade dishes, not photographs of the user's actual meals. Both crepe variants intentionally share an illustration with different fillings.",
+  "basePrompt": "Square, premium photorealistic food thumbnail for a dark nutrition app. Overhead view, complete ivory ceramic dish centered on a dark charcoal teal table, natural soft lighting, appetizing realistic textures, clean margins. No text, no logos, no people, no hands, no props. Readable when reduced to 64 pixels.",
+  "images": [
+    {
+      "files": [
+        "/foods/dish-rosol-noodles.webp"
+      ],
+      "subject": "A bowl of Polish clear chicken broth rosół with fine egg noodles and a few thin cooked carrot slices. Clear golden soup, restrained parsley garnish. No big meat chunks."
+    },
+    {
+      "files": [
+        "/foods/dish-italian-pizza.webp"
+      ],
+      "subject": "An entire Italian homemade thin crust pizza with tomato sauce, melted mozzarella and sliced salami. No extra vegetables."
+    },
+    {
+      "files": [
+        "/foods/dish-crepes-nutella.webp",
+        "/foods/dish-crepes-jam.webp"
+      ],
+      "subject": "Three thin Polish crêpes naleśniki folded into triangles on a plate, one showing a thin layer of chocolate hazelnut filling and another showing strawberry jam. No powdered sugar, no cream, no fruit garnish."
+    },
+    {
+      "files": [
+        "/foods/dish-cocoa-crumble-cheesecake.webp"
+      ],
+      "subject": "Polish cheesecake with a cocoa shortcrust base and cocoa crumble, creamy Pilos bucket-curd filling, no raisins.",
+      "prompt": "Use case: photorealistic-natural. Asset type: square food photograph thumbnail for a dark navy-blue Polish nutrition diary. Primary request: a generous rectangular slice of Polish baked cheesecake sernik królewski, with a thick smooth ivory twaróg curd-cheese filling, dark cocoa shortcrust base and irregular crumbly dark cocoa crumble on top. Absolutely no raisins, fruit, chocolate glaze, cream or garnish. A few natural cocoa crumbs beside the slice are fine. Use fresh Polish bucket cheesecake curd, baked to a firm creamy ivory interior; avoid American cream-cheese cheesecake styling. Composition: single slice centered on a complete round ivory ceramic dessert plate, top-down with just enough angle to see the filling layers clearly, clean margins, close enough to remain recognizable at 64px. Background: plain dark charcoal navy tabletop matching a dark blue nutrition app. Soft natural food-photography lighting, realistic appetizing homemade textures. No props, utensils, napkins, people, hands, text, logos or watermark. Generate one square image, not a collage."
+    },
+    {
+      "files": [
+        "/foods/dish-tomato-soup-noodles.webp"
+      ],
+      "subject": "Polish tomato soup with cooked noodles, ivory ceramic bowl on a dark navy tabletop. The recipe used in the app excludes cream.",
+      "prompt": "Use case: photorealistic-natural. Asset type: square food photograph thumbnail for a dark navy-blue Polish nutrition diary. Primary request: Polish homemade tomato soup pomidorowa with cooked small thin egg noodles visibly mixed into the soup, not dry pasta. Rich warm red-orange tomato broth, lightly creamy appearance without a cream swirl, restrained natural surface sheen. Composition: one complete round ivory ceramic soup bowl centered, overhead view, clean margins, soup and noodles clearly legible at 64px. Background: plain dark charcoal navy tabletop matching a dark blue nutrition app. Soft natural food-photography lighting, appetizing realistic homemade textures. No meat chunks, rice, chunky raw tomatoes, croutons, cheese topping, basil leaves, fruit, utensils, props, napkins, people, hands, text, logos or watermark. Generate one square image, not a collage."
+    }
   ]
 }

@@ -5,7 +5,7 @@ Responsywna aplikacja React + Vite + Cloudflare Pages Functions + D1. Jeden uży
 ## Co działa
 
 - Dziennik posiłków: śniadanie, obiad, kolacja, przekąski; każdy składnik dodajesz osobno z ilością w g lub ml, możesz poprawić porcję lub ją usunąć.
-- **43 podstawowe produkty ze zdjęciami WebP**, **17 produktów z listy użytkownika ze zdjęciami**, **4 dania domowe liczone w gramach** i produkty własne z etykiety. Wartości produktów bazowych i dań są orientacyjne; produkty z listy zachowują podaną tabelę. Wyszukiwanie marki i nazwy przez **Open Food Facts** z przycisku (bez żądań na każde naciśnięcie klawisza).
+- **43 podstawowe produkty ze zdjęciami WebP**, **17 produktów z listy użytkownika ze zdjęciami**, **6 dań domowych liczonych w gramach** i produkty własne z etykiety. Wśród dań są sernik z kakaową kruszonką bez rodzynek oraz pomidorowa z makaronem bez śmietany. Wartości produktów bazowych i dań są orientacyjne; produkty z listy zachowują podaną tabelę. Wyszukiwanie marki i nazwy przez **Open Food Facts** z przycisku (bez żądań na każde naciśnięcie klawisza).
 - Kalorie, białko, węglowodany, tłuszcze, błonnik, cukry, nasycone kwasy tłuszczowe, sól, wapń, żelazo, potas, magnez, witamina C, D, B12 — te składniki, dla których produkt ma dane. Brak danych = `—`, nigdy nie jest prezentowany jako zero.
 - Kroki, trening siłowy, bieganie, spacer, rower, inny trening, szacunkowy wydatek energetyczny; mechanizm ograniczający podwójne liczenie kroków z biegu i spaceru.
 - Ciemny interfejs na komputerze i telefonie. Profil: start 93 kg, cel 85 kg, wzrost 186 cm; punkt startowy **2600 kcal i 180 g białka**. Wiek, płeć, aktywność, metoda obliczeń i cele są edytowalne.

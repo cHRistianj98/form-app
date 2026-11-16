@@ -13,6 +13,9 @@ FIELDS = runpy.run_path(str(ROOT/'scripts/prepare-generic-nutrients.py'))['FIELD
 MATCHES = {
     'stock':172884, 'noodles':169762, 'flour':169761, 'mozzarella':170845,
     'salami':174582, 'yeast':175042, 'sugar':169655, 'jam':169641,
+    'cocoa':169593, 'cornstarch':169698, 'eggYolk':172184,
+    'bakingPowder':172804, 'tomatoPuree':170460, 'garlic':169230,
+    'parsley':170416, 'basil':171317, 'oregano':171328, 'pepper':170931,
 }
 with zipfile.ZipFile(ROOT/'.cache/usda-sr-legacy-2018.zip') as archive:
     def rows(filename):

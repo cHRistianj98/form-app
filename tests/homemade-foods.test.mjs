@@ -13,8 +13,8 @@ const favorite=id=>FAVORITE_FOODS.find(f=>f.id===`favorite:${id}`);
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-9,`${a} != ${b}`);
 const entry=(food,grams,day='2026-11-15')=>({id:`entry:${food.id}`,food,grams,day,meal:'lunch'});
 
-test('four homemade dishes are discoverable by Polish names, aliases and gram quantities',()=>{
-  assert.equal(HOMEMADE_FOODS.length,4);
+test('six homemade dishes are discoverable by Polish names, aliases and gram quantities',()=>{
+  assert.equal(HOMEMADE_FOODS.length,6);
   for(const food of HOMEMADE_FOODS) {
     assert.equal(food.unit,'g');assert.equal(foodBasis(food),100);
     assert.equal(foodOptions(food.name)[0].id,food.id);
@@ -25,9 +25,40 @@ test('four homemade dishes are discoverable by Polish names, aliases and gram qu
     assert.equal(foodImage({id:food.id,name:food.name}),food.image);
   }
   assert.equal(foodOptions('rosol')[0].id,get('rosol-noodles').id);
-  assert.equal(foodOptions('lidlomix')[0].id,get('italian-pizza').id);
+  assert.ok(foodOptions('lidlomix').some(food=>food.id===get('italian-pizza').id));
   assert.equal(foodOptions('nalesniki dzem')[0].id,get('crepes-jam').id);
   assert.equal(foodOptions('nalesniki nutella')[0].id,get('crepes-nutella').id);
+  assert.equal(foodOptions('sernik Pilos')[0].id,get('cocoa-crumble-cheesecake').id);
+  assert.equal(foodOptions('sernik krolewski')[0].id,get('cocoa-crumble-cheesecake').id);
+  assert.equal(foodOptions('pomidorowka')[0].id,get('tomato-soup-noodles').id);
+  assert.equal(foodOptions('lidlomix pomidorowa')[0].id,get('tomato-soup-noodles').id);
+});
+
+test('cheesecake includes cocoa crumble and Pilos bucket curd with explicit assumptions and no raisins',()=>{
+  const cake=get('cocoa-crumble-cheesecake');
+  // Compare the whole batch, not a generic cheesecake table or raw batter mass.
+  const batch=108*10+364*4+753*4+387*2.8+143*2.5+322*0.34+228*0.4+381*0.4+51*0.08;
+  near(cake.kcal,batch/23);
+  near(scaleFood(cake,137.5).kcal,batch/2300*137.5);
+  assert.match(cake.estimateNotes,/bez rodzynek/i);
+  assert.match(cake.estimateNotes,/Pilos z wiaderka/);
+  assert.match(cake.estimateNotes,/wariant 6%/);
+  assert.match(cake.estimateNotes,/2300 g/);
+  assert.ok(cake.partialNutrients.includes('calcium'));
+  assert.ok(cake.partialNutrients.includes('salt'));
+  assert.equal(cake.recipeSources.some(s=>s.url.includes('fitatu.com')),true);
+});
+
+test('tomato soup follows the supplied Lidlomix recipe using dry pasta and excluding cream',()=>{
+  const soup=get('tomato-soup-noodles');
+  const batch=36*10+38*1.5+350*2+149*0.03+36*0.02+233*0.002+265*0.002+251*0.001;
+  near(soup.kcal,batch/13);
+  near(scaleFood(soup,425).kcal,batch/1300*425);
+  assert.match(soup.estimateNotes,/200 g SUCHEGO makaronu/);
+  assert.match(soup.estimateNotes,/bez śmietany/);
+  assert.match(soup.estimateNotes,/1300 g/);
+  assert.match(soup.estimateNotes,/makaron jest już wliczony/);
+  assert.equal(soup.recipeSources[0].url,'https://www.monsieur-cuisine.com/pl/recipe/zupa-pomidorowa-z-makaronem-5');
 });
 
 test('recipe yield uses cooked grams, counts ml by their own label and converts only the oil density',()=>{
