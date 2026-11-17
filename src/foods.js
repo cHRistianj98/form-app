@@ -58,6 +58,14 @@ export const BASE_FOODS = [
   f('honey','Miód',304,0.3,82.4,0,{sugars:82.1}),
   f('oil','Olej rzepakowy',884,0,0,100),
   f('cottage','Serek wiejski',97,11.4,3,4.3,{calcium:80,salt:0.7}),
+  f('garlic','Czosnek',149,6.36,33.06,.5,{
+    aliases:['czosnek świeży','czosnek surowy','ząbek czosnku','zabek czosnku'],
+    servingSizes:[{label:'1 ząbek — 3 g',quantity:3},{label:'2 ząbki — 6 g',quantity:6},{label:'3 ząbki — 9 g',quantity:9}],
+  }),
+  f('rustic-sausage','Kiełbasa wiejska krucha',326,14.1,1.63,28.72,{
+    aliases:['kiełbasa wiejska','kielbasa wiejska','kiełbasa krucha','wiejska krucha','kiełbasa wieprzowa'],
+    servingSizes:[{label:'50 g',quantity:50},{label:'100 g',quantity:100},{label:'150 g',quantity:150}],
+  }),
 ];
 
 export const HOMEMADE_FOODS=createHomemadeFoods(BASE_FOODS,FAVORITE_FOODS);

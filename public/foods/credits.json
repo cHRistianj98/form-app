@@ -673,5 +673,23 @@
     "source": "/foods/dish-image-prompts.json",
     "licenseUrl": "/foods/dish-image-prompts.json",
     "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "garlic": {
+    "image": "/foods/garlic.webp",
+    "title": "Czosnek",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/additional-food-image-prompts.json",
+    "licenseUrl": "/foods/additional-food-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "rustic-sausage": {
+    "image": "/foods/rustic-sausage.webp",
+    "title": "Kiełbasa wiejska krucha",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/additional-food-image-prompts.json",
+    "licenseUrl": "/foods/additional-food-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
   }
 }

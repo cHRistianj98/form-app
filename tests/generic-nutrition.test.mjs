@@ -14,9 +14,9 @@ const legacy=id=>({id:`base:${id}`,name:get(id).name,source:'Orientacyjne',kcal:
 const entry=(food,grams,day='2026-11-14')=>({food,grams,day});
 const near=(actual,expected)=>assert.ok(Math.abs(actual-expected)<0.000001,`${actual} != ${expected}`);
 
-test('all 43 generic foods have reviewed composition sources including six explicit supplementary estimates',()=>{
-  assert.equal(BASE_FOODS.length,43);
-  assert.equal(Object.keys(data.foods).length,37);
+test('all 45 generic foods have reviewed composition sources including six explicit supplementary estimates',()=>{
+  assert.equal(BASE_FOODS.length,45);
+  assert.equal(Object.keys(data.foods).length,39);
   assert.equal(Object.keys(data.unmatched).length,6);
   assert.equal(Object.keys(estimates.foods).length,6);
   assert.match(data.sha256,/^[a-f0-9]{64}$/);

@@ -54,6 +54,8 @@ MATCHES = {
     'honey': (169640, 'Miód'),
     'oil': (172336, 'Olej rzepakowy niskoerukowy'),
     'cottage': (172179, 'Serek ziarnisty ze śmietanką, około 4% tłuszczu'),
+    'garlic': (169230, 'Czosnek surowy, obrane ząbki'),
+    'rustic-sausage': (174577, 'Kiełbasa wieprzowa typu polskiego; przybliżenie wiejskiej kruchej'),
 }
 # No adequate match in this dataset: do not substitute cottage cheese for
 # Polish twarog, Greek yogurt for skyr, or fortified US kefir for Polish kefir.
@@ -134,6 +136,10 @@ def main():
             'nutrients': values,
             'conversionInputs': {str(n): raw[n] for n in [1093, 1105, 1107, 1108, 1120, 1167, 1210] if n in raw},
         }
+        if key=='rustic-sausage':
+            result[f'base:{key}']['method']='Wariant ogólny bez wskazanej marki. Kalorie, makro i mikroskładniki oszacowano tabelą USDA „Polish sausage, pork”. Receptura, zawartość tłuszczu, sól i podsuszenie konkretnej kiełbasy wiejskiej kruchej mogą zmienić wynik. Dane dotyczą produktu gotowego do jedzenia.'
+        if key=='garlic':
+            result[f'base:{key}']['method']='Wartości na 100 g surowych, obranych ząbków. Jeden ząbek przyjęto orientacyjnie jako 3 g; dokładną ilość możesz wpisać w gramach.'
 
     output = {
         'dataset': 'USDA FoodData Central — SR Legacy, April 2018',

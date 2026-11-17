@@ -1,6 +1,10 @@
 // Products supplied by the user. Keep their table as the nutrition source;
 // packaging photographs do not override these values or imply a specific flavour.
-import {NUTRIENT_FIELDS} from './nutrients.js';
+import {NUTRIENT_FIELDS,MINERAL_KEYS,VITAMIN_KEYS} from './nutrients.js';
+import genericEstimates from './genericFoodEstimates.json' with {type:'json'};
+const highProteinProxy=genericEstimates.foods['base:skyr'];
+const highProteinMicros=Object.fromEntries([...MINERAL_KEYS,...VITAMIN_KEYS]
+  .filter(key=>highProteinProxy.nutrients[key]!=null).map(key=>[key,highProteinProxy.nutrients[key]]));
 const product = (id, name, brand, unit, kcal, protein, carbs, fat, extra={}) => ({
   id:`favorite:${id}`, name, brand, unit, source:'Twoja tabela',
   image:`/foods/fav-${id}.webp`, imageFit:'contain',
@@ -19,8 +23,13 @@ export const FAVORITE_FOODS = [
     sliceGrams:14,aliases:['ser high protein','ser wysokobiałkowy w plastrach'],
     servingSizes:[{label:'1 plaster — 14 g',quantity:14},{label:'2 plastry — 28 g',quantity:28},{label:'3 plastry — 42 g',quantity:42}],
   }),
-  product('lidl-protein-cup','High Protein, kubek','Lidl','g',71,10,6.7,0.3,{
-    imageNote:'Zdjęcie poglądowe serii High Protein. Smak kubka nie został określony.',
+  labelled('lidl-protein-cup','Jogurt High Protein','Lidl','g',71,10,6.7,0.3,{
+    ...highProteinMicros,defaultQuantity:200,
+    aliases:['high protein kubek','high protein jogurt','jogurt wysokobiałkowy','jogurt hight protein','jogurt proteinowy'],
+    servingSizes:[{label:'Opakowanie 200 g',quantity:200},{label:'Pół opakowania — 100 g',quantity:100}],
+    imageNote:'Zdjęcie poglądowe serii High Protein. Smak kubka nie został określony. Mikroskładniki są szacunkowe.',
+    sourceUrl:highProteinProxy.sourceUrl,
+    estimateNotes:'Kalorie i makro pozostają z Twojej tabeli na 100 g: 71 kcal, 10 g białka, 6,7 g węglowodanów i 0,3 g tłuszczu. Całe opakowanie ma 200 g. Witaminy i minerały oszacowano tabelą naturalnego skyru 0,2% z DTU Frida 6.1 jako zbliżonego nabiału wysokobiałkowego. To przybliżenie, nie dane laboratoryjne tego jogurtu; smak i receptura mogą zmieniać skład. Cukry, nasycone, sól i składniki niepodane w źródle pozostają nieznane. Źródło: DTU National Food Institute, CC BY 4.0.',
   }),
   product('laciate-milk-32','Mleko Łaciate 3,2%','Mlekpol — Łaciate','ml',60,3.2,4.7,3.2),
   product('cincin-rose-zero','Cin&Cin Rosé 0%','Cin&Cin','ml',22,0,5.3,0),

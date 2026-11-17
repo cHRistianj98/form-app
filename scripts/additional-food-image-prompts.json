@@ -1,0 +1,18 @@
+{
+  "tool": "Built-in imagegen",
+  "usage": "Poglądowe grafiki produktów ogólnych, bez wskazanej marki.",
+  "images": [
+    {
+      "id": "garlic",
+      "name": "Czosnek",
+      "image": "/foods/garlic.webp",
+      "prompt": "Photorealistic premium food photograph for a dark navy Polish nutrition diary thumbnail. Square composition. One complete ivory ceramic plate centered on a plain dark charcoal navy tabletop, clean generous margin, close overhead view, soft natural side lighting, appetizing realistic food texture, subject clearly recognizable at 48 pixels. No text, labels, logos, watermarks, cutlery, napkins, people, hands, packages or unrelated food. One image, no collage. Subject: two fresh white garlic bulbs, one bulb partly opened to reveal cloves, and three peeled ivory garlic cloves arranged neatly on the plate. Raw fresh garlic, not roasted or powdered. No onion, herbs or garnish."
+    },
+    {
+      "id": "rustic-sausage",
+      "name": "Kiełbasa wiejska krucha",
+      "image": "/foods/rustic-sausage.webp",
+      "prompt": "Photorealistic premium food photograph for a dark navy Polish nutrition diary thumbnail. Square composition. One complete ivory ceramic plate centered on a plain dark charcoal navy tabletop, clean generous margin, close overhead view, soft natural side lighting, appetizing realistic food texture, subject clearly recognizable at 48 pixels. No text, labels, logos, watermarks, cutlery, napkins, people, hands, packages or unrelated food. One image, no collage. Subject: traditional Polish smoked rustic pork sausage, kielbasa wiejska krucha, one short curved link with a wrinkled golden-brown natural casing and four thick slices in front revealing a coarse pink-brown pork filling with small white fat flecks. Fully cooked ready-to-eat cold smoked sausage, no grilling marks, no bread, mustard, pickles, herbs or sauce."
+    }
+  ]
+}

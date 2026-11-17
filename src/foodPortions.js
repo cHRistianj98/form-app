@@ -1,5 +1,11 @@
 import {FAVORITE_FOODS} from './favoriteFoods.js';
 
+export function defaultFoodQuantity(food) {
+  const quantity=food?.defaultQuantity??FAVORITE_FOODS.find(item=>item.id===food?.id)?.defaultQuantity;
+  if(Number.isFinite(quantity)&&quantity>=.1&&quantity<=100000)return quantity;
+  return ['tablet','capsule'].includes(food?.unit)?1:100;
+}
+
 // Older diary snapshots keep their original nutrition; only the new portion
 // convenience is looked up by identity when the snapshot predates it.
 export function sliceGrams(food) {

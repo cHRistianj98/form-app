@@ -1348,6 +1348,74 @@
         "1167": 0.099,
         "1210": 0.147
       }
+    },
+    "base:garlic": {
+      "fdcId": 169230,
+      "description": "Garlic, raw",
+      "variant": "Czosnek surowy, obrane ząbki",
+      "nutrients": {
+        "fiber": 2.1,
+        "sugars": 1.0,
+        "saturatedFat": 0.089,
+        "salt": 0.0425,
+        "calcium": 181.0,
+        "iron": 1.7,
+        "potassium": 401.0,
+        "magnesium": 25.0,
+        "zinc": 1.16,
+        "vitaminC": 31.2,
+        "vitaminD": 0.0,
+        "vitaminE": 0.08,
+        "vitaminK": 1.7,
+        "b1": 0.2,
+        "b2": 0.11,
+        "b5": 0.596,
+        "b6": 1.235,
+        "folate": 3.0,
+        "b12": 0.0,
+        "vitaminA": 0.833333,
+        "b3": 1.8
+      },
+      "conversionInputs": {
+        "1093": 17.0,
+        "1105": 0.0,
+        "1107": 5.0,
+        "1108": 0.0,
+        "1120": 0.0,
+        "1167": 0.7,
+        "1210": 0.066
+      },
+      "method": "Wartości na 100 g surowych, obranych ząbków. Jeden ząbek przyjęto orientacyjnie jako 3 g; dokładną ilość możesz wpisać w gramach."
+    },
+    "base:rustic-sausage": {
+      "fdcId": 174577,
+      "description": "Polish sausage, pork",
+      "variant": "Kiełbasa wieprzowa typu polskiego; przybliżenie wiejskiej kruchej",
+      "nutrients": {
+        "fiber": 0.0,
+        "saturatedFat": 10.33,
+        "salt": 2.19,
+        "calcium": 12.0,
+        "iron": 1.44,
+        "potassium": 237.0,
+        "magnesium": 14.0,
+        "zinc": 1.93,
+        "vitaminC": 1.0,
+        "b1": 0.502,
+        "b2": 0.148,
+        "b5": 0.45,
+        "b6": 0.19,
+        "folate": 2.0,
+        "b12": 0.98,
+        "b3": 5.743
+      },
+      "conversionInputs": {
+        "1093": 876.0,
+        "1105": 0.0,
+        "1167": 3.443,
+        "1210": 0.138
+      },
+      "method": "Wariant ogólny bez wskazanej marki. Kalorie, makro i mikroskładniki oszacowano tabelą USDA „Polish sausage, pork”. Receptura, zawartość tłuszczu, sól i podsuszenie konkretnej kiełbasy wiejskiej kruchej mogą zmienić wynik. Dane dotyczą produktu gotowego do jedzenia."
     }
   },
   "unmatched": {

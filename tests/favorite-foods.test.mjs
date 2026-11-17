@@ -100,7 +100,7 @@ test('Worker saves and reloads product snapshots with units, images, qualifiers 
   const custom={...FAVORITE_FOODS[0],id:'own:drink'};
   assert.equal((await ask('foods','POST',custom)).status,200);
   assert.deepEqual(customFood,custom);
-  for(const change of [{unit:'l'},{fatLessThan:'true'},{imageFit:'invalid'}]) {
+  for(const change of [{unit:'l'},{fatLessThan:'true'},{imageFit:'invalid'},{defaultQuantity:0},{defaultQuantity:-1},{defaultQuantity:'200'},{defaultQuantity:100001}]) {
     assert.equal((await ask('entries','POST',{id:'entry:bad',day:'2026-11-14',meal:'breakfast',grams:100,food:{...custom,...change}})).status,400);
   }
   const cheese=FAVORITE_FOODS.find(food=>food.id==='favorite:hochland-gouda');
@@ -110,7 +110,7 @@ test('Worker saves and reloads product snapshots with units, images, qualifiers 
   const tablet=FAVORITE_FOODS.find(food=>food.unit==='tablet');
   const record={id:'entry:tablet',day:'2026-11-14',meal:'breakfast',grams:1,food:tablet};
   assert.equal((await ask('entries','POST',{...record,grams:0.5})).status,400);
-  for(const change of [{basisQuantity:100},{b1:'1.1'},{vitaminC:-1},{servingSizes:[{label:'Pół tabletki',quantity:0.5}]}]) {
+  for(const change of [{basisQuantity:100},{b1:'1.1'},{vitaminC:-1},{defaultQuantity:1.5},{servingSizes:[{label:'Pół tabletki',quantity:0.5}]}]) {
     assert.equal((await ask('entries','POST',{...record,food:{...tablet,...change}})).status,400);
   }
 });
