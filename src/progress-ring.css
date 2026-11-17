@@ -4,24 +4,22 @@
 .progress-ring circle { fill:none; stroke-width:4; }
 .progress-ring-track { stroke:var(--border); }
 .progress-ring-fill { stroke:currentColor; stroke-linecap:round; transition:stroke-dashoffset .25s ease; }
-.progress-ring-value { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; font-size:10px; line-height:1.2; font-weight:800; white-space:nowrap; }
+.progress-ring-label { fill:currentColor; font-family:inherit; font-weight:650; }
 .progress-ring.progress, .progress-ring.done { color:var(--success); }
-.progress-ring .progress-ring-value { color:inherit; font-size:10px; }
-.progress-ring .progress-ring-value>span { color:inherit; font-size:inherit; }
 .progress-ring.limit { color:#edb676; }
 .progress-ring.unknown { color:var(--muted); }
 .macro-item>.progress-ring { margin-bottom:10px; }
 .nutrition-metric-name { justify-content:space-between; align-items:center; }
-.micro-reference-progress { display:flex; align-items:center; gap:9px; margin-top:auto; }
+.micro-reference-progress { display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin-top:auto; }
 .micro-reference-progress>small { color:var(--muted); font-size:11px; line-height:1.5; overflow-wrap:anywhere; min-width:0; }
 .micro-item.has-reference-progress { gap:10px; min-width:0; }
 .micro-item.has-reference-progress>strong { overflow-wrap:anywhere; }
-.micro-item .progress-ring { width:48px; height:48px; }
+.micro-item .progress-ring { width:56px; height:56px; }
 .nutrition-table-row>div:last-child .progress-ring { margin-left:auto; }
 @media(max-width:600px) {
   .macro-item>.progress-ring { width:52px; height:52px; }
   .nutrition-metric-name { flex-direction:column; align-items:flex-start; gap:10px; }
   .micro-reference-progress { gap:6px; }
   .micro-reference-progress>small { font-size:10px; }
-  .micro-item .progress-ring { width:44px; height:44px; }
+  .micro-item .progress-ring { width:56px; height:56px; }
 }

@@ -1,0 +1,220 @@
+{
+  "dataset": "Uzupełniające szacunki ogólnych produktów — DTU Frida 6.1 i USDA",
+  "basisQuantity": 100,
+  "unit": "g",
+  "verifiedAt": "2026-11-17",
+  "frida": {
+    "name": "The Danish Food Composition Database, version 6.1",
+    "author": "DTU National Food Institute",
+    "url": "https://doi.org/10.11583/DTU.32312844",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "sha256": "aba52ade9dd75f085954ca5561f001efb58e4b37d412b135622fd34d77f45c09"
+  },
+  "foods": {
+    "base:bread": {
+      "sourceName": "DTU Frida 6.1",
+      "sourceUrl": "https://doi.org/10.11583/DTU.32312844",
+      "sourceIds": [
+        861
+      ],
+      "variant": "Chleb pszenny biały; receptura ogólna DTU",
+      "method": "Szacunek z tabel na 100 g produktu. Wariant i receptura mogą zmieniać skład.",
+      "nutrients": {
+        "fiber": 3.601111,
+        "salt": 1.05875,
+        "vitaminA": 0.0,
+        "vitaminD": 0.0,
+        "vitaminE": 0.5,
+        "vitaminK": 0.0,
+        "b1": 0.1662,
+        "b2": 0.0685,
+        "b3": 1.539333,
+        "b6": 0.061444,
+        "b5": 0.5,
+        "biotin": 2.27,
+        "folate": 40.166667,
+        "b12": 0.0,
+        "vitaminC": 0.0,
+        "potassium": 137.611111,
+        "calcium": 38.988889,
+        "magnesium": 20.316667,
+        "iron": 1.075556,
+        "zinc": 0.641148,
+        "sugars": 0.35,
+        "saturatedFat": 0.789015
+      }
+    },
+    "base:roll": {
+      "sourceName": "DTU Frida 6.1",
+      "sourceUrl": "https://doi.org/10.11583/DTU.32312844",
+      "sourceIds": [
+        956
+      ],
+      "variant": "Bułka pszenna biała; receptura ogólna DTU",
+      "method": "Szacunek z tabel na 100 g produktu. Wariant i receptura mogą zmieniać skład.",
+      "nutrients": {
+        "fiber": 3.361176,
+        "salt": 1.255909,
+        "vitaminA": 0.0,
+        "vitaminD": 0.0,
+        "vitaminK": 0.0,
+        "b1": 0.175118,
+        "b2": 0.080818,
+        "b3": 1.654824,
+        "b6": 0.073455,
+        "b5": 0.5,
+        "biotin": 1.9,
+        "folate": 69.714286,
+        "b12": 0.0,
+        "vitaminC": 0.0,
+        "potassium": 144.818182,
+        "calcium": 49.027273,
+        "magnesium": 20.818182,
+        "iron": 1.312941,
+        "zinc": 0.754118,
+        "sugars": 0.35,
+        "saturatedFat": 0.652294
+      }
+    },
+    "base:skyr": {
+      "sourceName": "DTU Frida 6.1",
+      "sourceUrl": "https://doi.org/10.11583/DTU.32312844",
+      "sourceIds": [
+        1693
+      ],
+      "variant": "Skyr naturalny, 0,2% tłuszczu",
+      "method": "Szacunek z tabel na 100 g produktu. Wariant i receptura mogą zmieniać skład.",
+      "nutrients": {
+        "fiber": 0.0,
+        "salt": 0.1125,
+        "vitaminA": 12.666667,
+        "vitaminD": 0.03504,
+        "vitaminE": 0.005,
+        "b1": 0.01,
+        "b2": 0.28,
+        "b3": 2.728533,
+        "b6": 0.05,
+        "folate": 1.0,
+        "b12": 0.7,
+        "vitaminC": 0.0,
+        "potassium": 140.0,
+        "calcium": 120.0,
+        "magnesium": 12.0,
+        "iron": 0.02,
+        "zinc": 0.6,
+        "sugars": 4.0,
+        "saturatedFat": 0.1
+      }
+    },
+    "base:tw": {
+      "sourceName": "DTU Frida 6.1",
+      "sourceUrl": "https://doi.org/10.11583/DTU.32312844",
+      "sourceIds": [
+        307,
+        874
+      ],
+      "variant": "Twaróg półtłusty; przybliżenie serem quark do 4,7% tłuszczu",
+      "method": "Mikroskładniki interpolowano między chudym i tłustym quarkiem z tabel DTU. To orientacyjny odpowiednik polskiego twarogu, nie analiza jego receptury. Wcześniejsze wartości, w tym wapń 90 mg, pozostają zachowane.",
+      "nutrients": {
+        "fiber": 0.0,
+        "salt": 0.131032,
+        "vitaminA": 43.836645,
+        "vitaminD": 0.104967,
+        "vitaminE": 0.120728,
+        "vitaminK": 0.0,
+        "b1": 0.04,
+        "b2": 0.23,
+        "b3": 2.413027,
+        "b6": 0.05,
+        "b5": 0.314327,
+        "biotin": 1.665342,
+        "folate": 27.0,
+        "b12": 0.415673,
+        "vitaminC": 1.0,
+        "potassium": 143.0,
+        "calcium": 152.761589,
+        "magnesium": 11.8,
+        "iron": 0.017667,
+        "zinc": 0.476667,
+        "sugars": 3.647241,
+        "saturatedFat": 3.04288
+      }
+    },
+    "base:kefir": {
+      "sourceName": "DTU Frida 6.1",
+      "sourceUrl": "https://doi.org/10.11583/DTU.32312844",
+      "sourceIds": [
+        1153
+      ],
+      "variant": "Kefir naturalny 2%; przybliżenie tabelą kefiru 1,5%",
+      "method": "Minerały i witaminy rozpuszczalne w wodzie z ogólnego kefiru DTU. Witaminy A, D, E i nasycone oszacowano proporcjonalnie do 2% tłuszczu.",
+      "nutrients": {
+        "fiber": 0.0,
+        "salt": 0.107612,
+        "vitaminA": 19.035855,
+        "vitaminD": 0.050204,
+        "vitaminE": 0.050204,
+        "vitaminK": 0.0,
+        "b1": 0.046333,
+        "b2": 0.174219,
+        "b3": 0.90157,
+        "b6": 0.0492,
+        "b5": 0.35625,
+        "biotin": 1.554545,
+        "folate": 11.5,
+        "b12": 0.438,
+        "vitaminC": 1.3,
+        "potassium": 152.985075,
+        "calcium": 121.313433,
+        "magnesium": 11.753731,
+        "iron": 0.029,
+        "zinc": 0.412667,
+        "sugars": 3.78,
+        "saturatedFat": 1.295
+      }
+    },
+    "base:tortilla": {
+      "sourceName": "USDA — szacunek z niewzbogacanej mąki i oleju",
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/169761/nutrients",
+      "sourceIds": [
+        169761,
+        172336
+      ],
+      "variant": "Tortilla pszenna; orientacyjna receptura z mąki niewzbogacanej",
+      "method": "Na 100 g gotowego placka przyjęto 70 g mąki niewzbogacanej, 6 g oleju rzepakowego, 0,8 g soli i 23,2 g wody. Bez korekty strat witamin. To szacunek typowej receptury, nie etykieta konkretnej tortilli; kalorie i makro pozostają dotychczasowe.",
+      "sources": [
+        {
+          "name": "Mąka pszenna niewzbogacana USDA",
+          "url": "https://fdc.nal.usda.gov/food-details/169761/nutrients"
+        },
+        {
+          "name": "Olej rzepakowy USDA",
+          "url": "https://fdc.nal.usda.gov/food-details/172336/nutrients"
+        }
+      ],
+      "nutrients": {
+        "fiber": 1.89,
+        "salt": 0.8035,
+        "vitaminA": 0.0,
+        "vitaminD": 0.0,
+        "vitaminE": 1.0896,
+        "vitaminK": 4.488,
+        "b1": 0.084,
+        "b2": 0.028,
+        "b6": 0.0308,
+        "b5": 0.3066,
+        "folate": 18.2,
+        "b12": 0.0,
+        "vitaminC": 0.0,
+        "potassium": 74.9,
+        "calcium": 10.5,
+        "magnesium": 15.4,
+        "iron": 0.819,
+        "zinc": 0.49,
+        "sugars": 0.189,
+        "saturatedFat": 0.5504
+      }
+    }
+  }
+}

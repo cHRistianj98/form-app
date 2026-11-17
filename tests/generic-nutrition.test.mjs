@@ -8,23 +8,26 @@ import {nutritionReport,sumNutrition} from '../src/nutritionStats.js';
 import {DEFAULT_PROFILE} from '../src/profile.js';
 
 const data=JSON.parse(readFileSync(new URL('../src/genericFoodNutrients.json',import.meta.url),'utf8'));
+const estimates=JSON.parse(readFileSync(new URL('../src/genericFoodEstimates.json',import.meta.url),'utf8'));
 const get=id=>BASE_FOODS.find(f=>f.id===`base:${id}`);
 const legacy=id=>({id:`base:${id}`,name:get(id).name,source:'Orientacyjne',kcal:get(id).kcal,protein:get(id).protein,carbs:get(id).carbs,fat:get(id).fat});
 const entry=(food,grams,day='2026-11-14')=>({food,grams,day});
 const near=(actual,expected)=>assert.ok(Math.abs(actual-expected)<0.000001,`${actual} != ${expected}`);
 
-test('all 43 generic foods have a reviewed source or an explicit reason for missing composition',()=>{
+test('all 43 generic foods have reviewed composition sources including six explicit supplementary estimates',()=>{
   assert.equal(BASE_FOODS.length,43);
   assert.equal(Object.keys(data.foods).length,37);
   assert.equal(Object.keys(data.unmatched).length,6);
+  assert.equal(Object.keys(estimates.foods).length,6);
   assert.match(data.sha256,/^[a-f0-9]{64}$/);
   for(const food of BASE_FOODS) {
     const info=genericNutritionInfo(food);
-    assert.equal(Boolean(info) !== Boolean(genericNutritionGap(food)),true,food.id);
-    if(!info) continue;
+    assert.ok(info,food.id);
+    assert.equal(genericNutritionGap(food),null,food.id);
     assert.equal(data.basisQuantity,100);
     assert.equal(data.unit,'g');
-    assert.match(info.url,new RegExp(`/food-details/${info.fdcId}/nutrients$`));
+    if(info.fdcId)assert.match(info.url,new RegExp(`/food-details/${info.fdcId}/nutrients$`));
+    else assert.ok(info.sourceIds.length>0&&info.url.startsWith('https:'));
     for(const [key,value] of Object.entries(info.nutrients)) {
       assert.ok(NUTRIENT_FIELDS.includes(key),key);
       assert.ok(!['kcal','protein','carbs','fat'].includes(key),key);
@@ -71,10 +74,29 @@ test('dry/cooked foods and unfortified sources remain distinct',()=>{
   assert.equal(get('rice').folate,8);assert.equal(get('ricec').folate,3);
   assert.equal(get('pasta').folate,18);assert.equal(get('pastac').folate,7);
   assert.equal(genericNutritionInfo(get('milk')).fdcId,172205);
+});
+
+test('six previously missing foods gain traceable estimated micros without changing known values or old snapshots',()=>{
   for(const id of ['bread','roll','tortilla','tw','skyr','kefir']) {
-    assert.equal(genericNutritionInfo(get(id)),null,id);
-    assert.equal(scaleFood(get(id),100).b1,null,id);
+    const info=genericNutritionInfo(get(id));
+    assert.ok(Object.keys(info.nutrients).length>=18,id);
+    assert.ok(info.method.length>40,id);
+    const old=legacy(id),before=structuredClone(old),portion=scaleFood(old,150);
+    assert.deepEqual(old,before);
+    near(portion.kcal,before.kcal*1.5);
+    near(portion.protein,before.protein*1.5);
+    assert.ok(portion.b1>0);assert.ok(portion.magnesium>0);
   }
+  assert.equal(get('tw').calcium,90);
+  assert.equal(get('bread').salt,1.2);
+  assert.equal(get('skyr').b12,.7);
+  assert.equal(get('skyr').magnesium,12);
+  assert.equal(get('skyr').biotin,undefined);
+  assert.ok(get('bread').biotin>0);
+  assert.deepEqual(estimates.foods['base:tortilla'].sourceIds,[169761,172336]);
+  assert.match(genericNutritionInfo(get('tortilla')).method,/mąki niewzbogacanej/);
+  assert.match(estimates.frida.sha256,/^[a-f0-9]{64}$/);
+  assert.equal(estimates.frida.license,'CC BY 4.0');
 });
 
 test('legacy generic entries gain only missing data in calculations without mutating snapshots',()=>{

@@ -9,7 +9,7 @@ import {SUPPLEMENTS} from './supplements.js';
 export {NUTRIENTS} from './nutrients.js';
 
 // Orientacyjne wartości na 100 g. Brakujące składniki uzupełniamy z jawnie
-// dopasowanych rekordów USDA; niedostępne dane nigdy nie oznaczają zera.
+// dopasowanych tabel USDA i DTU; niedostępne dane nigdy nie oznaczają zera.
 const f = (id, name, kcal, protein, carbs, fat, extra = {}) => enrichGenericFood({
   id: `base:${id}`, name, brand: '', source: 'Orientacyjne', image: `/foods/${id}.webp`,
   kcal, protein, carbs, fat, ...extra,
@@ -163,10 +163,17 @@ export function calcTargets(profile, weight) {
   };
 }
 
-// A fixed daily plan includes usual activity through PAL/EER. Logs are useful
-// estimates, but do not increase the food budget a second time.
-export function calcDailyBalance(targets, eaten) {
-  return {budget:targets.calories, remaining:targets.calories-(Number(eaten)||0)};
+// The user's base plan gains the movement recorded for this specific day.
+export function calcDailyBalance(targets, eaten, movement=0) {
+  const extra=Number.isFinite(Number(movement))?Math.max(0,Number(movement)):0;
+  const budget=targets.calories+extra;
+  return {budget,remaining:budget-(Number(eaten)||0)};
+}
+
+export function calcDailyMovement(steps=0,activities=[]) {
+  const workout=activities.reduce((total,a)=>total+Math.max(0,Number(a.kcal)||0),0);
+  const stepsBurn=calcStepsKcal(steps,activities);
+  return {workout,stepsBurn,total:workout+stepsBurn};
 }
 
 export function foodImage(food) {
@@ -178,9 +185,8 @@ export function foodImage(food) {
   return base?.image || null;
 }
 export function calcStepsKcal(steps, activities) {
-  // Informacyjny szacunek ruchu ponad umowną bazę 3 tys. kroków.
+  // Szacunek ruchu ponad umowną bazę 3 tys. kroków.
   // Odejmujemy kroki z biegu / spaceru, by nie liczyć ich ponownie.
-  // Ten szacunek nie zwiększa celu kalorii zawierającego już aktywność.
   const exerciseSteps = activities.reduce((total,a) => total + (a.includedInSteps ?
     (a.type === 'run' ? (Number(a.distance)>0 ? a.distance * 1250 : a.minutes * 150) :
      a.type === 'walk' ? a.minutes * 100 : 0) : 0), 0);

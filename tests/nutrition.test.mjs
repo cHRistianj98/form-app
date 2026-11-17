@@ -44,10 +44,12 @@ test('manual target stays fixed when weight and activity change; protein can be 
   assert.equal(calcTargets({...DEFAULT_PROFILE,manualCalories:1000},93).macrosFit,false);
 });
 
-test('daily budget does not credit activity already included in the plan',()=>{
+test('daily budget gains the recorded movement while retaining the base plan',()=>{
   const target=calcTargets(DEFAULT_PROFILE,93);
   assert.deepEqual(calcDailyBalance(target,1700),{budget:2600,remaining:900});
-  assert.equal(calcDailyBalance({...target,workout:800,steps:20000},2700).remaining,-100);
+  assert.deepEqual(calcDailyBalance(target,518,128),{budget:2728,remaining:2210});
+  assert.equal(calcDailyBalance(target,2700,800).remaining,700);
+  assert.equal(calcDailyBalance(target,2700,-50).budget,2600);
 });
 
 test('migration replaces built-in old targets and preserves explicit preferences without touching diary records',()=>{

@@ -47,6 +47,10 @@
 .portion-equivalence strong { color:var(--text); }
 .serving-presets.slice-presets { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
 .serving-presets.slice-presets button { padding:8px 3px; font-size:12px; text-align:center; }
+.modal-actions .button.food-entry-save { display:inline-flex; align-items:center; justify-content:center; gap:8px; white-space:nowrap; font-size:14px; font-weight:650; padding:12px 16px; border-radius:12px; }
+.food-entry-save>svg { flex-shrink:0; }
+.portion-preview .portion-energy strong { font-size:30px; font-weight:650; }
+.modal-card .portion-preview .macro-value>strong { font-size:17px; font-weight:650; }
 @media(max-width:360px) {
   .meal-collapsible .meal-head { padding:13px 12px; gap:9px; }
   .meal-toggle { gap:7px; }

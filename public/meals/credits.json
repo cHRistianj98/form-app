@@ -6,7 +6,8 @@
   "images": [
     {"image":"/meals/breakfast.webp","subject":"Breakfast plate with scrambled eggs, one slice of wholegrain avocado toast and a few cherry tomatoes."},
     {"image":"/meals/lunch.webp","subject":"Lunch plate with grilled chicken breast slices, a neat portion of white rice, broccoli florets and roasted carrot."},
-    {"image":"/meals/dinner.webp","subject":"Dinner plate with a roasted salmon fillet and a fresh green salad with cucumber and tomato."}
+    {"image":"/meals/dinner.webp","subject":"Dinner plate with a roasted salmon fillet and a fresh green salad with cucumber and tomato."},
+    {"image":"/meals/snack.webp","subject":"Snack plate with apple wedges, blueberries, walnuts and dark chocolate.","prompt":"Photorealistic premium food photograph for a nutrition app meal-category thumbnail. Square composition, overhead view, one complete round matte ivory ceramic plate fully visible centered with generous plain dark charcoal navy table margin. Subject: a simple light snack plate with fresh red apple wedges, a few blueberries, a few walnut halves and two small pieces of dark chocolate neatly grouped with breathing room. Soft natural side lighting, realistic appetizing textures, calm professional food styling. Match a dark navy-blue food diary and remain recognizable at 52 pixels. No text, no labels, no logos, no hands, no cutlery, no packages, no UI, no collage."}
   ],
   "changes": "Resized to 320 pixels and converted to WebP. No source image edits."
 }

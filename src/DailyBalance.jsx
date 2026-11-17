@@ -12,7 +12,7 @@ export default function DailyBalance({nutrition,goal,budget,movement,onDetails})
   const remaining=budget-(eaten||0);
   const over=!unknown&&remaining<0;
   const progress=unknown?0:Math.min(1,Math.max(0,(eaten||0)/Math.max(budget,1)));
-  const radius=80,circumference=2*Math.PI*radius,arc=circumference*.75;
+  const radius=86,circumference=2*Math.PI*radius,arc=circumference*.75;
   const partial=nutrition.entryCount>0&&!nutrition.coverage.kcal.complete;
   return <section className="panel calorie-hero balance-card" aria-label="Bilans dnia">
     <div className="balance-heading"><h2>Twój dzisiejszy bilans</h2><button className="text-link" onClick={onDetails}>Szczegóły <ChevronRight size={16}/></button></div>
@@ -37,6 +37,6 @@ export default function DailyBalance({nutrition,goal,budget,movement,onDetails})
         <p><strong>{displayTotal(nutrition,m.key)}</strong><span> / {fmt(target)} g</span></p>
       </div>;
     })}</div>
-    <details className="balance-notes"><summary>{partial?'Bilans z dostępnych danych':'Jak liczymy bilans?'}</summary><p>{partial?'Część wpisów nie ma podanych kalorii. Pokazujemy sumę znanych wartości. ':''}Ruch jest już uwzględniony w dziennym celu i nie zwiększa limitu jedzenia.</p></details>
+    <details className="balance-notes"><summary>{partial?'Bilans z dostępnych danych':'Jak liczymy bilans?'}</summary><p>{partial?'Część wpisów nie ma podanych kalorii. Pokazujemy sumę znanych wartości. ':''}Cel na dziś to {fmt(goal.calories)} kcal z planu + {fmt(movement)} kcal z zapisanego ruchu. Makro pozostaje według planu z ustawień.</p></details>
   </section>;
 }

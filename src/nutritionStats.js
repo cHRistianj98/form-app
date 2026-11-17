@@ -1,4 +1,4 @@
-import {calcTargets,fmt,localDay,nutrientLabel,scaleFood,shiftDay} from './foods.js';
+import {calcTargets,calcDailyBalance,calcDailyMovement,fmt,localDay,nutrientLabel,scaleFood,shiftDay} from './foods.js';
 import {NUTRIENT_FIELDS} from './nutrients.js';
 import {genericNutritionInfo} from './genericNutrition.js';
 import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
@@ -38,14 +38,27 @@ export function targetsOnDay(profile,daily,day) {
   return calcTargets(profile,latest?.weight||profile.startWeight);
 }
 
-export function nutritionReport({entries,daily,profile,day,period='day',today=localDay()}) {
+export function recentEnergyDays({entries,daily,activities,day}) {
+  return Array.from({length:7},(_,i)=>{
+    const date=shiftDay(day,i-6);
+    const summary=sumNutrition(entries.filter(entry=>entry.day===date));
+    const movement=calcDailyMovement(daily.find(row=>row.day===date)?.steps||0,activities.filter(a=>a.day===date)).total;
+    const eaten=summary.totals.kcal;
+    return {day:date,summary,eaten,movement,net:eaten==null?null:eaten-movement};
+  });
+}
+
+export function nutritionReport({entries,daily,activities=[],profile,day,period='day',today=localDay()}) {
   const dates=period==='week'?calendarWeek(day):[day];
   const allowed=new Set(dates.filter(date=>date<=today));
   const selected=entries.filter(entry=>allowed.has(entry.day));
   const summary=sumNutrition(selected);
   const days=dates.map(date=>{
     const records=date<=today?entries.filter(entry=>entry.day===date):[];
-    return {day:date,summary:sumNutrition(records),goal:targetsOnDay(profile,daily,date>today?today:date),future:date>today};
+    const baseGoal=targetsOnDay(profile,daily,date>today?today:date);
+    const movement=date>today?0:calcDailyMovement(daily.find(row=>row.day===date)?.steps||0,activities.filter(a=>a.day===date)).total;
+    const goal={...baseGoal,calories:calcDailyBalance(baseGoal,0,movement).budget};
+    return {day:date,summary:sumNutrition(records),goal,movement,future:date>today};
   });
   const goals=Object.fromEntries(['kcal','protein','fat','carbs'].map(key=>[key,days.reduce((sum,d)=>sum+d.goal[key==='kcal'?'calories':key],0)]));
   const loggedDays=days.filter(d=>d.summary.entryCount>0).length;

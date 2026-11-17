@@ -23,4 +23,5 @@ test('friendly presentation removes inequality prefixes while keeping unknowns a
 
 test('historical recipe explanations express inequalities in words',()=>{
   assert.equal(readableNutritionNote('Wartości ≥ 5, ≤ 10; >= 3, <= 7.'),'Wartości co najmniej 5, nie więcej niż 10; co najmniej 3, nie więcej niż 7.');
+  assert.equal(readableNutritionNote('≈ 5 g; ~~ 10 g.'),'szacunkowo 5 g; szacunkowo 10 g.');
 });

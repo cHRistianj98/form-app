@@ -6,7 +6,7 @@ export function progressPresentation(value,target,{mode='goal',upper=false,parti
   const fraction=Math.min(1,percent/100);
   const approximate=partial||upper;
   const displayed=percent<100?Math.min(99,Math.round(percent)):Math.round(percent);
-  const text=`${approximate?'≈ ':''}${displayed}%`;
+  const text=`${displayed}%`;
   if(mode==='limit')return {percent,fraction,done:false,tone:percent>=100?'limit':'progress',text,approximate,
     status:percent>=100?(upper?'Granica powyżej odniesienia':percent>100?'Powyżej odniesienia':'Osiągnięto wartość odniesienia'):'Wykorzystanie wartości odniesienia'};
   const done=percent>=100&&!upper;

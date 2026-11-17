@@ -19,5 +19,5 @@ export function nutrientDescription(food,key) {
   return partial&&upper?'Szacunek z niepełnych danych i górnej granicy etykiety':partial?'Dane częściowe':upper?'Górna granica z etykiety':'';
 }
 export function readableNutritionNote(text='') {
-  return text.replace(/≥|>=/g,'co najmniej').replace(/≤|<=/g,'nie więcej niż');
+  return text.replace(/≥|>=/g,'co najmniej').replace(/≤|<=/g,'nie więcej niż').replace(/≈|~~?/g,'szacunkowo');
 }
