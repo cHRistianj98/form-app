@@ -55,6 +55,10 @@
 .nutrition-explanation a { color:var(--accent); }
 .nutrition-explanation .nutrition-sources { margin-top:18px; }
 .micro-item>small { font-size:12px; line-height:1.5; color:var(--muted); }
+.nutrient-ring-legend { color:var(--muted); font-size:12px; line-height:1.6; margin:0 0 14px; }
+.nutrient-ring-legend b { color:var(--text); }
+.nutrient-limit-status[data-ul-status] { color:#edb676; font-weight:700; }
+.nutrient-limit-status[data-ul-status="over"] { color:#ff9b9e; }
 .serving-presets { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 17px; }
 .serving-presets button { padding:9px 12px; border:1px solid var(--border); background:var(--raised); border-radius:9px; color:var(--muted); font-size:13px; min-height:38px; }
 .serving-presets button[aria-pressed=true] { border-color:#57729a; color:var(--accent); background:#203048; }

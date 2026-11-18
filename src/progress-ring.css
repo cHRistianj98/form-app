@@ -3,15 +3,20 @@
 .progress-ring>svg { display:block; width:100%; height:100%; overflow:visible; }
 .progress-ring circle { fill:none; stroke-width:4; }
 .progress-ring-track { stroke:var(--border); }
-.progress-ring-fill { stroke:currentColor; stroke-linecap:round; transition:stroke-dashoffset .25s ease; }
+.progress-ring-fill { stroke:currentColor; stroke-linecap:round; transition:stroke-dasharray .25s ease; }
 .progress-ring-label { fill:currentColor; font-family:inherit; font-weight:650; }
 .progress-ring.progress, .progress-ring.done { color:var(--success); }
+.progress-ring.reference { color:var(--accent); }
+.progress-ring-to-reference { stroke:var(--accent); }
+.progress-ring-to-limit { stroke:var(--success); }
 .progress-ring.limit { color:#edb676; }
+.progress-ring.exceeded { color:#ff9b9e; }
 .progress-ring.unknown { color:var(--muted); }
 .macro-item>.progress-ring { margin-bottom:10px; }
 .nutrition-metric-name { justify-content:space-between; align-items:center; }
 .micro-reference-progress { display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin-top:auto; }
-.micro-reference-progress>small { color:var(--muted); font-size:11px; line-height:1.5; overflow-wrap:anywhere; min-width:0; }
+.micro-thresholds { flex:1 1 64px; min-width:0; }
+.micro-thresholds>small { display:block; color:var(--muted); font-size:11px; line-height:1.5; overflow-wrap:anywhere; }
 .micro-item.has-reference-progress { gap:10px; min-width:0; }
 .micro-item.has-reference-progress>strong { overflow-wrap:anywhere; }
 .micro-item .progress-ring { width:56px; height:56px; }
@@ -20,6 +25,6 @@
   .macro-item>.progress-ring { width:52px; height:52px; }
   .nutrition-metric-name { flex-direction:column; align-items:flex-start; gap:10px; }
   .micro-reference-progress { gap:6px; }
-  .micro-reference-progress>small { font-size:10px; }
+  .micro-thresholds>small { font-size:10px; }
   .micro-item .progress-ring { width:56px; height:56px; }
 }

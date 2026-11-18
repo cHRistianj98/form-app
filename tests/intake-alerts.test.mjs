@@ -41,6 +41,30 @@ test('upper-bound label amounts support a possible warning rather than a confirm
   assert.equal(definite.value,30);
 });
 
+test('daily rings show progress against each threshold and use the day’s confirmed UL status',()=>{
+  const ring=(zinc,upper=false)=>{
+    const reading=assessDailyIntake([meal({zinc,upperBoundNutrients:upper?['zinc']:[]})]).limitReadings.zinc;
+    return progressPresentation(zinc,10,{mode:'daily-reference',intakeLimit:reading,upper});
+  };
+  assert.deepEqual([ring(5).tone,ring(5).fraction,ring(5).secondFraction],['reference',.5,0]);
+  assert.deepEqual([ring(10).done,ring(10).fraction,ring(10).secondFraction],[true,1,0]);
+  assert.deepEqual([ring(17.5).tone,ring(17.5).fraction,ring(17.5).secondFraction,ring(17.5).text],['done',1,.5,'175%']);
+  assert.equal(ring(25).status,'Na poziomie UL');
+  assert.equal(ring(26).tone,'exceeded');
+  assert.equal(ring(26,true).tone,'limit');
+  assert.equal(ring(17.5,true).done,false);
+  assert.equal(progressPresentation(26,10,{mode:'reference'}).tone,'reference');
+  assert.equal(progressPresentation(null,10,{mode:'daily-reference'}).tone,'unknown');
+});
+
+test('magnesium limit readings track the supplemental amount even below the limit',()=>{
+  const magnesium=product('essensey-magnesium-b6');
+  const food=meal({magnesium:500});
+  assert.equal(assessDailyIntake([food]).limitReadings.magnesium,undefined);
+  assert.deepEqual(assessDailyIntake([food,intake(magnesium)]).limitReadings.magnesium,
+    {limit:250,total:187.5,knownMinimum:187.5,status:null});
+});
+
 test('overlap means distinct products, with active plan and recorded intake evaluated separately',()=>{
   const zinc=product('essensey-zinc');
   const biotin=product('essensey-biotin-horsetail-zinc');

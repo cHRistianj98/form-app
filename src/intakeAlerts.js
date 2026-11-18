@@ -51,13 +51,15 @@ export function assessDailyIntake(entries) {
   });
   const supplements=rows.filter(row=>row.supplement);
   const limits=[];
+  const limitReadings={};
 
   for(const [key,{value:limit,supplementsOnly=false}] of Object.entries(ADULT_UPPER_LIMITS)) {
     const sources=supplementsOnly?supplements:rows;
-    let total=0,knownMinimum=0,supplementAmount=0,supplementUpper=false;
+    let total=0,knownMinimum=0,supplementAmount=0,supplementUpper=false,hasValue=false;
     for(const row of sources) {
       const value=row.values[key];
       if(!Number.isFinite(value))continue;
+      hasValue=true;
       total+=value;
       const upper=isUpperBoundNutrient(row.food,key);
       if(row.supplement) {
@@ -66,12 +68,14 @@ export function assessDailyIntake(entries) {
       }
       if(!upper)knownMinimum+=value;
     }
+    if(!hasValue)continue;
     const epsilon=1e-9;
-    if(total<limit-epsilon)continue;
-    const status=knownMinimum>limit+epsilon?'over':total>limit+epsilon||knownMinimum<limit-epsilon?'possible':'at';
-    limits.push({...metadata[key],limit,value:status==='possible'?total:knownMinimum,supplementAmount,supplementUpper,supplementsOnly,status});
+    const status=total<limit-epsilon?null:
+      knownMinimum>limit+epsilon?'over':total>limit+epsilon||knownMinimum<limit-epsilon?'possible':'at';
+    limitReadings[key]={limit,total,knownMinimum,status};
+    if(status)limits.push({...metadata[key],limit,value:status==='possible'?total:knownMinimum,supplementAmount,supplementUpper,supplementsOnly,status});
   }
-  return {limits,overlaps:overlaps(supplements)};
+  return {limits,limitReadings,overlaps:overlaps(supplements)};
 }
 
 export const LIMIT_STATUS_LABELS={over:'Powyżej UL',at:'Na poziomie UL',possible:'Możliwy poziom UL lub wyżej'};

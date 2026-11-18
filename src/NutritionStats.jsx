@@ -10,7 +10,7 @@ import ProgressRing from './ProgressRing.jsx';
 import {NutritionExportButton} from './NutritionExportModal.jsx';
 import {REFERENCE_LIMITS} from './progressPresentation.js';
 import IntakeAlerts from './IntakeAlerts.jsx';
-import {ADULT_UPPER_LIMITS,UL_SOURCE} from './intakeAlerts.js';
+import {ADULT_UPPER_LIMITS,LIMIT_STATUS_LABELS,UL_SOURCE} from './intakeAlerts.js';
 import './nutrition-stats.css';
 
 const MACROS=[
@@ -27,7 +27,25 @@ function Coverage({summary,nutrient}) {
   return <span className={`nutrition-coverage ${c.complete?'complete':''}`}>Dane: {c.known}/{c.total} wpisów{!c.complete?' — suma częściowa':''}</span>;
 }
 
+function NutrientRing({summary,nutrient,name,target,intake}) {
+  const {complete,upper}=summary.coverage[nutrient];
+  const mode=REFERENCE_LIMITS.has(nutrient)?'reference-cap':intake?'daily-reference':'reference';
+  const intakeLimit=ADULT_UPPER_LIMITS[nutrient]?.supplementsOnly?undefined:intake?.limitReadings[nutrient];
+  return <ProgressRing value={summary.totals[nutrient]} target={target} label={name} mode={mode} partial={!complete} upper={upper} intakeLimit={intakeLimit}/>;
+}
+
+function LimitStatus({reading}) {
+  if(!reading?.status)return null;
+  return <small className="nutrient-limit-status" data-ul-status={reading.status}>{LIMIT_STATUS_LABELS[reading.status]}</small>;
+}
+
+function SupplementLimit({reading,limit,unit}) {
+  const amount=reading?(`${reading.total>reading.knownMinimum?'do ':''}${fmt(reading.total,2)} / `):'';
+  return <small>UL suplementów {amount}{fmt(limit,2)} {unit}</small>;
+}
+
 function NutrientRows({title,subtitle,keys,report}) {
+  const intake=report.period==='day'?report.days[0].intake:null;
   return <section className="panel nutrition-reference-panel">
     <div className="section-heading"><div><h2>{title}</h2><p>{subtitle}</p></div></div>
     <div className="nutrition-table" role="table" aria-label={title}>
@@ -38,15 +56,16 @@ function NutrientRows({title,subtitle,keys,report}) {
         const limit=ADULT_UPPER_LIMITS[key];
         const goal=reference.value*report.dayCount;
         const value=report.summary.totals[key];
-        const partial=!report.summary.coverage[key].complete;
+        const reading=intake?.limitReadings[key];
         return <div className="nutrition-table-row" role="row" key={key} data-nutrient={key}>
           <div role="cell"><strong>{name}</strong><b>{totalLabel(report.summary,key,2)}{value!=null?` ${unit}`:''}</b><Coverage summary={report.summary} nutrient={key}/>
             {report.period==='week'&&value!=null&&<small>Śr. znana: {totalLabel(report.summary,key,2,report.loggedDays)} {unit}/dzień z wpisami</small>}
           </div>
           <div role="cell"><b>{fmt(goal,2)} {unit}</b><small>{reference.source}{report.period==='week'?' × 7':''}</small>
-            {limit&&<small className="nutrition-ul">UL {fmt(limit.value,2)} {unit}/dzień{limit.supplementsOnly?' (z suplementów)':''}</small>}
+            {limit&&(limit.supplementsOnly&&intake?<SupplementLimit reading={reading} limit={limit.value} unit={unit}/>:
+              <small className="nutrition-ul">UL {fmt(limit.value,2)} {unit}/dzień{limit.supplementsOnly?' (z suplementów)':''}</small>)}
           </div>
-          <div role="cell"><ProgressRing value={value} target={goal} label={name} mode={REFERENCE_LIMITS.has(key)?'limit':'reference'} partial={partial} upper={report.summary.coverage[key].upper}/></div>
+          <div role="cell"><NutrientRing summary={report.summary} nutrient={key} name={name} target={goal} intake={intake}/><LimitStatus reading={reading}/></div>
         </div>;
       })}
     </div>
@@ -106,7 +125,7 @@ export default function NutritionStats({entries,daily,activities=[],profile,day,
     })}</div>
     <IntakeAlerts days={report.days.map(({day,intake})=>({day,...intake}))} showDates={period==='week'}/>
     <details className="panel nutrition-explanation"><summary>RWS, indywidualny cel i UL</summary>
-      <p><strong>RWS</strong> to wartość odniesienia stosowana na etykietach. Procent w tabeli pokazuje stosunek zapisanej ilości do tej wartości.</p>
+      <p><strong>RWS</strong> to punkt odniesienia z etykiet. Procent w kółku liczymy względem tej wartości. Zielony odcinek pokazuje, jak blisko znana suma jest górnego poziomu UL.</p>
       <p><strong>Twój cel</strong> kalorii i makroskładników pochodzi z planu w ustawieniach. Indywidualne zapotrzebowanie na witaminy i minerały wymaga osobnej oceny.</p>
       <p><strong>UL</strong> to górny poziom regularnego spożycia dla dorosłych. Limity sprawdzamy osobno dla każdego dnia z dostępnymi danymi. Dla magnezu porównujemy tylko zapis z suplementów, ponieważ jego limit dotyczy określonych form dodanych. <a href={UL_SOURCE.url} target="_blank" rel="noreferrer">Limity EFSA/SCF ↗</a></p>
     </details>
@@ -128,9 +147,22 @@ export default function NutritionStats({entries,daily,activities=[],profile,day,
   </div>;
 }
 
-export function DailyNutrientPreview({summary}) {
-  return <>{summary.genericEntryCount>0&&<p className="muted-note">Produkty ogólne uwzględniają szacunki z tabel USDA i DTU Frida. {GENERIC_NUTRITION_SOURCES.map(source=><a href={source.url} key={source.url} target="_blank" rel="noreferrer">{source.name} ↗ </a>)}</p>}<div className="micros-grid">{NUTRIENTS.map(([key,name,unit])=>{
+export function DailyNutrientPreview({summary,intake}) {
+  return <><p className="nutrient-ring-legend">Niebieski odcinek prowadzi do <b>RWS</b> z etykiet. Zielony odcinek pokazuje zbliżanie się do <b>UL</b>, górnego poziomu regularnego spożycia. Czerwone kółko oznacza przekroczenie UL.</p>
+    {summary.genericEntryCount>0&&<p className="muted-note">Produkty ogólne uwzględniają szacunki z tabel USDA i DTU Frida. {GENERIC_NUTRITION_SOURCES.map(source=><a href={source.url} key={source.url} target="_blank" rel="noreferrer">{source.name} ↗ </a>)}</p>}<div className="micros-grid">{NUTRIENTS.map(([key,name,unit])=>{
     const value=summary.totals[key],reference=DAILY_REFERENCES[key];
-    return <div className={`micro-item ${reference?'has-reference-progress':''}`} key={key} data-nutrient={key}><span>{name}</span><strong>{totalLabel(summary,key,2)}{value!=null?` ${unit}`:''}</strong>{reference?<div className="micro-reference-progress"><ProgressRing value={value} target={reference.value} label={name} mode={REFERENCE_LIMITS.has(key)?'limit':'reference'} partial={!summary.coverage[key].complete} upper={summary.coverage[key].upper} size={56}/><small>{value==null?'Brak danych':reference.source}</small></div>:<small>{value==null?'Brak danych':'Znana ilość, bez wartości RWS'}</small>}</div>;
+    const limit=ADULT_UPPER_LIMITS[key],reading=intake.limitReadings[key];
+    const referenceLabel=key==='fiber'?'EFSA':REFERENCE_LIMITS.has(key)?'Odniesienie':'RWS';
+    return <div className={`micro-item ${reference?'has-reference-progress':''}`} key={key} data-nutrient={key}>
+      <span>{name}</span><strong>{totalLabel(summary,key,2)}{value!=null?` ${unit}`:''}</strong>
+      {reference?<div className="micro-reference-progress">
+        <NutrientRing summary={summary} nutrient={key} name={name} target={reference.value} intake={intake}/>
+        <div className="micro-thresholds">
+          <small>{referenceLabel} {fmt(reference.value,2)} {unit}</small>
+          {limit&&(limit.supplementsOnly?<SupplementLimit reading={reading} limit={limit.value} unit={unit}/>:<small>UL {fmt(limit.value,2)} {unit}</small>)}
+          <LimitStatus reading={reading}/>
+        </div>
+      </div>:<small>{value==null?'Brak danych':'Znana ilość, bez wartości RWS'}</small>}
+    </div>;
   })}</div></>;
 }
