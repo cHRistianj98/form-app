@@ -19,8 +19,12 @@
 .balance-gauge.over .balance-gauge-value strong { color:#f39f9c; }
 .balance-gauge-value>span { color:var(--muted); font-size:13px; }
 .balance-gauge-value>small { color:var(--muted); font-size:11px; }
-.balance-target { position:absolute; left:0; right:0; bottom:7%; text-align:center; color:var(--muted); font-size:13px; }
-.balance-target strong { color:var(--text); }
+.balance-goals { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:-10px auto 14px; max-width:620px; position:relative; }
+.balance-goals>div { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:center; column-gap:8px; row-gap:2px; padding:9px 8px; border:1px solid var(--border); border-radius:10px; background:#15243a; text-align:center; }
+.balance-goals>div:last-child { background:#1c3250; border-color:#365b85; }
+.balance-goals span,.balance-goals small { font-size:11px; color:var(--muted); font-weight:500; }
+.balance-goals strong { font-size:15px; font-weight:650; color:var(--text); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.balance-goals>div:last-child strong { color:var(--accent); }
 .balance-macros { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; border-top:1px solid var(--border); padding-top:18px; }
 .balance-macro { min-width:0; }
 .balance-macro>div:first-child { position:relative; display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px; color:var(--muted); margin-bottom:8px; }
@@ -75,7 +79,6 @@
   .balance-gauge-value strong { font-size:28px; }
   .balance-gauge-value>span { font-size:11px; }
   .balance-gauge-value>small { font-size:10px; }
-  .balance-target { font-size:11px; }
   .balance-macros { gap:12px; padding-top:14px; }
   .balance-macro>div:first-child { font-size:12px; }
   .balance-macro p { font-size:11px; }

@@ -2,6 +2,7 @@ import {calcTargets,calcDailyBalance,calcDailyMovement,fmt,localDay,nutrientLabe
 import {NUTRIENT_FIELDS} from './nutrients.js';
 import {genericNutritionInfo} from './genericNutrition.js';
 import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
+import {assessDailyIntake} from './intakeAlerts.js';
 
 export function sumNutrition(entries) {
   const foods=entries.map(entry=>resolveFoodNutrition(entry.food));
@@ -61,10 +62,11 @@ export function nutritionReport({entries,daily,activities=[],profile,day,period=
     const metrics=daily.find(row=>row.day===date);
     const movement=date>today?0:calcDailyMovement(metrics?.steps||0,activities.filter(a=>a.day===date),metrics?.garminActiveKcal).total;
     const goal={...baseGoal,calories:calcDailyBalance(baseGoal,0,movement).budget};
-    return {day:date,summary:sumNutrition(records),goal,movement,future:date>today};
+    return {day:date,summary:sumNutrition(records),goal,baseCalories:baseGoal.calories,movement,future:date>today,
+      intake:assessDailyIntake(records)};
   });
   const goals=Object.fromEntries(['kcal','protein','fat','carbs'].map(key=>[key,days.reduce((sum,d)=>sum+d.goal[key==='kcal'?'calories':key],0)]));
   const loggedDays=days.filter(d=>d.summary.entryCount>0).length;
-  return {summary,days,goals,loggedDays,dayCount:dates.length,elapsedDays:allowed.size,
+  return {summary,days,goals,baseCalories:days.reduce((sum,d)=>sum+d.baseCalories,0),loggedDays,dayCount:dates.length,elapsedDays:allowed.size,
     from:dates[0],to:dates.at(-1),period};
 }

@@ -1,0 +1,25 @@
+.panel.intake-alerts { padding:0; margin:0 0 16px; border-color:#78603b; border-radius:16px; background:#242135; }
+.panel.intake-alerts-over { border-color:#88575a; }
+.intake-alerts>summary { display:grid; grid-template-columns:20px minmax(0,1fr) 18px; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; list-style:none; }
+.intake-alerts>summary::-webkit-details-marker { display:none; }
+.intake-alerts>summary::marker { content:''; }
+.intake-alerts>summary:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:16px; }
+.intake-alerts>summary>svg { color:#f5c687; }
+.intake-alerts-over>summary>svg { color:#ffaead; }
+.intake-alerts[open]>summary>svg:last-child { transform:rotate(180deg); }
+.intake-alerts>summary strong { display:block; color:var(--text); font-size:14px; }
+.intake-alerts>summary small { display:block; margin-top:4px; color:#efc898; font-size:12px; line-height:1.5; }
+.intake-alerts-content { padding:14px 16px 16px; border-top:1px solid #6a5662; }
+.intake-alerts-day+.intake-alerts-day { margin-top:16px; padding-top:12px; border-top:1px solid #6a5662; }
+.intake-alerts-day h3 { margin:0 0 8px; font-size:13px; color:var(--text); }
+.intake-alerts-list+h3 { margin-top:14px; }
+.intake-alerts-day p,.intake-alerts-day small,.intake-alerts-note { color:var(--muted); font-size:12px; line-height:1.6; margin:4px 0; }
+.intake-alerts-list { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+.intake-alerts-list>li { padding:10px 12px; border-radius:10px; background:#191b2c; }
+.intake-alerts-list strong { font-size:13px; font-weight:650; }
+.intake-alerts-limit { display:flex; align-items:baseline; flex-wrap:wrap; gap:5px 12px; }
+.intake-alerts-limit span { font-size:11px; color:#f5c687; }
+.intake-alerts-limit [data-ul-status=over] { color:#ffaead; }
+.intake-alerts-sources { margin:4px 0 0; padding-left:18px; color:var(--muted); font-size:12px; line-height:1.6; }
+.intake-alerts-content .intake-alerts-note { margin:12px 0 0; }
+.intake-alerts-note a { color:var(--accent); }

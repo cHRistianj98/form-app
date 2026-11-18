@@ -9,7 +9,8 @@ export function progressPresentation(value,target,{mode='goal',upper=false,parti
   const text=`${displayed}%`;
   if(mode==='limit')return {percent,fraction,done:false,tone:percent>=100?'limit':'progress',text,approximate,
     status:percent>=100?(upper?'Granica powyżej odniesienia':percent>100?'Powyżej odniesienia':'Osiągnięto wartość odniesienia'):'Wykorzystanie wartości odniesienia'};
+  if(mode==='reference')return {percent,fraction,done:false,tone:'progress',text,approximate,status:'Procent wartości odniesienia'};
   const done=percent>=100&&!upper;
   return {percent,fraction,done,tone:done?'done':'progress',text,approximate,
-    status:done?(mode==='reference'?'RWS osiągnięte w znanych danych':'Cel osiągnięty'):'W trakcie'};
+    status:done?'Cel osiągnięty':'W trakcie'};
 }

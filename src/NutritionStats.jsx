@@ -9,6 +9,8 @@ import {MACRO_PRESENTATION} from './macroPresentation.js';
 import ProgressRing from './ProgressRing.jsx';
 import {NutritionExportButton} from './NutritionExportModal.jsx';
 import {REFERENCE_LIMITS} from './progressPresentation.js';
+import IntakeAlerts from './IntakeAlerts.jsx';
+import {ADULT_UPPER_LIMITS,UL_SOURCE} from './intakeAlerts.js';
 import './nutrition-stats.css';
 
 const MACROS=[
@@ -29,10 +31,11 @@ function NutrientRows({title,subtitle,keys,report}) {
   return <section className="panel nutrition-reference-panel">
     <div className="section-heading"><div><h2>{title}</h2><p>{subtitle}</p></div></div>
     <div className="nutrition-table" role="table" aria-label={title}>
-      <div className="nutrition-table-heading" role="row"><span role="columnheader">Składnik / znana suma</span><span role="columnheader">Odniesienie</span><span role="columnheader">Realizacja</span></div>
+      <div className="nutrition-table-heading" role="row"><span role="columnheader">Składnik / znana suma</span><span role="columnheader">Odniesienie i UL</span><span role="columnheader">% odniesienia</span></div>
       {keys.map(key=>{
         const [,name,unit]=NUTRIENTS.find(n=>n[0]===key);
         const reference=DAILY_REFERENCES[key];
+        const limit=ADULT_UPPER_LIMITS[key];
         const goal=reference.value*report.dayCount;
         const value=report.summary.totals[key];
         const partial=!report.summary.coverage[key].complete;
@@ -40,7 +43,9 @@ function NutrientRows({title,subtitle,keys,report}) {
           <div role="cell"><strong>{name}</strong><b>{totalLabel(report.summary,key,2)}{value!=null?` ${unit}`:''}</b><Coverage summary={report.summary} nutrient={key}/>
             {report.period==='week'&&value!=null&&<small>Śr. znana: {totalLabel(report.summary,key,2,report.loggedDays)} {unit}/dzień z wpisami</small>}
           </div>
-          <div role="cell"><b>{fmt(goal,2)} {unit}</b><small>{reference.source}{report.period==='week'?' × 7':''}</small></div>
+          <div role="cell"><b>{fmt(goal,2)} {unit}</b><small>{reference.source}{report.period==='week'?' × 7':''}</small>
+            {limit&&<small className="nutrition-ul">UL {fmt(limit.value,2)} {unit}/dzień{limit.supplementsOnly?' (z suplementów)':''}</small>}
+          </div>
           <div role="cell"><ProgressRing value={value} target={goal} label={name} mode={REFERENCE_LIMITS.has(key)?'limit':'reference'} partial={partial} upper={report.summary.coverage[key].upper}/></div>
         </div>;
       })}
@@ -92,13 +97,19 @@ export default function NutritionStats({entries,daily,activities=[],profile,day,
       return <section className="panel nutrition-macro-card" key={m.key} style={{'--metric-color':m.color}} data-macro={m.key}>
         <span className="nutrition-metric-name"><span>{m.name}</span><ProgressRing value={value} target={goal} label={m.name} mode={m.key==='kcal'?'limit':'goal'} partial={!report.summary.coverage[m.key].complete} upper={report.summary.coverage[m.key].upper}/></span>
         <strong>{totalLabel(report.summary,m.key,m.key==='kcal'?0:1)}<small>{value!=null?m.unit:''}</small></strong>
-        <p>Cel {period==='week'?'7 dni':'dnia'}: {fmt(goal)} {m.unit}</p>
+        {m.key==='kcal'?<><p>Cel bazowy {fmt(report.baseCalories)} kcal</p><p>Cel z ruchem {fmt(goal)} kcal</p></>:<p>Cel {period==='week'?'7 dni':'dnia'}: {fmt(goal)} {m.unit}</p>}
         <div className="meter"><div style={{width:`${Math.min(percent||0,100)}%`,background:m.color}}/></div>
         <span className="nutrition-percent">{percent==null?'—':`${fmt(percent)}% celu`}</span>
         <Coverage summary={report.summary} nutrient={m.key}/>
         {period==='week'&&value!=null&&<small className="nutrition-average">Śr. znana: {totalLabel(report.summary,m.key,m.key==='kcal'?0:1,report.loggedDays)} {m.unit}/dzień z wpisami</small>}
       </section>;
     })}</div>
+    <IntakeAlerts days={report.days.map(({day,intake})=>({day,...intake}))} showDates={period==='week'}/>
+    <details className="panel nutrition-explanation"><summary>RWS, indywidualny cel i UL</summary>
+      <p><strong>RWS</strong> to wartość odniesienia stosowana na etykietach. Procent w tabeli pokazuje stosunek zapisanej ilości do tej wartości.</p>
+      <p><strong>Twój cel</strong> kalorii i makroskładników pochodzi z planu w ustawieniach. Indywidualne zapotrzebowanie na witaminy i minerały wymaga osobnej oceny.</p>
+      <p><strong>UL</strong> to górny poziom regularnego spożycia dla dorosłych. Limity sprawdzamy osobno dla każdego dnia z dostępnymi danymi. Dla magnezu porównujemy tylko zapis z suplementów, ponieważ jego limit dotyczy określonych form dodanych. <a href={UL_SOURCE.url} target="_blank" rel="noreferrer">Limity EFSA/SCF ↗</a></p>
+    </details>
     {period==='week'&&<p className="nutrition-period-note">Plan tygodnia obejmuje 7 dni. Minęło {report.elapsedDays}/7 dni, zapisano {report.loggedDays}/7. Średnia uwzględnia dni z wpisami; nie oznacza pełnego spożycia, jeśli etykiety lub dziennik są niepełne.</p>}
     <WeekMacroChart report={week} metric={metric} setMetric={setMetric}/>
     {report.summary.genericEntryCount>0&&<p className="nutrition-period-note generic-nutrition-summary">Produkty ogólne: {report.summary.genericEntryCount} wpisów. Witaminy i minerały obejmują szacunki z tabel USDA i DTU Frida {GENERIC_NUTRITION_SOURCES.map(source=><a href={source.url} key={source.url} target="_blank" rel="noreferrer">{source.name} ↗ </a>)}, również dla brakujących danych we wcześniejszych wpisach. Dane z etykiet pozostają zachowane.</p>}
@@ -108,7 +119,12 @@ export default function NutritionStats({entries,daily,activities=[],profile,day,
       <NutrientRows title="Składniki mineralne" subtitle="Znane ilości z jedzenia i suplementów." keys={MINERAL_KEYS} report={report}/>
     </div>
     {SUPPLEMENT_COMPONENT_KEYS.some(key=>report.summary.totals[key]!=null)&&<section className="panel nutrition-reference-panel"><div className="section-heading"><div><h2>Składniki suplementów</h2><p>Znane ilości z zapisanych porcji. EPA i DHA są częścią oleju, witanolidy i krzemionka częścią ekstraktów, a kreatyna częścią monohydratu.</p></div></div><div className="micros-grid">{NUTRIENTS.filter(([key])=>SUPPLEMENT_COMPONENT_KEYS.includes(key)&&report.summary.totals[key]!=null).map(([key,name,unit])=><div className="micro-item" key={key} data-nutrient={key}><span>{name}</span><strong>{totalLabel(report.summary,key,2)} {unit}</strong></div>)}</div></section>}
-    <details className="panel nutrition-explanation"><summary>Jak czytać dane i normy?</summary><p>Kalorie, białko, tłuszcze i węglowodany porównujemy z Twoim planem z ustawień, uwzględniając ostatnią zapisaną wagę do danego dnia. Cel kalorii uwzględnia ruch zapisany dla danego dnia. Zmiana ustawień profilu zmienia odniesienie również dla historii.</p><p>Witaminy i minerały odnosimy do RWS UE dla dorosłych. To wartości odniesienia z etykiet, a nie indywidualna ocena zapotrzebowania ani górny bezpieczny limit. Dla witaminy D RWS z etykiet wynosi 5 µg; nie jest to zalecana dawka suplementacji. Błonnik porównujemy do 25 g/dzień (EFSA). Cukry ogółem, nasycone i sól mają etykietowe odniesienie dla 2000 kcal; cukry ogółem nie są tym samym co cukry wolne.</p><p>Produkty ogólne korzystają z tabel USDA SR Legacy (2018) i DTU Frida 6.1, z podanym wariantem lub metodą szacunku. Uzupełniamy wyłącznie brakujące składniki, także przy obliczaniu starszych wpisów; zapisane kalorie, makro i znane wartości pozostają zachowane. Produkty markowe i własne korzystają ze swoich etykiet. Nieznanych składników, np. biotyny niepodanej w tabeli, nie zastępujemy zerem. Witaminę A z USDA przeliczamy na europejskie równoważniki retinolu (RE), a B3 na równoważniki niacyny (NE).</p><p>W tygodniu wartości odniesienia mnożymy przez 7. Niepełne dane opisujemy jako sumę z dostępnych informacji, a brak wszystkich danych jako „—”. Dla wartości granicznych zachowujemy górną granicę z etykiety; przy brakach danych pokazujemy znaną część wartości. Puste dni nie świadczą o zerowym spożyciu. Procenty dla częściowych danych są przybliżone; nie potwierdzają niedoborów ani pełnego pokrycia potrzeb.</p><div className="nutrition-sources">{[...REFERENCE_SOURCES,...GENERIC_NUTRITION_SOURCES].map(s=><a href={s.url} key={s.url} target="_blank" rel="noreferrer">{s.name} ↗</a>)}</div></details>
+    <details className="panel nutrition-explanation"><summary>Źródła i kompletność danych</summary>
+      <p>W tygodniu wartości odniesienia mnożymy przez 7. Błonnik porównujemy do 25 g/dzień według EFSA. Cukry ogółem, tłuszcze nasycone i sól mają etykietowe odniesienia dla 2000 kcal.</p>
+      <p>Dane pochodzą z etykiet i szacunków opartych na tabelach USDA SR Legacy oraz DTU Frida. „—” oznacza brak danych. Przy niepełnych danych pokazujemy znaną część spożycia, a dla wartości granicznych uwzględniamy górną granicę z etykiety.</p>
+      <p>Cel kalorii i makro dla danego dnia korzysta z ostatniej dostępnej na ten dzień wagi oraz bieżących ustawień profilu. Wartości witaminy A i niacyny z tabel podajemy w równoważnikach RE i NE.</p>
+      <div className="nutrition-sources">{[...REFERENCE_SOURCES,...GENERIC_NUTRITION_SOURCES].map(s=><a href={s.url} key={s.url} target="_blank" rel="noreferrer">{s.name} ↗</a>)}</div>
+    </details>
   </div>;
 }
 

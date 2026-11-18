@@ -24,9 +24,12 @@ export default function DailyBalance({nutrition,goal,budget,movement,movementSou
           <circle className="balance-gauge-fill" cx="100" cy="100" r={radius} strokeDasharray={`${arc*progress} ${circumference}`} strokeOpacity={progress?1:0} transform="rotate(135 100 100)"/>
         </svg>
         <div className="balance-gauge-value"><strong data-balance="remaining">{unknown?'—':fmt(Math.abs(remaining))}</strong><span>{over?'Ponad plan':'Pozostało'}</span><small>kcal</small></div>
-        <div className="balance-target">Cel <strong>{fmt(budget)}</strong> kcal</div>
       </div>
       <div className="balance-side"><strong data-balance="movement">{fmt(movement)}</strong><span>Ruch</span><small>{movementSource==='garmin'?'kcal z Garmin':'kcal szac.'}</small></div>
+    </div>
+    <div className="balance-goals" aria-label="Cele kalorii">
+      <div><span>Cel bazowy</span><strong data-balance="base-goal">{fmt(goal.calories)} <small>kcal</small></strong></div>
+      <div><span>Cel z ruchem</span><strong data-balance="movement-goal">{fmt(budget)} <small>kcal</small></strong></div>
     </div>
     <div className="balance-macros">{MACRO_PRESENTATION.map(m=>{
       const value=nutrition.totals[m.key],target=goal[m.key];

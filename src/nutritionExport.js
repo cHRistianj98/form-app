@@ -11,6 +11,8 @@ import {supplementPlanFor,supplementScheduleLabel} from './supplementPlan.js';
 import {isTea,TEA_CUP_ML,teaRecipeOf} from './teaRecipe.js';
 import {teaPortionLabel} from './foodPortions.js';
 import {TEA_ADDONS} from './tea.js';
+import {isSupplementIntake} from './supplements.js';
+import {assessDailyIntake,LIMIT_STATUS_LABELS,UL_SOURCE} from './intakeAlerts.js';
 
 export const EXPORT_PERIODS=[{id:'day',name:'Dzień'},{id:'week',name:'Tydzień'},{id:'month',name:'Miesiąc'}];
 const MACROS=[['kcal','Kalorie','kcal'],['protein','Białko','g'],['carbs','Węglowodany','g'],['fat','Tłuszcze','g']];
@@ -19,7 +21,7 @@ const meta=key=>META.find(row=>row[0]===key);
 const clean=value=>String(value??'').replace(/[\r\n\t]+/g,' ').replace(/\s+/g,' ').trim();
 const note=value=>clean(readableNutritionNote(value).replace(/<\s*(?=\d)/g,'mniej niż ').replace(/>\s*(?=\d)/g,'więcej niż '));
 export const exportDate=day=>new Date(day+'T12:00:00').toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'});
-export const isReportSupplement=entry=>entry.food?.kind==='supplement'||['tablet','capsule'].includes(entry.food?.unit)||entry.meal==='supplements';
+export const isReportSupplement=isSupplementIntake;
 
 export function exportDates(day,period='day') {
   if(!EXPORT_PERIODS.some(option=>option.id===period))throw new Error('Niepoprawny okres raportu');
@@ -171,12 +173,31 @@ export function buildNutritionExport({entries=[],daily=[],activities=[],profile,
   if(components.length)nutrientBlock('Składniki suplementów',components);
   const energyDays=days.filter(d=>d.summary.totals.kcal!=null);
   const movement=days.reduce((sum,d)=>sum+d.movement.total,0);
+  const baseCalories=days.reduce((sum,d)=>sum+d.goal.calories,0);
+  const budget=days.reduce((sum,d)=>sum+d.budget,0);
   lines.push('','### Ruch i bilans',`Zapisany ruch w uwzględnionych dniach: ${fmt(movement,2)} kcal (${days.some(d=>d.movement.source==='garmin')?'kalorie aktywne Garmin; w dniach bez danych szacunek z kroków i treningów':'szacunek ponad bazę aplikacji'}).`);
+  if(days.length)lines.push(`Cel bazowy w okresie: ${fmt(baseCalories,2)} kcal. Cel z ruchem: ${fmt(budget,2)} kcal.`);
   if(energyDays.length) {
     const energyMovement=energyDays.reduce((sum,d)=>sum+d.movement.total,0);
     lines.push(`Znane spożycie minus ruch: ${amount(summary.totals.kcal-energyMovement,'kcal')} z ${energyDays.length} ${energyDays.length===1?'dnia ze znanymi kaloriami':'dni ze znanymi kaloriami'}${!summary.coverage.kcal.complete?' (spożycie częściowe)':''}.`);
   }else lines.push('Spożycie minus ruch: brak danych o spożyciu.');
   lines.push('To bilans po zapisanym ruchu, a nie wyliczenie całkowitego deficytu energetycznego.');
+
+  const flaggedDays=days.map(d=>({day:d.day,...assessDailyIntake(d.records)})).filter(d=>d.limits.length||d.overlaps.length);
+  if(flaggedDays.length) {
+    lines.push('','## Alerty żywieniowe w zapisanych dniach');
+    for(const date of flaggedDays) {
+      lines.push(`### ${exportDate(date.day)}`);
+      for(const row of date.limits) {
+        const basis=row.status==='possible'?'suma z górnymi granicami':'znana suma';
+        lines.push(`- ${row.name}: ${LIMIT_STATUS_LABELS[row.status]}. ${basis} ${amount(row.value,row.key)} / UL ${amount(row.limit,row.key)}/dzień${row.supplementsOnly?' (z suplementów)':''}.`);
+      }
+      for(const row of date.overlaps) {
+        lines.push(`- ${row.name} w kilku przyjętych suplementach: ${row.products.map(product=>`${clean(product.name)} (${product.upper?'do ':''}${amount(product.amount,row.key)})`).join(', ')}.`);
+      }
+    }
+    lines.push('UL dotyczy regularnego spożycia. Każdy dzień porównano osobno na podstawie dostępnych danych.',`${UL_SOURCE.name}: ${UL_SOURCE.url}`);
+  }
 
   const actualSupps=selected.filter(isReportSupplement);
   const supplementGroups=new Map();

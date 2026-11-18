@@ -6,6 +6,8 @@ import {NUTRIENTS, NUTRIENT_FIELDS} from './nutrients.js';
 import {supplementCatalog} from './supplements.js';
 import {supplementPlanProgress} from './supplementPlan.js';
 import ProgressRing from './ProgressRing.jsx';
+import IntakeAlerts from './IntakeAlerts.jsx';
+import {plannedSupplementOverlaps} from './intakeAlerts.js';
 import './supplements.css';
 
 function Photo({food}) {
@@ -100,10 +102,12 @@ function SupplementForm({onSave,onClose}) {
   </form></Modal>;
 }
 
-export default function SupplementsPage({entries,personal,day,plan,onAdjust,onSave,onSettings}) {
+export default function SupplementsPage({entries,personal,day,plan,intake,onAdjust,onSave,onSettings}) {
   const [details,setDetails]=useState(null),[adding,setAdding]=useState(false);
+  const plannedOverlaps=plannedSupplementOverlaps(supplementCatalog(personal),plan);
   return <>
     <div className="supplement-intro"><div><h2>Twoja codzienna lista</h2><p>Skład na jedną kapsułkę. Zaznaczaj tylko to, co przyjąłeś.</p></div><button className="button primary" onClick={()=>setAdding(true)}><Plus size={18}/> Dodaj suplement</button></div>
+    <IntakeAlerts days={[intake]} plannedOverlaps={plannedOverlaps}/>
     <SupplementPanel entries={entries} personal={personal} day={day} plan={plan} onAdjust={onAdjust} onOpen={setDetails} onSettings={onSettings}/>
     {details&&<Modal title={details.name} subtitle={`${details.brand||'Własny suplement'} · skład na 1 ${details.unit==='tablet'?'tabletkę':'kapsułkę'}`} onClose={()=>setDetails(null)}>
       <div className="supplement-detail-head"><Photo food={details}/><p className="help-note">{details.labelNote||'Dane z Twojej etykiety.'}</p></div>

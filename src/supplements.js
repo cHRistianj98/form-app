@@ -89,6 +89,7 @@ export const SUPPLEMENTS=[
 ];
 
 export const isSupplement=food=>food?.kind==='supplement';
+export const isSupplementIntake=entry=>isSupplement(entry.food)||['tablet','capsule'].includes(entry.food?.unit)||entry.meal==='supplements';
 export const supplementLogId=(day,foodId)=>`intake:${day}:${foodId}`;
 export const supplementCount=(entries,day,foodId)=>entries.filter(entry=>entry.day===day&&entry.food.id===foodId&&isSupplement(entry.food)).reduce((sum,entry)=>sum+entry.grams,0);
 export const supplementCatalog=personal=>[...SUPPLEMENTS,...personal.filter(isSupplement)];
