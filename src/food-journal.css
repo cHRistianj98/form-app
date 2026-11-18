@@ -49,6 +49,11 @@
 .serving-presets.slice-presets button { padding:8px 3px; font-size:12px; text-align:center; }
 .modal-actions .button.food-entry-save { display:inline-flex; align-items:center; justify-content:center; gap:8px; white-space:nowrap; font-size:14px; font-weight:650; padding:12px 16px; border-radius:12px; }
 .food-entry-save>svg { flex-shrink:0; }
+.food-entry-modal>.modal-footer { flex-shrink:0; padding:15px 25px max(15px,env(safe-area-inset-bottom)); border-top:1px solid var(--border); background:var(--surface); box-shadow:0 -8px 24px #03080d18; }
+.food-entry-modal>.modal-footer>.modal-actions { margin:0; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.food-entry-modal>.modal-footer .button { min-width:0; min-height:46px; }
+.food-entry-modal>.modal-body { scroll-padding-block:18px; }
+@media(max-width:600px) { .food-entry-modal>.modal-footer { padding:12px 16px max(12px,env(safe-area-inset-bottom)); } }
 .portion-preview .portion-energy strong { font-size:30px; font-weight:650; }
 .modal-card .portion-preview .macro-value>strong { font-size:17px; font-weight:650; }
 @media(max-width:360px) {

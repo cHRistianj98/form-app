@@ -1,0 +1,25 @@
+.weight-trend-averages { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.weight-trend-average-card { min-width:0; padding:13px 12px; border:1px solid var(--border); border-radius:12px; background:var(--raised); }
+.weight-trend-average-card>span { display:block; color:var(--muted); font-size:12px; margin-bottom:6px; }
+.weight-trend-average-card>strong { display:block; color:var(--text); font-size:24px; line-height:1.3; font-weight:650; font-variant-numeric:tabular-nums; }
+.weight-trend-average-card>strong>small { font-size:12px; font-weight:500; color:var(--muted); }
+.weight-trend-average-card>small { display:block; font-size:11px; line-height:1.5; color:var(--muted); margin-top:5px; }
+.weight-summary-body .weight-trend-change { display:flex; align-items:flex-start; gap:7px; color:var(--accent); font-size:13px; margin:12px 0 4px; }
+.weight-trend-change>svg { flex-shrink:0; margin-top:3px; }
+.weight-summary-body .weight-trend-explanation { font-size:11px; line-height:1.6; margin:7px 0 14px; }
+.weight-trend-chart { min-width:0; margin:18px 0; }
+.weight-trend-legend { display:flex; flex-wrap:wrap; gap:14px; margin-bottom:12px; color:var(--muted); font-size:11px; }
+.weight-trend-legend>span { display:flex; align-items:center; gap:6px; }
+.weight-trend-legend i { display:inline-block; width:17px; height:0; border-top:2px solid var(--accent); }
+.weight-trend-legend .weight-trend-raw-key { border-color:var(--muted); border-top-style:dashed; }
+.weight-trend-plot { display:grid; grid-template-columns:43px minmax(0,1fr); column-gap:6px; }
+.weight-trend-axis { display:flex; flex-direction:column; justify-content:space-between; padding:7px 0; color:var(--muted); font-size:10px; text-align:right; font-variant-numeric:tabular-nums; }
+.weight-trend-plot>svg { display:block; width:100%; height:164px; overflow:visible; }
+.weight-trend-grid { stroke:var(--border); stroke-dasharray:4 5; stroke-width:1; }
+.weight-trend-raw { stroke:var(--muted); stroke-width:1.3; stroke-dasharray:4 4; opacity:.65; fill:none; }
+.weight-trend-average { stroke:var(--accent); stroke-width:2.5; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+.weight-trend-dot { fill:var(--blue); stroke:var(--surface); stroke-width:1.5; }
+.weight-trend-dates { grid-column:2; display:flex; justify-content:space-between; gap:10px; color:var(--muted); font-size:10px; margin-top:7px; }
+.weight-summary-body .weight-trend-chart-note, .weight-trend-chart-note { color:var(--muted); font-size:10px; line-height:1.6; margin:10px 0 0; }
+.weight-trend-empty { display:flex; flex-direction:column; align-items:center; gap:10px; color:var(--muted); text-align:center; font-size:12px; line-height:1.7; padding:22px 12px; }
+@media(max-width:360px) { .weight-trend-average-card { padding:11px 9px; } .weight-trend-average-card>strong { font-size:22px; } }
