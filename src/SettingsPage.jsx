@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Check, CircleHelp, Download, Info, LogOut, ShieldCheck, Target} from 'lucide-react';
+import {Check, CircleHelp, Download, Image as ImageIcon, LogOut, ShieldCheck, Target} from 'lucide-react';
 import {calcTargets, fmt, parseNum} from './foods.js';
 import {ACTIVITY_LEVELS, NUTRITION_SOURCES} from './profile.js';
 import MacroValues from './MacroValues.jsx';
@@ -7,6 +7,7 @@ import WeightInput from './WeightInput.jsx';
 import {formatWeight, parseWeight, weightError} from './weight.js';
 import SupplementPlanSettings from './SupplementPlanSettings.jsx';
 import GarminSettings from './GarminSettings.jsx';
+import SettingsSection from './SettingsSection.jsx';
 
 export default function SettingsPage({profile, currentWeight, personal=[], onSave, onExport, local, onLogout,day,onGarminSynced}) {
   const [form,setForm]=useState({...profile});
@@ -18,6 +19,7 @@ export default function SettingsPage({profile, currentWeight, personal=[], onSav
   const numeric=['height','startWeight','targetWeight','age','deficit','deficitPercent','proteinFactor','fatFactor','manualCalories','manualProtein'];
   const parsed=Object.fromEntries(Object.entries(form).map(([k,v])=>[k,['startWeight','targetWeight'].includes(k)?parseWeight(v):numeric.includes(k)?parseNum(v):v]));
   const preview=calcTargets(parsed,currentWeight || parsed.startWeight);
+  const savedTargets=calcTargets(profile,currentWeight || profile.startWeight);
   async function submit(e) {
     e.preventDefault(); setError('');
     const invalidWeight=weightError(form.startWeight,true)||weightError(form.targetWeight,true);
@@ -34,9 +36,9 @@ export default function SettingsPage({profile, currentWeight, personal=[], onSav
       setCredits(await response.json());
     } catch {setCredits(false);}
   }
-  return <><GarminSettings local={local} day={day} onSynced={onGarminSynced}/><SupplementPlanSettings profile={profile} personal={personal} onSave={onSave}/><div className="settings-grid">
-    <div className="panel">
-      <div className="section-heading"><div><h2>Twój plan żywieniowy</h2><p>Dane, założenia i wyliczenia w jednym miejscu.</p></div></div>
+  return <div className="settings-sections">
+    <GarminSettings local={local} day={day} onSynced={onGarminSynced}/>
+    <SettingsSection id="settings-nutrition" title="Twój plan żywieniowy" description={`${fmt(savedTargets.calories)} kcal, ${fmt(savedTargets.protein)} g białka dziennie`} icon={Target}>
       <form onSubmit={submit}>
         <div className="plan-preset"><Target size={22}/><div><strong>Twój punkt startowy</strong><span>2600 kcal — 180 g białka dziennie</span></div><button type="button" className="text-link" onClick={()=>setForm(p=>({...p,manualCalories:2600,manualProtein:180}))}>Ustaw</button></div>
         <div className="field-row">
@@ -74,11 +76,10 @@ export default function SettingsPage({profile, currentWeight, personal=[], onSav
         {(!preview.macrosFit||error)&&<p className="form-error" role="alert">{error||'Wybrane białko i tłuszcze przekraczają cel kalorii. Zmień kalorie lub makro.'}</p>}
         <button type="submit" className="button primary" disabled={saving||!preview.macrosFit}><Check size={18}/>{saving?'Zapisywanie…':'Zapisz ustawienia'}</button>
       </form>
-    </div>
-    <aside className="settings-aside">
-      <div className="panel tip-panel"><span className="icon-badge sun"><CircleHelp size={22}/></span><h3>Dobry punkt startowy. Potem dane.</h3><p>Mifflin–St Jeor szacuje energię w spoczynku, a poziom aktywności pozwala oszacować cały dzień. EER z DRI 2023 wyznacza całkowite zapotrzebowanie osobnym równaniem dla wybranej aktywności.</p><p>2600 kcal i 180 g białka to Twój wybrany punkt startowy. Żaden wzór nie mierzy indywidualnego metabolizmu. W aplikacji do bazowego celu dodajemy zapisany ruch. Dobierz poziom aktywności do takiego sposobu prowadzenia dziennika.</p><p>Obserwuj średnią masę ciała z 7 dni przez 2–4 tygodnie przy rzetelnym zapisie jedzenia. Jeśli tempo zmian odbiega od planu, skoryguj cel o około 100–150 kcal i ponownie obserwuj trend. To praktyczna korekta, nie automatyczny pomiar spalania.</p><p>ISSN wskazuje zwykle 1,4–2,0 g białka/kg dla osób ćwiczących; potrzeby podczas deficytu mogą być wyższe. Wzory EER w tym kalkulatorze dotyczą osób od 19 lat.</p><div className="nutrition-sources">{NUTRITION_SOURCES.map(s=><a key={s.url} href={s.url} target="_blank" rel="noreferrer">{s.name} ↗</a>)}</div></div>
-      <div className="panel"><span className="icon-badge mint"><ShieldCheck size={22}/></span><h3>Twoje dane, Twoja kontrola</h3><p>{local?'Pracujesz lokalnie — dane zapisują się w tej przeglądarce.':'Dziennik jest przechowywany w prywatnej bazie Cloudflare D1. Dostęp wymaga hasła.'}</p><button className="button outline full" onClick={onExport}><Download size={17}/> Eksportuj dane do JSON</button>{!local&&<button className="button ghost full" onClick={onLogout}><LogOut size={17}/> Wyloguj się</button>}</div>
-      <div className="panel photo-credits"><span className="icon-badge mint"><Info size={22}/></span><h3>Zdjęcia produktów</h3><p>Zdjęcia z Wikimedia Commons, Open Food Facts oraz stron produktowych, zapisane lokalnie jako WebP. Przy produktach z Twojej listy wartości pochodzą z podanej tabeli. Zdjęcie opakowania lub serii jest poglądowe — sprawdzaj wariant i etykietę.</p><details onToggle={showCredits}><summary>Autorzy, źródła i licencje zdjęć</summary>{credits===null?<p>Wczytywanie…</p>:credits===false?<a href="/foods/credits.json">Otwórz pełne informacje o zdjęciach</a>:Object.values(credits).map(c=><div className="photo-credit" key={c.image}><a href={c.source} target="_blank" rel="noreferrer">{c.title}</a><span>{c.author}</span><a href={c.licenseUrl||c.source} target="_blank" rel="noreferrer">{c.license}</a><small>{c.changes}</small></div>)}</details></div>
-    </aside>
-  </div></>;
+    </SettingsSection>
+    <SupplementPlanSettings profile={profile} personal={personal} onSave={onSave}/>
+      <SettingsSection id="settings-method" title="Jak liczymy cele?" description="Metody obliczeń i źródła" icon={CircleHelp}><p>Mifflin–St Jeor szacuje energię w spoczynku, a poziom aktywności pozwala oszacować cały dzień. EER z DRI 2023 wyznacza całkowite zapotrzebowanie osobnym równaniem dla wybranej aktywności.</p><p>2600 kcal i 180 g białka to Twój wybrany punkt startowy. Żaden wzór nie mierzy indywidualnego metabolizmu. W aplikacji do bazowego celu dodajemy zapisany ruch. Dobierz poziom aktywności do takiego sposobu prowadzenia dziennika.</p><p>Obserwuj średnią masę ciała z 7 dni przez 2–4 tygodnie przy rzetelnym zapisie jedzenia. Jeśli tempo zmian odbiega od planu, skoryguj cel o około 100–150 kcal i ponownie obserwuj trend. To praktyczna korekta, nie automatyczny pomiar spalania.</p><p>ISSN wskazuje zwykle 1,4–2,0 g białka/kg dla osób ćwiczących; potrzeby podczas deficytu mogą być wyższe. Wzory EER w tym kalkulatorze dotyczą osób od 19 lat.</p><div className="nutrition-sources">{NUTRITION_SOURCES.map(s=><a key={s.url} href={s.url} target="_blank" rel="noreferrer">{s.name} ↗</a>)}</div></SettingsSection>
+      <SettingsSection id="settings-data" title="Twoje dane i konto" description="Kopia danych i dostęp do aplikacji" icon={ShieldCheck}><p>{local?'Pracujesz lokalnie — dane zapisują się w tej przeglądarce.':'Dziennik jest przechowywany w prywatnej bazie Cloudflare D1. Dostęp wymaga hasła.'}</p><button className="button outline full" onClick={onExport}><Download size={17}/> Eksportuj dane do JSON</button>{!local&&<button className="button ghost full" onClick={onLogout}><LogOut size={17}/> Wyloguj się</button>}</SettingsSection>
+      <SettingsSection id="settings-photos" className="photo-credits" title="Zdjęcia produktów" description="Autorzy, źródła i licencje" icon={ImageIcon} onToggle={showCredits}><p>Zdjęcia z Wikimedia Commons, Open Food Facts oraz stron produktowych, zapisane lokalnie jako WebP. Przy produktach z Twojej listy wartości pochodzą z podanej tabeli. Zdjęcie opakowania lub serii jest poglądowe — sprawdzaj wariant i etykietę.</p>{credits===null?<p>Wczytywanie…</p>:credits===false?<a href="/foods/credits.json">Otwórz pełne informacje o zdjęciach</a>:Object.values(credits).map(c=><div className="photo-credit" key={c.image}><a href={c.source} target="_blank" rel="noreferrer">{c.title}</a><span>{c.author}</span><a href={c.licenseUrl||c.source} target="_blank" rel="noreferrer">{c.license}</a><small>{c.changes}</small></div>)}</SettingsSection>
+  </div>;
 }

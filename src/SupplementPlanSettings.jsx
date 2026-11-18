@@ -3,6 +3,7 @@ import {Check,Pill} from 'lucide-react';
 import {supplementCatalog} from './supplements.js';
 import {foodImage} from './foods.js';
 import {normalizeSupplementPlan,SUPPLEMENT_SCHEDULES,SUPPLEMENT_WEEKDAYS,validSupplementPlan} from './supplementPlan.js';
+import SettingsSection from './SettingsSection.jsx';
 import './supplements.css';
 
 export default function SupplementPlanSettings({profile,personal,onSave}) {
@@ -24,8 +25,7 @@ export default function SupplementPlanSettings({profile,personal,onSave}) {
     setSaving(true);
     try{await onSave({...profile,supplementPlan:normalizeSupplementPlan(plan)});setSaved(true);}catch(err){setError(err.message);}finally{setSaving(false);}
   }
-  return <section className="panel supplement-plan-settings">
-    <div className="section-heading"><div><h2><Pill size={21}/> Twój plan suplementów</h2><p>Liczba kapsułek lub tabletek na wybrany dzień. To Twój plan do śledzenia.</p></div></div>
+  return <SettingsSection id="settings-supplements" className="supplement-plan-settings" title="Twój plan suplementów" description="Dawki, dni tygodnia i opcjonalne pozycje" icon={Pill}>
     <form onSubmit={save}>
       <div className="supplement-plan-rows">{catalog.map(food=>{
         const row=plan[food.id]||{quantity:1,schedule:'daily'};
@@ -43,5 +43,5 @@ export default function SupplementPlanSettings({profile,personal,onSave}) {
       {error&&<p className="form-error" role="alert">{error}</p>}
       <div className="supplement-plan-actions"><button className="button primary" disabled={saving}><Check size={18}/>{saving?'Zapisywanie…':'Zapisz plan suplementów'}</button>{saved&&<span className="supplement-plan-saved" role="status"><Check size={16}/> Plan zapisany</span>}</div>
     </form>
-  </section>;
+  </SettingsSection>;
 }

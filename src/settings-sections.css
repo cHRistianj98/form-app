@@ -1,0 +1,32 @@
+.settings-sections { display:grid; gap:12px; width:100%; max-width:960px; margin:0 auto 24px; }
+.settings-sections>.settings-section.panel { padding:0; margin:0; min-width:0; border:1px solid var(--border); border-radius:17px; background:var(--surface); }
+.settings-section>.settings-section-summary { display:grid; grid-template-columns:40px minmax(0,1fr) 19px; align-items:center; gap:13px; padding:17px 20px; cursor:pointer; list-style:none; -webkit-tap-highlight-color:transparent; }
+.settings-section-summary::-webkit-details-marker { display:none; }
+.settings-section-summary::marker { content:''; }
+.settings-section-summary:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:16px; }
+.settings-section-icon { display:grid; place-items:center; width:40px; height:40px; border-radius:12px; background:#1d3557; color:var(--accent); }
+.settings-section-copy { min-width:0; }
+.settings-section-title { display:flex; align-items:center; flex-wrap:wrap; column-gap:10px; row-gap:5px; }
+.settings-section-title>h2 { margin:0; color:var(--text); font-size:16px; font-weight:650; line-height:1.4; }
+.settings-section-title .garmin-status { margin:0; }
+.settings-section-copy>p { margin:4px 0 0; color:var(--muted); font-size:12px; line-height:1.5; }
+.settings-section-chevron { color:var(--muted); transition:transform .18s ease; }
+.settings-section[open]>.settings-section-summary .settings-section-chevron { transform:rotate(180deg); color:var(--accent); }
+.settings-section>.settings-section-content { border-top:1px solid var(--border); padding:20px; min-width:0; }
+.settings-section:not([open])>.settings-section-content { display:none; }
+.settings-section-content>p { color:var(--muted); font-size:13px; line-height:1.8; margin:0 0 16px; }
+.settings-section-content>p:last-child { margin-bottom:0; }
+.settings-section-content>form>.supplement-plan-rows>.supplement-plan-row:first-child { border-top:0; padding-top:0; }
+.settings-section-content>.nutrition-sources { margin-top:16px; }
+.settings-section-content>.button+.button { margin-top:10px; }
+.settings-section .garmin-help { margin-bottom:0; }
+@media(max-width:600px) {
+  .settings-sections { gap:10px; }
+  .settings-section>.settings-section-summary { grid-template-columns:36px minmax(0,1fr) 18px; gap:11px; padding:15px 14px; }
+  .settings-section-icon { width:36px; height:36px; border-radius:10px; }
+  .settings-section-title>h2 { font-size:15px; }
+  .settings-section-title .garmin-status { padding:4px 7px; font-size:9px; }
+  .settings-section-copy>p { font-size:11px; }
+  .settings-section>.settings-section-content { padding:17px 15px; }
+}
+@media(prefers-reduced-motion:reduce) { .settings-section-chevron { transition:none; } }

@@ -2,6 +2,7 @@ import React,{useEffect,useRef,useState} from 'react';
 import {Check,Clock3,ExternalLink,Info,RefreshCw,Watch} from 'lucide-react';
 import {api} from './storage.js';
 import {localDay,shiftDay} from './foods.js';
+import SettingsSection from './SettingsSection.jsx';
 import './garmin-settings.css';
 
 const dateTime=value=>value?new Date(value).toLocaleString('pl-PL',{timeZone:'Europe/Warsaw',dateStyle:'short',timeStyle:'short'}):'Jeszcze nie synchronizowano';
@@ -57,8 +58,7 @@ export default function GarminSettings({local,day,onSynced}) {
     try{const next=await api('/garmin/settings',{method:'POST',body:JSON.stringify({autoEnabled:!status.autoEnabled})});++statusVersion.current;setChecking(false);setStatus(next);}
     catch(err){setError(err.message);}finally{setSaving(false);}
   }
-  return <section className="panel garmin-settings" aria-label="Synchronizacja Garmin">
-    <div className="garmin-heading"><span className="garmin-icon"><Watch size={23}/></span><div><h2>Garmin Connect</h2><p>Kroki, waga i kalorie aktywne</p></div><span className={`garmin-status ${ready&&status?.lastSuccess&&!status.error?'connected':''}`}>{label}</span></div>
+  return <SettingsSection id="settings-garmin" className="garmin-settings" ariaLabel="Synchronizacja Garmin" title="Garmin Connect" description="Kroki, waga i kalorie aktywne" icon={Watch} badge={<span className={`garmin-status ${ready&&status?.lastSuccess&&!status.error?'connected':''}`}>{label}</span>}>
     {local?<p className="garmin-info"><Info size={16}/> Synchronizacja działa w wersji Cloudflare. Lokalny podgląd zapisuje dane wyłącznie w tej przeglądarce.</p>:<>
       <div className="garmin-last"><Clock3 size={15}/><span>Ostatnia udana synchronizacja<strong>{dateTime(status?.lastSuccess)}</strong></span></div>
       <div className="garmin-status-check"><small role="status">{checking?'Sprawdzam konfigurację…':checkedAt?`Stan sprawdzony o ${checkedTime(checkedAt)}`:'Oczekiwanie na status'}</small><button type="button" className="garmin-refresh-status" disabled={checking||busy||saving} onClick={()=>{setError('');loadStatus();}} aria-label="Odśwież status Garmin"><RefreshCw size={15} className={checking?'garmin-spinning':''}/><span>Sprawdź konfigurację</span></button></div>
@@ -76,5 +76,5 @@ export default function GarminSettings({local,day,onSynced}) {
       {!ready&&<><button className="garmin-sync-button garmin-sync-unavailable" disabled><RefreshCw size={17}/>Synchronizuj teraz</button><p className="garmin-info">Uzupełnij konfigurację wskazaną powyżej, a następnie wybierz „Sprawdź konfigurację”. Pobieranie pomiarów uruchamia „Synchronizuj teraz”.</p></>}
     </>}
     <details className="garmin-help"><summary>Jak połączyć Garmin?</summary><ol><li>W przeglądarce otwórz <a href="https://connect.garmin.com/app/settings/personalApiToken" target="_blank" rel="noreferrer">Personal API Key w Garmin Connect <ExternalLink size={12}/></a> i utwórz klucz.</li><li>W Cloudflare dodaj go jako sekret <code>GARMIN_PERSONAL_API_KEY</code> do Workera <code>form-app</code>.</li><li>Wykonaj migrację z pliku <code>migrations/0001_garmin.sql</code> i <code>migrations/0002_garmin_calories.sql</code> i wdróż nową wersję aplikacji. Pełna instrukcja jest w pliku <code>GARMIN-CLOUDFLARE.md</code> w projekcie.</li><li>Użyj „Synchronizuj teraz”, a następnie włącz automat, jeśli chcesz.</li></ol><p>Łączymy się z chmurą Garmin. Aktualność pomiarów zależy od ich wcześniejszego przesłania do Garmin Connect. Klucz może wygasnąć — wtedy wygeneruj nowy i podmień sekret w Cloudflare.</p></details>
-  </section>;
+  </SettingsSection>;
 }
