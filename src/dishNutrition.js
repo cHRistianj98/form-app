@@ -5,7 +5,13 @@ import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
 // unit. The cooked yield is always grams: evaporation changes concentration,
 // not total macro energy. Do not divide by the mass of raw batter or dough.
 export function calculateDish(ingredients,cookedGrams) {
-  if (!Number.isFinite(cookedGrams)||cookedGrams<=0) throw new Error('Niepoprawna masa gotowego dania');
+  return calculateMixture(ingredients,cookedGrams);
+}
+
+// Ingredients retain their g/ml basis. The final amount may be cooked grams
+// or prepared millilitres; callers declare that unit on the resulting food.
+export function calculateMixture(ingredients,preparedQuantity) {
+  if (!Number.isFinite(preparedQuantity)||preparedQuantity<=0) throw new Error('Niepoprawna wielkość gotowej porcji');
   if (!Array.isArray(ingredients)||!ingredients.length) throw new Error('Brak składników');
   const active=ingredients.filter(row=>{
     if(!row.food||!Number.isFinite(row.quantity)||row.quantity<0) throw new Error('Niepoprawny składnik');
@@ -28,7 +34,7 @@ export function calculateDish(ingredients,cookedGrams) {
     // Water/pure salt contribute known zero vitamins. If all substantive
     // information is missing, do not turn those zeros into a dish value.
     const available=known>0&&!(partial&&sum===0);
-    result[key]=available?sum/cookedGrams*100:null;
+    result[key]=available?sum/preparedQuantity*100:null;
     if(available&&partial) result.partialNutrients.push(key);
     if(available&&upper) result.upperBoundNutrients.push(key);
   }

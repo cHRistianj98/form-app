@@ -13,6 +13,12 @@
       "name": "Kiełbasa wiejska krucha",
       "image": "/foods/rustic-sausage.webp",
       "prompt": "Photorealistic premium food photograph for a dark navy Polish nutrition diary thumbnail. Square composition. One complete ivory ceramic plate centered on a plain dark charcoal navy tabletop, clean generous margin, close overhead view, soft natural side lighting, appetizing realistic food texture, subject clearly recognizable at 48 pixels. No text, labels, logos, watermarks, cutlery, napkins, people, hands, packages or unrelated food. One image, no collage. Subject: traditional Polish smoked rustic pork sausage, kielbasa wiejska krucha, one short curved link with a wrinkled golden-brown natural casing and four thick slices in front revealing a coarse pink-brown pork filling with small white fat flecks. Fully cooked ready-to-eat cold smoked sausage, no grilling marks, no bread, mustard, pickles, herbs or sauce."
+    },
+    {
+      "id": "fav-lipton-earl-grey",
+      "name": "Herbata Earl Grey — kubek naparu",
+      "image": "/foods/fav-lipton-earl-grey.webp",
+      "prompt": "Use case: product-mockup. Asset type: square food catalog photograph for a dark navy Polish nutrition diary, clear when viewed as a 48-pixel thumbnail. Subject: one ivory ceramic mug filled with clear amber freshly brewed black Earl Grey tea, on a matching small ivory saucer, centered on a plain dark charcoal navy tabletop. Close slightly overhead view with the complete mug and saucer visible and generous clean margin. Soft natural side light, realistic glazed ceramic and translucent amber tea, subtle gentle steam, premium appetizing photography. No fruit, lemon, orange, ginger, sugar, milk, garnish, teabag, packaging, branding, text, logos, watermarks, cutlery, napkins, people or hands. One image, no collage."
     }
   ]
 }

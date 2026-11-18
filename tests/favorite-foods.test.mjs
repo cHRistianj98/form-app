@@ -16,7 +16,7 @@ test('seven selectable products retain the user table, including ml basis and th
     ['cincin-rose-zero','ml',22,0,5.3,0],
   ]);
   assert.equal(FAVORITE_FOODS[0].fatLessThan,true);
-  assert.equal(FAVORITE_FOODS.every(f=>f.source==='Twoja tabela'),true);
+  assert.equal(FAVORITE_FOODS.filter(f=>f.id!=='favorite:lipton-earl-grey').every(f=>f.source==='Twoja tabela'),true);
 });
 
 test('portions scale per stated unit without treating ml as grams or recalculating labelled energy',()=>{

@@ -5,7 +5,7 @@ Responsywna aplikacja React + Vite + Cloudflare Pages Functions + D1. Jeden uży
 ## Co działa
 
 - Dziennik posiłków: śniadanie, obiad, kolacja i przekąski w zwiniętych wierszach ze zdjęciem, kaloriami i przyciskiem dodawania. Strzałka rozwija składniki z edycją i usuwaniem. Wyszukiwarka jedzenia pokazuje zdjęcie i nazwę, a osobna strzałka odsłania wartości. Kliknięcie lub dotknięcie pola ilości zaznacza całą liczbę do zastąpienia; gramy i ml można wpisać przecinkiem albo kropką.
-- **45 podstawowych produktów ze zdjęciami WebP**, **17 produktów z listy użytkownika ze zdjęciami**, **9 gotowych dań liczonych w gramach** i produkty własne z etykiety. Wśród dań są rolada z piersi kurczaka z pieczarkami, pieczona pierś z przyprawami, ziemniaki gotowane, sernik z kakaową kruszonką bez rodzynek oraz pomidorowa z makaronem bez śmietany. Ziemniaki zachowują identyfikator z bazy podstawowej, bez duplikatu w wyszukiwarce. Wartości produktów bazowych i dań są orientacyjne; produkty z listy zachowują podaną tabelę. Wyszukiwanie marki i nazwy przez **Open Food Facts** z przycisku (bez żądań na każde naciśnięcie klawisza).
+- **45 podstawowych produktów ze zdjęciami WebP**, **18 produktów z listy użytkownika ze zdjęciami**, **9 gotowych dań liczonych w gramach** i produkty własne z etykiety. Wśród dań są rolada z piersi kurczaka z pieczarkami, pieczona pierś z przyprawami, ziemniaki gotowane, sernik z kakaową kruszonką bez rodzynek oraz pomidorowa z makaronem bez śmietany. Ziemniaki zachowują identyfikator z bazy podstawowej, bez duplikatu w wyszukiwarce. Wartości produktów bazowych i dań są orientacyjne; produkty z listy zachowują podaną tabelę. Wyszukiwanie marki i nazwy przez **Open Food Facts** z przycisku (bez żądań na każde naciśnięcie klawisza).
 - Kalorie, białko, węglowodany, tłuszcze, błonnik, cukry, nasycone kwasy tłuszczowe, sól, wapń, żelazo, potas, magnez, witamina C, D, B12 — te składniki, dla których produkt ma dane. Brak danych = `—`, nigdy nie jest prezentowany jako zero.
 - Kroki, trening siłowy, bieganie, spacer, rower, inny trening, szacunkowy wydatek energetyczny; mechanizm ograniczający podwójne liczenie kroków z biegu i spaceru.
 - Ciemny interfejs na komputerze i telefonie. Profil: start 93 kg, cel 85 kg, wzrost 186 cm; punkt startowy **2600 kcal i 180 g białka**. Wiek, płeć, aktywność, metoda obliczeń i cele są edytowalne.
@@ -126,9 +126,13 @@ Autorzy, źródła, licencje i informacja o konwersji: `public/foods/credits.jso
 
 ## Produkty z listy użytkownika
 
-`src/favoriteFoods.js` zawiera 17 pozycji: wcześniejsze siedem produktów oraz masło Łaciate, orzechy Alesto, Olimp Whey Isolate 95, mąkę Basia, kakao, wędlinę z indyka, dwa aerozole śmietany, Plusssz 100% Multiwitamina oraz sos Mutti do pizzy z czosnkiem i bazylią. Są dostępne od razu w zakładce Produkty oraz w wyszukiwarce dodawania jedzenia, niezależnie od rekordów własnych w D1. Wyszukiwanie obsługuje także `aliases`, a `servingSizes` daje szybki wybór porcji.
+`src/favoriteFoods.js` zawiera 18 pozycji: 17 produktów z tabel użytkownika oraz szacunek naparu Lipton Earl Grey. Są dostępne od razu w zakładce Produkty oraz w wyszukiwarce dodawania jedzenia, niezależnie od rekordów własnych w D1. Wyszukiwanie obsługuje także `aliases`, a `servingSizes` daje szybki wybór porcji.
 
 **Jogurt High Protein** zachowuje identyfikator dawnego „High Protein, kubek” i tabelę na 100 g. Otwiera się z domyślną porcją **200 g** (`defaultQuantity`) oraz przyciskiem „Opakowanie 200 g”: 142 kcal, 20 g białka, 13,4 g węglowodanów i 0,6 g tłuszczu. Minerały i witaminy są jawnym szacunkiem z naturalnego skyru 0,2% DTU Frida 6.1; nie zastępują makro użytkownika. Niepodane cukry, sól, nasycone i pozostałe braki zostają nieznane. API zachowuje i waliduje domyślną porcję bez zmiany podstawy 100 g; edycja wpisu otwiera jego zapisaną ilość.
+
+**Herbata Earl Grey (Lipton)** ma szybkie porcje 1 kubek (250 ml) i 2 kubki (500 ml), przełącznik kubki/ml oraz dodatki na każdy kubek: cytryna 10 g/plaster, pomarańcza 20 g/plaster, imbir 2 g/plasterek i cukier 5 g/płaska łyżeczka (także ułamki). Są to umowne masy domowych porcji. `src/tea.js` używa tabeli gotowego naparu czarnej herbaty USDA 173227, przyjmując 1 ml = 1 g; to jawny szacunek Earl Grey, nie dokładna analiza Lipton. Pozostałe źródła: cytryna 167746, pomarańcza 169097, imbir 169231, cukier 169655. Nieznana biotyna pozostaje nieznana.
+
+Domyślnie plastry zostają w kubku, zgodnie z wyborem użytkownika: znane składniki naparu i cukru są liczone, a nieznany transfer z owoców/imbiru oznacza częściowe wartości (lub brak wartości, jeśli znana suma wynosi zero). Nie zakładamy procentu ekstrakcji. Opcja zjedzenia całych dodatków liczy surowy miąższ i imbir bez korekty strat termicznych. Objętość porcji odnosi się do naparu; masa owoców nie rozcieńcza wyliczenia na 100 ml. Jeden wpis przechowuje skład na 100 ml i `teaRecipe` z ilościami na kubek; Worker waliduje i zachowuje te metadane bez migracji D1. Zmiana samej objętości zachowuje zapisany szacunek, zmiana dodatków przelicza skład raz od surowców. Poglądowy kubek `/foods/fav-lipton-earl-grey.webp` wygenerowano wbudowanym imagegen; prompt i atrybucja są w plikach katalogu zdjęć.
 
 W bazie ogólnej są też **czosnek surowy** (USDA 169230; szybkie porcje 3/6/9 g, ząbek orientacyjnie 3 g) oraz **kiełbasa wiejska krucha** bez określonej marki (jawny odpowiednik USDA 174577 „Polish sausage, pork”: 326 kcal, 14,1 g białka, 1,63 g węglowodanów i 28,72 g tłuszczu na 100 g). Obie pozycje mają źródłowe makro i mikroskładniki oraz poglądowe WebP wygenerowane wbudowanym imagegen. Prompty: `public/foods/additional-food-image-prompts.json`; konwersja: `scripts/prepare-extra-food-images.py`.
 
@@ -210,7 +214,7 @@ src/profile.js              domyślny profil i migracja ustawień
 src/styles.css              styl responsywny, w tym wersja mobilna
 src/dark-theme.css          ciemna paleta i nowe elementy kalkulatora
 src/foods.js                baza żywności i funkcje kalkulacji
-src/favoriteFoods.js        17 produktów z tabel użytkownika
+src/favoriteFoods.js        17 produktów z tabel użytkownika i herbata Earl Grey
 src/homemadeFoods.js        9 gotowych dań, ich skład i założenia masy po obróbce
 src/dishNutrition.js        obliczenia na 100 g i przenoszenie braków oraz granic
 src/genericNutrition.js     uzupełnianie brakujących składników produktów ogólnych

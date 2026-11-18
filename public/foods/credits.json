@@ -691,5 +691,14 @@
     "source": "/foods/additional-food-image-prompts.json",
     "licenseUrl": "/foods/additional-food-image-prompts.json",
     "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "fav-lipton-earl-grey": {
+    "image": "/foods/fav-lipton-earl-grey.webp",
+    "title": "Herbata Earl Grey — kubek naparu",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/additional-food-image-prompts.json",
+    "licenseUrl": "/foods/additional-food-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
   }
 }

@@ -1,0 +1,27 @@
+.modal-card .tea-extras { margin:16px 0; border:1px solid var(--border); border-radius:13px; background:#101d30; overflow:hidden; }
+.tea-extras-toggle { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; padding:14px; border:0; background:none; color:var(--text); text-align:left; cursor:pointer; }
+.tea-extras-toggle>span { display:grid; gap:4px; min-width:0; }
+.tea-extras-toggle strong { font-size:14px; font-weight:650; }
+.tea-extras-toggle small { font-size:11px; line-height:1.5; color:var(--muted); }
+.tea-extras-toggle svg { flex-shrink:0; color:var(--accent); transition:transform .2s; }
+.tea-extras-toggle[aria-expanded=true] svg { transform:rotate(180deg); }
+.tea-extras-body[hidden] { display:none; }
+.tea-extras-body { padding:0 14px 14px; }
+.tea-extras-body>p { color:var(--muted); font-size:12px; line-height:1.6; margin:0 0 8px; }
+.tea-addon-row { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:11px 0; border-bottom:1px solid var(--border); }
+.tea-addon-name { display:grid; gap:3px; min-width:0; }
+.tea-addon-name strong { font-size:13px; font-weight:600; }
+.tea-addon-name small { color:var(--muted); font-size:10px; line-height:1.5; }
+.tea-addon-counter { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.modal-card .tea-addon-counter button { width:32px; height:36px; padding:0; border:1px solid #304c70; border-radius:8px; background:#1c3555; color:var(--accent); display:grid; place-items:center; cursor:pointer; }
+.tea-addon-counter button:disabled { opacity:.4; cursor:default; }
+.modal-card .tea-addon-counter input { width:45px; height:36px; min-width:0; padding:5px 2px; border:1px solid var(--border); border-radius:7px; background:#0b1524; color:var(--text); text-align:center; font-size:14px; font-weight:600; }
+.tea-extras-body .tea-addon-hint { margin:10px 0 0; font-size:11px; }
+.tea-infusion-note { background:#172940; border-radius:10px; padding:11px; margin-top:12px; }
+.tea-infusion-note label { display:flex; align-items:center; gap:8px; font-size:12px; cursor:pointer; }
+.modal-card .tea-infusion-note input { width:16px; height:16px; margin:0; accent-color:var(--accent); flex-shrink:0; }
+.tea-infusion-note p { font-size:11px; line-height:1.6; color:var(--muted); margin:8px 0 0; }
+@media(max-width:360px) {
+  .tea-extras-body { padding:0 10px 12px; }
+  .tea-addon-name small { max-width:115px; }
+}

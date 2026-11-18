@@ -4,6 +4,7 @@ import {normalizeProfile, ACTIVITY_LEVELS} from '../../src/profile.js';
 import {calcTargets} from '../../src/foods.js';
 import {NUTRIENT_FIELDS,MACRO_FIELDS} from '../../src/nutrients.js';
 import {validSupplementPlan} from '../../src/supplementPlan.js';
+import {isTea,validTeaRecipe,normalizeTeaRecipe} from '../../src/teaRecipe.js';
 
 const json = (value, status = 200, headers = {}) => new Response(JSON.stringify(value), {
   status, headers: { 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff', ...headers }
@@ -49,6 +50,7 @@ function validFood(food) {
   if (food.basisQuantity != null && food.basisQuantity !== (['tablet','capsule'].includes(food.unit)?1:100)) return false;
   if (food.sliceGrams != null && (food.unit!=='g'||!finite(food.sliceGrams,0.1,100000))) return false;
   if (food.defaultQuantity != null && (!finite(food.defaultQuantity,0.1,100000)||(['tablet','capsule'].includes(food.unit)&&!Number.isInteger(food.defaultQuantity)))) return false;
+  if (food.teaRecipe != null && (!isTea(food)||!validTeaRecipe(food.teaRecipe))) return false;
   for(const [field,limit] of [['ingredients',1800],['labelNote',1000],['sourceUrl',500],['verifiedAt',10]]) if(food[field]!=null&&(typeof food[field]!=='string'||food[field].length>limit)) return false;
   if(food.sourceUrl&&!/^https:\/\//.test(food.sourceUrl)) return false;
   if(typeof food.image==='string'&&food.image.startsWith('data:')&&!(food.image.length<=160000&&/^data:image\/webp;base64,[A-Za-z0-9+/]+=*$/.test(food.image))) return false;
@@ -73,6 +75,7 @@ function cleanFood(food) {
   if (food.basisQuantity != null) result.basisQuantity = food.basisQuantity;
   if (food.sliceGrams != null) result.sliceGrams = food.sliceGrams;
   if (food.defaultQuantity != null) result.defaultQuantity = food.defaultQuantity;
+  if (food.teaRecipe != null) result.teaRecipe = normalizeTeaRecipe(food.teaRecipe);
   if (food.aliases != null) result.aliases = food.aliases;
   if (food.servingSizes != null) result.servingSizes = food.servingSizes.map(({label,quantity})=>({label,quantity}));
   if (food.fatLessThan != null) result.fatLessThan = food.fatLessThan;

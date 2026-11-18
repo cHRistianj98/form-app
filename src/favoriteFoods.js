@@ -1,6 +1,7 @@
-// Products supplied by the user. Keep their table as the nutrition source;
-// packaging photographs do not override these values or imply a specific flavour.
+// User-supplied product tables stay unchanged by packaging photographs.
+// The appended prepared-tea estimate declares its own source separately.
 import {NUTRIENT_FIELDS,MINERAL_KEYS,VITAMIN_KEYS} from './nutrients.js';
+import {TEA_FOOD} from './tea.js';
 import genericEstimates from './genericFoodEstimates.json' with {type:'json'};
 const highProteinProxy=genericEstimates.foods['base:skyr'];
 const highProteinMicros=Object.fromEntries([...MINERAL_KEYS,...VITAMIN_KEYS]
@@ -87,4 +88,5 @@ export const FAVORITE_FOODS = [
     aliases:['mutti','sos pomidorowy','sos do pizzy','czosnek bazylia'],
     servingSizes:[{label:'100 g',quantity:100},{label:'200 g — pół puszki',quantity:200},{label:'400 g — puszka',quantity:400}],
   }),
+  TEA_FOOD,
 ];
