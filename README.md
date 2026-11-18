@@ -1,8 +1,10 @@
 # Forma — prywatny licznik kalorii
 
-Responsywna aplikacja React + Vite + Cloudflare Pages Functions + D1. Jeden użytkownik, bez płatnego serwera, bez zewnętrznego konta w aplikacji. Działa w przeglądarce desktopowej i na iPhonie jako skrót na ekranie początkowym.
+Responsywna aplikacja React + Vite + Cloudflare Workers + D1. Jeden użytkownik, bez zewnętrznego konta w aplikacji. Działa w przeglądarce desktopowej i na iPhonie jako skrót na ekranie początkowym. Aktualne wdrożenie korzysta z `worker/index.js` i `wrangler.jsonc`; wspólny handler API pozostaje w katalogu `functions/`.
 
 ## Co działa
+
+- **Garmin Connect: import kroków i wagi** z oficjalnego Personal API. Panel w Ustawieniach ma zakres 1/7/28 dni, „Synchronizuj teraz”, status połączenia i automat co godzinę. Import zachowuje notatki i ręczne korekty; opcjonalne zastąpienie dotyczy wyłącznie ręcznego wywołania. Sekret i migracja D1 wymagają konfiguracji: **[instrukcja Garmin + Cloudflare krok po kroku](GARMIN-CLOUDFLARE.md)**. Testy integracji korzystają z rzeczywistej lokalnej D1 w Miniflare i syntetycznych odpowiedzi Garmin.
 
 - Dziennik posiłków: śniadanie, obiad, kolacja i przekąski w zwiniętych wierszach ze zdjęciem, kaloriami i przyciskiem dodawania. Strzałka rozwija składniki z edycją i usuwaniem. Wyszukiwarka jedzenia pokazuje zdjęcie i nazwę, a osobna strzałka odsłania wartości. Kliknięcie lub dotknięcie pola ilości zaznacza całą liczbę do zastąpienia; gramy i ml można wpisać przecinkiem albo kropką.
 - **45 podstawowych produktów ze zdjęciami WebP**, **18 produktów z listy użytkownika ze zdjęciami**, **9 gotowych dań liczonych w gramach** i produkty własne z etykiety. Wśród dań są rolada z piersi kurczaka z pieczarkami, pieczona pierś z przyprawami, ziemniaki gotowane, sernik z kakaową kruszonką bez rodzynek oraz pomidorowa z makaronem bez śmietany. Ziemniaki zachowują identyfikator z bazy podstawowej, bez duplikatu w wyszukiwarce. Wartości produktów bazowych i dań są orientacyjne; produkty z listy zachowują podaną tabelę. Wyszukiwanie marki i nazwy przez **Open Food Facts** z przycisku (bez żądań na każde naciśnięcie klawisza).
@@ -41,6 +43,8 @@ npm test
 ```
 
 ## 2. Wdrożenie Cloudflare za 0 zł / miesiąc (przy małym, prywatnym użyciu)
+
+**Dla obecnego Workera `form-app` i synchronizacji Garmin korzystaj z [GARMIN-CLOUDFLARE.md](GARMIN-CLOUDFLARE.md)**: istniejący binding `DB`, dodatkowa migracja, sekret i `npm run deploy`. Harmonogram jest w `wrangler.jsonc`; automat jest domyślnie wyłączony. Poniższa instrukcja Pages opisuje starszy wariant wdrożenia bez handlera `scheduled`.
 
 ### Krok A — przygotuj repozytorium
 
@@ -119,7 +123,7 @@ Po połączeniu repo z Cloudflare Pages wystarczy `git push` do gałęzi `main`.
 - Białko: stałe **180 g**, opcjonalnie `2 g × kg aktualnej wagi` po ustawieniu stałego celu białka na 0. Tłuszcz: `0,8 g × kg wagi docelowej`. Węglowodany: pozostałe kcal po białku (4 kcal/g) i tłuszczach (9 kcal/g), podzielone przez 4. Formularz i API odrzucają cele, które nie pokrywają wybranego białka i tłuszczu.
 - Starszy profil otrzymuje nowy model przy odczycie, bez zmiany dziennika i schematu D1. Ręcznie wybrane kalorie oraz niestandardowy deficyt i białko zostają zachowane. Nowe ustawienia utrwalają się po zapisie profilu.
 
-To **szacunki**, nie pomiar spalania. Nie ma integracji z Apple Health / HealthKit ani automatycznego importu kroków. Urządzenia i aplikacje mogą podawać różne kalorie aktywne i całkowite; przed wpisaniem sprawdź, których używasz.
+To **szacunki**, nie pomiar spalania. Opcjonalny import Garmin dostarcza kroki i wagę; aplikacja nadal liczy ruch według powyższego modelu. Nie importuje równolegle kalorii aktywnych ani treningów z Garmin, więc nie dodaje ich drugi raz. Apple Health / HealthKit nie jest pośrednikiem tej integracji.
 
 Źródła metod: [Mifflin–St Jeor](https://pubmed.ncbi.nlm.nih.gov/2305711/), [równania EER i kategorie aktywności DRI 2023 — Health Canada](https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/equations-estimate-energy-requirement.html), [NIDDK Body Weight Planner](https://www.niddk.nih.gov/bwp), [ISSN — białko i wysiłek](https://pmc.ncbi.nlm.nih.gov/articles/PMC5477153/). Linki są również dostępne w ustawieniach aplikacji.
 

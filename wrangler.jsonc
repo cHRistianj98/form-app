@@ -3,6 +3,7 @@
   "name": "form-app",
   "main": "worker/index.js",
   "compatibility_date": "2026-11-14",
+  "triggers": { "crons": ["17 * * * *"] },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

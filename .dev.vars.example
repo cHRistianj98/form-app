@@ -1,0 +1,5 @@
+# Optional LOCAL Worker development only; copy to .dev.vars and fill locally.
+# Production values belong in Cloudflare Worker Secrets.
+APP_PASSWORD=replace-with-your-local-app-password
+SESSION_SECRET=replace-with-a-random-string-of-at-least-32-characters
+GARMIN_PERSONAL_API_KEY=

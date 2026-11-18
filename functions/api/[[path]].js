@@ -5,6 +5,7 @@ import {calcTargets} from '../../src/foods.js';
 import {NUTRIENT_FIELDS,MACRO_FIELDS} from '../../src/nutrients.js';
 import {validSupplementPlan} from '../../src/supplementPlan.js';
 import {isTea,validTeaRecipe,normalizeTeaRecipe} from '../../src/teaRecipe.js';
+import {GarminError,garminStatus,setGarminAuto,syncGarmin} from '../../worker/garmin.js';
 
 const json = (value, status = 200, headers = {}) => new Response(JSON.stringify(value), {
   status, headers: { 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff', ...headers }
@@ -169,6 +170,19 @@ export async function onRequest(context) {
     }
     if (path[0]==='logout' && method==='POST') return json({ok:true},200,{'Set-Cookie':'forma_session=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0'});
     if (!(await auth(req,env))) return json({error:'Wymagane logowanie'},401);
+    if (path[0]==='garmin'&&path.length===2) {
+      if(path[1]==='status'&&method==='GET')return json(await garminStatus(env));
+      if(path[1]==='settings'&&method==='POST') {
+        const b=await readBody(req);
+        if(!b||typeof b.autoEnabled!=='boolean'||Object.keys(b).some(key=>key!=='autoEnabled'))return json({error:'Niepoprawne ustawienia Garmin'},400);
+        return json(await setGarminAuto(env,b.autoEnabled));
+      }
+      if(path[1]==='sync'&&method==='POST') {
+        const b=await readBody(req);
+        if(!b||typeof b.overwriteManual!=='boolean'||Object.keys(b).some(key=>!['from','to','overwriteManual'].includes(key)))return json({error:'Niepoprawny zakres synchronizacji'},400);
+        return json(await syncGarmin(env,b));
+      }
+    }
     if (path[0]==='state' && method==='GET') return json(await state(env.DB));
     if (path[0]==='search' && method==='GET') {
       const q=(url.searchParams.get('q')||'').trim().slice(0,80);
@@ -229,6 +243,7 @@ export async function onRequest(context) {
     }
     return json({error:'Nieznany adres API'},404);
   } catch(e) {
+    if(e instanceof GarminError)return json({error:e.message,code:e.code,retryAt:e.retryAt},e.status,e.retryAt?{'Retry-After':String(Math.max(1,Math.ceil((Date.parse(e.retryAt)-Date.now())/1000)))}:{});
     const msg = e instanceof Error ? e.message : 'Błąd serwera';
     // Nie ujawniamy szczegółów błędów bazy danych ani sekretów.
     if (/Dane są za duże|Niepoprawny JSON/.test(msg)) return json({error:msg},400);
