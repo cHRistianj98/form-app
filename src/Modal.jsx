@@ -4,7 +4,7 @@ import {X} from 'lucide-react';
 // Opening a dialog on a phone should not immediately open the keyboard.
 export const allowFieldAutofocus = () => !window.matchMedia('(pointer: coarse)').matches;
 
-export default function Modal({title,subtitle,onClose,children,wide=false}) {
+export default function Modal({title,subtitle,onClose,children,wide=false,className='',trapFocus=false}) {
   const backdropRef=useRef(null);
   const cardRef=useRef(null);
 
@@ -43,13 +43,22 @@ export default function Modal({title,subtitle,onClose,children,wide=false}) {
   },[]);
 
   useEffect(()=>{
-    const escape=e=>{if(e.key==='Escape')onClose();};
+    const escape=e=>{
+      if(e.key==='Escape'){e.preventDefault();onClose();}
+      if(trapFocus&&e.key==='Tab') {
+        const controls=[...cardRef.current.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href],[tabindex]:not([tabindex="-1"])')].filter(element=>element.tabIndex>=0&&element.getClientRects().length);
+        const first=controls[0],last=controls.at(-1);
+        if(!first){e.preventDefault();return;}
+        if(e.shiftKey&&(document.activeElement===first||!controls.includes(document.activeElement))){e.preventDefault();last.focus();}
+        else if(!e.shiftKey&&(document.activeElement===last||!controls.includes(document.activeElement))){e.preventDefault();first.focus();}
+      }
+    };
     document.addEventListener('keydown',escape);
     return ()=>document.removeEventListener('keydown',escape);
-  },[onClose]);
+  },[onClose,trapFocus]);
 
   return <div ref={backdropRef} className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}}>
-    <section ref={cardRef} className={`modal-card ${wide?'modal-wide':''}`} role="dialog" aria-modal="true" aria-label={title} tabIndex={-1}>
+    <section ref={cardRef} className={`modal-card ${wide?'modal-wide':''} ${className}`} role="dialog" aria-modal="true" aria-label={title} tabIndex={-1}>
       <div className="modal-top"><div><h2>{title}</h2>{subtitle&&<p>{subtitle}</p>}</div><button className="icon-button" onClick={onClose} aria-label="Zamknij"><X size={19}/></button></div>
       <div className="modal-body">{children}</div>
     </section>

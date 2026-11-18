@@ -31,6 +31,8 @@ import QuantityInput from './QuantityInput.jsx';
 import {sliceGrams,quantityInBaseUnits,defaultFoodQuantity} from './foodPortions.js';
 import './food-journal.css';
 import WeekChart from './WeekChart.jsx';
+import DateNavigation from './DateNavigation.jsx';
+import useDaySwipe from './useDaySwipe.js';
 
 const nav = [
   {id:'dashboard',label:'Pulpit',icon:BarChart3},
@@ -60,9 +62,8 @@ function FoodPhoto({food,size=''}) {
 
 function IconBadge({Icon, color='mint',size=20}) {return <span className={`icon-badge ${color}`}><Icon size={size} strokeWidth={1.9}/></span>;}
 function SectionTitle({title,subtitle,action}) {return <div className="section-heading"><div><h2>{title}</h2>{subtitle&&<p>{subtitle}</p>}</div>{action}</div>;}
-function Topline({day,setDay,view}) {
-  const today = localDay();
-  return <div className="topline"><div className="topline-left"><span className="today-marker"><ClipboardList size={15} aria-hidden="true"/> TWÓJ DZIENNIK</span><h1>{({dashboard:'Dzień dobry! 👋',foods:'Baza produktów',activity:'Twoja aktywność',progress:'Statystyki żywienia',supplements:'Suplementy',settings:'Ustawienia'})[view]}</h1><p className="page-subtitle">{({dashboard:'Każdy dobry wybór przybliża Cię do celu.',foods:'Wszystko, co jesz, w jednym miejscu.',activity:'Każdy ruch ma znaczenie.',progress:'Twój bilans dnia i tygodnia, makro i witaminy.',supplements:'Zapisuj przyjęte kapsułki i sprawdzaj sumy składników.',settings:'Dopasuj licznik do siebie.'})[view]}</p></div><div className="date-nav"><button className="icon-button" onClick={()=>setDay(shiftDay(day,-1))} aria-label="Poprzedni dzień"><ChevronLeft size={19}/></button><div className="date-text"><CalendarDays size={16}/><span>{day===today?'Dzisiaj':dateTitle(day)}</span></div><button className="icon-button" onClick={()=>setDay(shiftDay(day,1))} disabled={day>=today} aria-label="Następny dzień"><ChevronRight size={19}/></button></div></div>;
+function Topline({day,setDay,view,recordedDays}) {
+  return <div className="topline"><div className="topline-left"><span className="today-marker"><ClipboardList size={15} aria-hidden="true"/> TWÓJ DZIENNIK</span><h1>{({dashboard:'Dzień dobry! 👋',foods:'Baza produktów',activity:'Twoja aktywność',progress:'Statystyki żywienia',supplements:'Suplementy',settings:'Ustawienia'})[view]}</h1><p className="page-subtitle">{({dashboard:'Każdy dobry wybór przybliża Cię do celu.',foods:'Wszystko, co jesz, w jednym miejscu.',activity:'Każdy ruch ma znaczenie.',progress:'Twój bilans dnia i tygodnia, makro i witaminy.',supplements:'Zapisuj przyjęte kapsułki i sprawdzaj sumy składników.',settings:'Dopasuj licznik do siebie.'})[view]}</p></div><DateNavigation day={day} onChange={setDay} recordedDays={recordedDays}/></div>;
 }
 function MealCard({meal,entries,onAdd,onEdit,onRemove}) {
   const [expanded,setExpanded]=useState(false);
@@ -251,6 +252,8 @@ function App() {
   const [toast,setToast]=useState('');
   const supplementLocks=useRef(new Set());
   const local=mode==='local';
+  const recordedDays=useMemo(()=>new Set([...data.entries,...data.daily,...data.activities].map(record=>record.day)),[data.entries,data.daily,data.activities]);
+  const daySwipe=useDaySwipe({day,onChange:setDay,disabled:!['ready','local'].includes(mode)||!!foodModal||activityModal||metricModal});
   useEffect(()=>{
     let mounted=true;
     (async()=>{try{const r=await api('/session');if(!mounted)return;if(!r.authenticated){setMode('auth');return}const s=await api('/state');if(!mounted)return;setData({...empty,...s,profile:normalizeProfile(s.profile)});setMode('ready');}
@@ -302,7 +305,7 @@ function App() {
   if(mode==='loading')return <div className="loading-screen"><div className="brand-mark"><Leaf/></div><p>Ładuję dziennik...</p></div>;
   if(mode==='auth'||mode==='setup')return <Login onLogin={reload} setupError={mode==='setup'?setupError:null}/>;
   return <div className="app-layout"><aside className="sidebar"><div className="sidebar-brand"><span className="brand-mark"><Leaf size={25}/></span><span>forma<span className="brand-point">.</span><small>TWÓJ DOBRY RYTM</small></span></div><div className="sidebar-nav-label">MENU GŁÓWNE</div><nav className="sidebar-nav">{nav.map(item=>{const Icon=item.icon;return <button key={item.id} className={view===item.id?'active':''} onClick={()=>setView(item.id)}><Icon size={20}/>{item.label}{view===item.id&&<span className="nav-mark"/>}</button>})}</nav><div className="sidebar-bottom"><div className="sidebar-goal"><span className="goal-symbol"><Target size={20}/></span><small>TWÓJ CEL</small><h3>{formatWeight(target)} kg</h3><div className="goal-meter"><span style={{width:`${progress}%`}}/></div><p>Jeszcze {formatWeight(Math.max(0,weight-target))} kg do celu</p></div><div className="sidebar-profile"><div className="profile-avatar">F</div><div><strong>Mój dziennik</strong><small>{local?'Tryb lokalny':'Prywatne konto'}</small></div><MoreHorizontal size={18}/></div></div></aside>
-    <main className="main"><Topline day={day} setDay={setDay} view={view}/>{local&&<div className="demo-banner"><Info size={16}/> Tryb lokalny — zapis tylko w tej przeglądarce. W Cloudflare dane będą synchronizowane przez D1.</div>}
+    <main className="main" {...daySwipe}><Topline day={day} setDay={setDay} view={view} recordedDays={recordedDays}/>{local&&<div className="demo-banner"><Info size={16}/> Tryb lokalny — zapis tylko w tej przeglądarce. W Cloudflare dane będą synchronizowane przez D1.</div>}
       {view==='dashboard'&&<>
         <DailyBalance nutrition={nutrition} goal={goal} budget={budget} movement={extra} onDetails={()=>setView('progress')}/>
         <section className="dashboard-meals"><SectionTitle title="Dziennik posiłków" subtitle={dateTitle(day)} action={<button className="button primary compact" onClick={()=>setFoodModal({meal:'breakfast'})}><Plus size={17}/> Dodaj jedzenie</button>}/><div className="meals-grid">{MEALS.map(m=><MealCard key={m.id} meal={m} entries={todayEntries.filter(e=>e.meal===m.id)} onAdd={id=>setFoodModal({meal:id})} onEdit={entry=>setFoodModal({editing:entry})} onRemove={e=>remove('entries',e)}/>)}</div></section>
