@@ -14,7 +14,9 @@ function Photo({food}) {
 }
 function Components({food,quantity=1,compact=false}) {
   const fields=NUTRIENTS.filter(([key])=>food[key]!=null);
-  return <div className={compact?'supplement-chips':'supplement-components'}>{(compact?fields.slice(0,3):fields).map(([key,name,unit])=><span key={key} data-supplement-nutrient={key}><span>{name}</span><strong>{fmt(food[key]*quantity,2)} {unit}{key==='vitaminD'?` / ${fmt(food[key]*quantity*40)} IU`:''}</strong></span>)}</div>;
+  const positive=fields.filter(([key])=>food[key]>0);
+  const visible=compact?(positive.length?positive:fields).slice(0,3):fields;
+  return <div className={compact?'supplement-chips':'supplement-components'}>{visible.map(([key,name,unit])=><span key={key} data-supplement-nutrient={key}><span>{name}</span><strong>{fmt(food[key]*quantity,2)} {unit}{key==='vitaminD'?` / ${fmt(food[key]*quantity*40)} IU`:''}</strong></span>)}</div>;
 }
 
 export function SupplementPanel({entries,personal,day,plan,onAdjust,onOpen,onSettings,compact=false}) {
@@ -34,14 +36,14 @@ export function SupplementPanel({entries,personal,day,plan,onAdjust,onOpen,onSet
     {compact?<summary className="supplement-summary">{heading}<ChevronDown className="supplement-expand-icon" size={20}/></summary>:<div className="supplement-summary">{heading}</div>}
     <div className="supplement-panel-body">
     <div className="supplement-panel-links">{onSettings&&<button className="text-link" onClick={onSettings}><Settings2 size={15}/> Ustaw plan</button>}{compact&&<button className="text-link" onClick={onOpen}>Pełny widok <ArrowRight size={16}/></button>}</div>
-    <div className="supplement-grid">{progress.rows.map(({food,count,target,done})=><article key={food.id} className={`supplement-card ${count>0?'taken':''} ${done?'done':''} ${!target?'not-due':''}`} data-supplement-id={food.id} data-supplement-state={done?'done':target?'pending':'not-due'}>
+    <div className="supplement-grid">{progress.rows.map(({food,count,target,done,disabled,optional,scheduleLabel})=><article key={food.id} className={`supplement-card ${count>0?'taken':''} ${done?'done':''} ${!target?'not-due':''} ${optional?'optional':''}`} data-supplement-id={food.id} data-supplement-state={done?'done':!target?'not-due':optional?'optional':'pending'}>
       <Photo food={food}/><div className="supplement-info"><small>{food.brand||'Własny suplement'}</small><h3>{food.name}</h3><Components food={food} compact/>{!compact&&<button className="text-link" onClick={()=>onOpen(food)}>Skład i źródło</button>}</div>
       <div className="supplement-counter" aria-label={`Przyjęto: ${food.name}`}>
         <button type="button" onClick={()=>adjust(food,-1)} disabled={!count||pending.has(food.id)} aria-label={`Odejmij jedną: ${food.name}`}><Minus size={20}/></button>
         <output aria-live="polite"><strong>{count}{target>0&&<span> / {target}</span>}</strong><small>{food.unit==='tablet'?'tabl.':'kaps.'}</small></output>
         <button type="button" onClick={()=>adjust(food,1)} disabled={pending.has(food.id)} aria-label={`Dodaj jedną: ${food.name}`}><Plus size={20}/></button>
       </div>
-      <div className="supplement-plan-status">{done?<><Check size={15}/> Plan wykonany</>:target?`Pozostało ${Math.max(0,target-count)} szt.`:'Brak planu na ten dzień'}</div>
+      <div className="supplement-plan-status">{done?<><Check size={15}/> {optional?'Przyjęto opcjonalnie':'Plan wykonany'}</>:disabled?'Wyłączony z planu':optional?`Opcjonalnie: ${target||'—'} szt.`:target?`Pozostało ${Math.max(0,target-count)} szt.`:`Plan: ${scheduleLabel}`}</div>
     </article>)}</div>
     {error&&<p className="form-error" role="alert">{error}</p>}
     {!compact&&<p className="muted-note">Liczniki zapisują się dla daty wybranej u góry. Nowy dzień zaczyna się od zera; zapisane składniki trafiają do statystyk dnia i tygodnia. To zapis przyjętych ilości.</p>}
@@ -66,7 +68,7 @@ async function photoAsWebP(file) {
 function SupplementForm({onSave,onClose}) {
   const [form,setForm]=useState({name:'',brand:'',unit:'capsule',ingredients:'',image:null,...Object.fromEntries(NUTRIENT_FIELDS.map(key=>[key,'']))});
   const [saving,setSaving]=useState(false),[processing,setProcessing]=useState(false),[error,setError]=useState('');
-  const primary=['magnesium','zinc','vitaminD','b6','vitaminC','biotin','epa','dha'];
+  const primary=['magnesium','zinc','selenium','vitaminD','b6','vitaminC','biotin','epa','dha'];
   const fields=[['kcal','Kalorie','kcal'],['protein','Białko','g'],['carbs','Węglowodany','g'],['fat','Tłuszcze','g'],...NUTRIENTS];
   const change=(key,value)=>setForm(previous=>({...previous,[key]:value}));
   async function imageChange(e) {
@@ -106,7 +108,7 @@ export default function SupplementsPage({entries,personal,day,plan,onAdjust,onSa
     {details&&<Modal title={details.name} subtitle={`${details.brand||'Własny suplement'} · skład na 1 ${details.unit==='tablet'?'tabletkę':'kapsułkę'}`} onClose={()=>setDetails(null)}>
       <div className="supplement-detail-head"><Photo food={details}/><p className="help-note">{details.labelNote||'Dane z Twojej etykiety.'}</p></div>
       <Components food={details}/>
-      {details.kcal!=null&&<p className="help-note">Energia: {fmt(details.kcal,2)} kcal{details.fat!=null?`, tłuszcz: ${fmt(details.fat,2)} g`:''} na jedną sztukę.</p>}
+      <div className="supplement-macros" aria-label="Kalorie i makroskładniki na jedną sztukę">{[['kcal','Kalorie','kcal'],['protein','Białko','g'],['carbs','Węgle','g'],['fat','Tłuszcze','g']].map(([key,name,unit])=><div key={key}><span>{name}</span><strong>{details[key]==null?'—':`${fmt(details[key],2)} ${unit}`}</strong></div>)}</div>
       {details.ingredients&&<p className="supplement-ingredients"><strong>Składniki:</strong> {details.ingredients}</p>}
       {details.sourceUrl&&<a className="text-link" href={details.sourceUrl} target="_blank" rel="noreferrer">Tabela i etykieta producenta ↗</a>}
       <p className="muted-note">{details.verifiedAt?`Sprawdzono ${details.verifiedAt}. `:''}Liczymy deklarowane składniki. Brak podanych kalorii lub makro pozostaje brakiem danych. Składniki „w tym” są częścią ekstraktu lub oleju.</p>

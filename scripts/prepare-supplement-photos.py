@@ -1,4 +1,4 @@
-"""Download the six product packshots and export local 480px WebP files.
+"""Download product packshots and export local 480px WebP files.
 Uses real manufacturer images. Requires Pillow; network access only when run.
 """
 from pathlib import Path

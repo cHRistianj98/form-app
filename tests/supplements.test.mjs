@@ -10,12 +10,12 @@ import worker from '../worker/index.js';
 const get=id=>SUPPLEMENTS.find(food=>food.id===`supplement:${id}`);
 const entry=(food,quantity=1,day='2026-11-16')=>({id:supplementLogId(day,food.id),day,meal:'supplements',grams:quantity,food});
 
-test('six exact supplement variants use per-capsule manufacturer data and real local WebP packshots',()=>{
-  assert.equal(SUPPLEMENTS.length,6);
+test('ten exact supplement variants use per-capsule manufacturer data and real local WebP packshots',()=>{
+  assert.equal(SUPPLEMENTS.length,10);
   const credits=JSON.parse(readFileSync(new URL('../public/foods/credits.json',import.meta.url),'utf8'));
   for(const food of SUPPLEMENTS){
     assert.ok(isSupplement(food));assert.equal(foodBasis(food),1);assert.equal(food.unit,'capsule');
-    assert.match(food.sourceUrl,/^https:\/\/(essensey\.com|www\.nowfoods\.com)\//);
+    assert.match(food.sourceUrl,/^https:\/\/(essensey\.com|www\.nowfoods\.com|olimpstore\.pl)\//);
     assert.equal(foodImage({id:food.id}),food.image);
     assert.equal(credits[food.id].source,food.sourceUrl);
     const bytes=readFileSync(new URL('../public'+food.image,import.meta.url));
@@ -33,7 +33,7 @@ test('six exact supplement variants use per-capsule manufacturer data and real l
 });
 
 test('combined supplement nutrients scale with counts; unknown macro values stay unknown',()=>{
-  const rows=SUPPLEMENTS.map(food=>entry(food,food.id.includes('magnesium')||food.id.includes('omega')?2:1));
+  const rows=SUPPLEMENTS.slice(0,6).map(food=>entry(food,food.id.includes('magnesium')||food.id.includes('omega')?2:1));
   const summary=sumNutrition(rows);
   const expected={magnesium:375,b6:1.4,vitaminC:325,biotin:2500,zinc:25,vitaminD:100,fishOil:2000,epa:360,dha:240,ashwagandhaExtract:666,withanolides:10,horsetailExtract:150,silica:10.5};
   for(const [key,value] of Object.entries(expected))assert.equal(summary.totals[key],value,key);
@@ -56,7 +56,7 @@ test('date-specific counters and calendar reports never repeat yesterday or incl
   const week=nutritionReport({entries:rows,daily:[],profile:DEFAULT_PROFILE,day:'2026-11-16',period:'week',today:'2026-11-17'});
   assert.equal(week.summary.totals.zinc,45);assert.equal(week.loggedDays,2);
   const own={id:'own:supplement:test',kind:'supplement',unit:'tablet',name:'Własny',zinc:2};
-  assert.equal(supplementCatalog([own,{id:'own:food',name:'Danie'}]).length,7);
+  assert.equal(supplementCatalog([own,{id:'own:food',name:'Danie'}]).length,11);
 });
 
 test('Worker upserts a single per-day count, preserves label data and custom WebP, and deletes intake',async()=>{
@@ -77,9 +77,10 @@ test('Worker upserts a single per-day count, preserves label data and custom Web
   const mag=get('essensey-magnesium-b6');
   assert.equal((await ask('entries','POST',entry(mag,2))).status,200);
   let state=await(await ask('state')).json();
-  assert.equal(state.entries.length,6);assert.equal(state.entries.find(e=>e.food.id===mag.id).grams,2);
+  assert.equal(state.entries.length,10);assert.equal(state.entries.find(e=>e.food.id===mag.id).grams,2);
   assert.equal(sumNutrition(state.entries).totals.magnesium,375);
   assert.deepEqual(state.entries.find(e=>e.food.id===mag.id).food,mag);
+  for(const id of ['olimp-creatine-1250','essensey-collagen-plus','essensey-selenium-pro-forte','essensey-melatonin'])assert.deepEqual(state.entries.find(e=>e.food.id===get(id).id).food,get(id));
   const image='data:image/webp;base64,'+readFileSync(new URL('../public/foods/supp-essensey-zinc.webp',import.meta.url)).toString('base64');
   const custom={...mag,id:'own:supplement:test',name:'Mój suplement',image,unit:'tablet'};
   assert.equal((await ask('foods','POST',custom)).status,200);
@@ -90,4 +91,22 @@ test('Worker upserts a single per-day count, preserves label data and custom Web
   for(const changes of [{kind:'food'},{unit:'g'},{basisQuantity:100},{magnesium:-1},{sourceUrl:'javascript:alert(1)'},{image:'data:text/html;base64,AAAA'}])assert.equal((await ask('entries','POST',entry({...mag,...changes}))).status,400,JSON.stringify(changes));
   assert.equal((await ask('entries/'+encodeURIComponent(supplementLogId('2026-11-16',mag.id)),'DELETE')).status,200);
   state=await(await ask('state')).json();assert.equal(supplementCount(state.entries,'2026-11-16',mag.id),0);
+});
+
+test('new supplements scale the actual capsule composition and preserve label energy instead of deriving it from macros',()=>{
+  const creatine=scaleFood(get('olimp-creatine-1250'),4);
+  assert.equal(creatine.kcal,20);assert.equal(creatine.protein,0);assert.equal(creatine.carbs,0);assert.equal(creatine.fat,0);
+  assert.equal(creatine.creatineMonohydrate,5000);assert.equal(creatine.creatine,4400);
+  const collagen=scaleFood(get('essensey-collagen-plus'),1);
+  assert.equal(collagen.collagen,500);assert.equal(collagen.vitaminC,30.5);
+  assert.equal(scaleFood(get('essensey-collagen-plus'),2).vitaminC,61);
+  assert.equal(scaleFood(get('essensey-selenium-pro-forte'),1).selenium,200);
+  assert.equal(scaleFood(get('essensey-melatonin'),1).melatonin,1);
+  for(const id of ['essensey-collagen-plus','essensey-selenium-pro-forte','essensey-melatonin']) {
+    for(const key of ['kcal','protein','carbs','fat'])assert.equal(get(id)[key],null,`${id}: ${key} must stay unknown`);
+  }
+  const summary=sumNutrition([entry(get('olimp-creatine-1250'),4),entry(get('essensey-collagen-plus')),entry(get('essensey-selenium-pro-forte')),entry(get('essensey-melatonin'))]);
+  assert.equal(summary.totals.selenium,200);assert.equal(summary.totals.melatonin,1);assert.equal(summary.totals.collagen,500);
+  assert.equal(summary.totals.creatine,4400);assert.equal(summary.totals.creatineMonohydrate,5000);assert.equal(summary.totals.kcal,20);
+  assert.equal(summary.coverage.kcal.complete,false);assert.equal(summary.coverage.protein.complete,false);
 });

@@ -38,6 +38,18 @@ test('day export includes meal quantities and recorded capsules/tablets, their c
   assert.equal(isReportSupplement(entry(tablet)),true);assert.equal(isReportSupplement(entry(food('zupa'))),false);
 });
 
+test('new supplement report exports actual intake, per-capsule components, weekly weekdays and optional status',()=>{
+  const get=id=>SUPPLEMENTS.find(food=>food.id===`supplement:${id}`);
+  const records=[entry(get('olimp-creatine-1250'),4,day,'supplements'),entry(get('essensey-collagen-plus'),1,day,'supplements'),entry(get('essensey-selenium-pro-forte'),1,'2026-11-17','supplements'),entry(get('essensey-melatonin'),1,day,'supplements')];
+  const report=build({period:'week',entries:records});
+  assert.equal(report.supplementEntries,4);
+  for(const text of ['Kreatyna: 4400 mg','Monohydrat kreatyny: 5000 mg','Hydrolizat kolagenu: 500 mg','Witamina C: 30,5 mg','Selen: 200 µg','Melatonina: 1 mg','wt, czw, niedz','codziennie (opcjonalnie)'])assert.ok(report.text.includes(text),text);
+  assert.match(report.text,/Kalorie: 20 kcal \(dane częściowe/);
+  assert.ok(report.text.includes('Białko: 0 g (dane częściowe'));
+  const noMelatonin=build({period:'week',entries:records.filter(row=>row.food.id!==get('essensey-melatonin').id)});
+  assert.equal(noMelatonin.supplementEntries,3);assert.doesNotMatch(noMelatonin.text,/Melatonina: 1 mg|Melatonina 1 mg \(Essensey\)/);
+});
+
 test('calendar period filters out-of-range/future records and does not fill the diary from supplement schedules',()=>{
   const report=build({period:'week',entries:[entry(food('poniedziałek'),100,'2026-11-16'),entry(food('dzisiaj')),entry(food('PRZYSZŁY WPIS'),100,'2026-11-19'),entry(food('POZA ZAKRESEM'),100,'2026-11-15')]});
   assert.equal(report.from,'2026-11-16');assert.equal(report.to,'2026-11-22');assert.equal(report.elapsedDays,3);assert.equal(report.dayCount,7);assert.equal(report.entryCount,2);

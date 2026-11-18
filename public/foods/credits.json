@@ -700,5 +700,41 @@
     "source": "/foods/additional-food-image-prompts.json",
     "licenseUrl": "/foods/additional-food-image-prompts.json",
     "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "supplement:olimp-creatine-1250": {
+    "image": "/foods/supp-olimp-creatine-1250.webp",
+    "title": "Olimp Creatine 1250 Mega Caps, 400 kapsułek",
+    "author": "Olimp Sport Nutrition / Olimp Laboratories",
+    "license": "Zdjęcie producenta — prawa zastrzeżone; identyfikacja produktu w prywatnym dzienniku.",
+    "source": "https://olimpstore.pl/olimp-creatine-1250-mega-caps-400-capsules-102",
+    "licenseUrl": "https://olimpstore.pl/olimp-creatine-1250-mega-caps-400-capsules-102",
+    "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
+  },
+  "supplement:essensey-collagen-plus": {
+    "image": "/foods/supp-essensey-collagen-plus.webp",
+    "title": "Essensey Kolagen+, 90 kapsułek",
+    "author": "Essensey / Trec Nutrition",
+    "license": "Zdjęcie producenta — prawa zastrzeżone; identyfikacja produktu w prywatnym dzienniku.",
+    "source": "https://essensey.com/kolageny/kolagen-w-90-kapsulkach.html",
+    "licenseUrl": "https://essensey.com/kolageny/kolagen-w-90-kapsulkach.html",
+    "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
+  },
+  "supplement:essensey-selenium-pro-forte": {
+    "image": "/foods/supp-essensey-selenium-pro-forte.webp",
+    "title": "Essensey Selen Pro Forte 200 µg, 120 kapsułek",
+    "author": "Essensey / Trec Nutrition",
+    "license": "Zdjęcie producenta — prawa zastrzeżone; identyfikacja produktu w prywatnym dzienniku.",
+    "source": "https://essensey.com/witaminy-i-mineraly/selen-pro-forte-w-120-kapsulkach.html",
+    "licenseUrl": "https://essensey.com/witaminy-i-mineraly/selen-pro-forte-w-120-kapsulkach.html",
+    "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
+  },
+  "supplement:essensey-melatonin": {
+    "image": "/foods/supp-essensey-melatonin.webp",
+    "title": "Essensey Melatonina 1 mg, 120 kapsułek",
+    "author": "Essensey / Trec Nutrition",
+    "license": "Zdjęcie producenta — prawa zastrzeżone; identyfikacja produktu w prywatnym dzienniku.",
+    "source": "https://essensey.com/ziola-i-suplementy-na-sen/melatonina-w-120-kapsulkach.html",
+    "licenseUrl": "https://essensey.com/ziola-i-suplementy-na-sen/melatonina-w-120-kapsulkach.html",
+    "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
   }
 }

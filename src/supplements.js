@@ -53,6 +53,39 @@ export const SUPPLEMENTS=[
     labelNote:'Tabela na 1 kapsułkę: 100 µg witaminy D3, czyli 4000 IU (1 µg = 40 IU). Opakowanie 90 kapsułek, 45 g.',
     ingredients:'Maltodekstryna; kapsułka celulozowa HPMC; sole magnezowe kwasów tłuszczowych; witamina D3 jako cholekalcyferol.',
   }),
+  supplement('olimp-creatine-1250','Kreatyna Creatine 1250 Mega Caps','Olimp Sport Nutrition',{
+    kcal:5,protein:0,carbs:0,fat:0,saturatedFat:0,sugars:0,salt:0,
+    creatineMonohydrate:1250,creatine:1100,
+  },{
+    verifiedAt:'2026-11-18',
+    sourceUrl:'https://olimpstore.pl/olimp-creatine-1250-mega-caps-400-capsules-102',
+    labelNote:'Wartości na 1 kapsułkę: 5 kcal, 1250 mg monohydratu, w tym 1100 mg kreatyny. Producent deklaruje 0 g białka, węglowodanów, tłuszczu, cukrów, tłuszczów nasyconych i soli. Opakowanie 400 kapsułek, 560 g. Twój plan 4 kapsułek daje 20 kcal, 5000 mg monohydratu i 4400 mg kreatyny. Nie przeliczamy kalorii ponownie z makro.',
+    ingredients:'Mikronizowany monohydrat kreatyny; celuloza mikrokrystaliczna; sole magnezowe kwasów tłuszczowych; kapsułka żelatynowa.',
+  }),
+  supplement('essensey-collagen-plus','Kolagen+','Essensey',{
+    collagen:500,vitaminC:30.5,
+  },{
+    verifiedAt:'2026-11-18',
+    sourceUrl:'https://essensey.com/kolageny/kolagen-w-90-kapsulkach.html',
+    labelNote:'Tabela na 2 kapsułki: 1000 mg hydrolizatu kolagenu typu I SOLUGEL i 61 mg witaminy C. W aplikacji połowa na 1 kapsułkę: 500 mg kolagenu i 30,5 mg witaminy C. Opakowanie 90 kapsułek, 61,2 g. Producent nie deklaruje kalorii ani makro; masa hydrolizatu nie jest deklaracją ilości białka.',
+    ingredients:'Hydrolizat kolagenu typu I SOLUGEL (73,5%); kapsułka celulozowa HPMC; kwas L-askorbinowy (4,5%); sole magnezowe kwasów tłuszczowych.',
+  }),
+  supplement('essensey-selenium-pro-forte','Selen Pro Forte 200 µg','Essensey',{
+    selenium:200,
+  },{
+    verifiedAt:'2026-11-18',
+    sourceUrl:'https://essensey.com/witaminy-i-mineraly/selen-pro-forte-w-120-kapsulkach.html',
+    labelNote:'Tabela na 1 kapsułkę: 200 µg selenu jako L-selenometionina. Opakowanie 120 kapsułek, 60 g. Producent nie deklaruje kalorii ani makro. Twój plan to 1 kapsułka we wtorek, czwartek i niedzielę.',
+    ingredients:'Maltodekstryna; kapsułka celulozowa HPMC; L-selenometionina; sole magnezowe kwasów tłuszczowych.',
+  }),
+  supplement('essensey-melatonin','Melatonina 1 mg','Essensey',{
+    melatonin:1,
+  },{
+    verifiedAt:'2026-11-18',
+    sourceUrl:'https://essensey.com/ziola-i-suplementy-na-sen/melatonina-w-120-kapsulkach.html',
+    labelNote:'Tabela na 1 kapsułkę: 1 mg melatoniny. Opakowanie 120 kapsułek, 60 g. Producent nie deklaruje kalorii ani makro. W planie 1 kapsułka dziennie opcjonalnie; do sum składników trafia wyłącznie zapisana ilość.',
+    ingredients:'Maltodekstryna; kapsułka celulozowa HPMC; sole magnezowe kwasów tłuszczowych; melatonina (0,2%).',
+  }),
 ];
 
 export const isSupplement=food=>food?.kind==='supplement';

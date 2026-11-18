@@ -2,7 +2,7 @@
 export const NUTRIENTS = [
   ['fiber','Błonnik','g'], ['sugars','Cukry ogółem','g'], ['saturatedFat','Tłuszcze nasycone','g'], ['salt','Sól','g'],
   ['calcium','Wapń','mg'], ['iron','Żelazo','mg'], ['potassium','Potas','mg'], ['magnesium','Magnez','mg'],
-  ['zinc','Cynk','mg'],
+  ['zinc','Cynk','mg'], ['selenium','Selen','µg'],
   ['vitaminA','Witamina A','µg RE'], ['vitaminC','Witamina C','mg'], ['vitaminD','Witamina D','µg'],
   ['vitaminE','Witamina E','mg'], ['vitaminK','Witamina K','µg'],
   ['b1','B1 — tiamina','mg'], ['b2','B2 — ryboflawina','mg'], ['b3','B3 — niacyna','mg NE'],
@@ -11,12 +11,14 @@ export const NUTRIENTS = [
   ['epa','EPA','mg'], ['dha','DHA','mg'], ['fishOil','Olej rybi','mg'],
   ['ashwagandhaExtract','Ekstrakt z korzenia ashwagandhy','mg'], ['withanolides','Witanolidy','mg'],
   ['horsetailExtract','Ekstrakt z ziela skrzypu','mg'], ['silica','Krzemionka','mg'],
+  ['creatineMonohydrate','Monohydrat kreatyny','mg'], ['creatine','Kreatyna','mg'],
+  ['collagen','Hydrolizat kolagenu','mg'], ['melatonin','Melatonina','mg'],
 ];
 export const MACRO_FIELDS = ['kcal','protein','carbs','fat'];
 export const NUTRIENT_FIELDS = [...MACRO_FIELDS,...NUTRIENTS.map(([key])=>key)];
 export const VITAMIN_KEYS = ['vitaminA','vitaminC','vitaminD','vitaminE','vitaminK','b1','b2','b3','b5','b6','biotin','folate','b12'];
-export const MINERAL_KEYS = ['calcium','iron','potassium','magnesium','zinc'];
-export const SUPPLEMENT_COMPONENT_KEYS = ['epa','dha','fishOil','ashwagandhaExtract','withanolides','horsetailExtract','silica'];
+export const MINERAL_KEYS = ['calcium','iron','potassium','magnesium','zinc','selenium'];
+export const SUPPLEMENT_COMPONENT_KEYS = ['epa','dha','fishOil','ashwagandhaExtract','withanolides','horsetailExtract','silica','creatineMonohydrate','creatine','collagen','melatonin'];
 
 export const REFERENCE_SOURCES = [
   {name:'RWS dla dorosłych — rozporządzenie UE 1169/2011, załącznik XIII',url:'https://eur-lex.europa.eu/eli/reg/2011/1169/oj/eng'},
@@ -28,6 +30,7 @@ export const DAILY_REFERENCES = {
   saturatedFat:{value:20,source:'RWS UE — 2000 kcal'}, salt:{value:6,source:'RWS UE — 2000 kcal'},
   calcium:{value:800,source:'RWS UE'},iron:{value:14,source:'RWS UE'},
   potassium:{value:2000,source:'RWS UE'},magnesium:{value:375,source:'RWS UE'},zinc:{value:10,source:'RWS UE'},
+  selenium:{value:55,source:'RWS UE'},
   vitaminA:{value:800,source:'RWS UE'},vitaminC:{value:80,source:'RWS UE'},vitaminD:{value:5,source:'RWS UE'},
   vitaminE:{value:12,source:'RWS UE'},vitaminK:{value:75,source:'RWS UE'},
   b1:{value:1.1,source:'RWS UE'},b2:{value:1.4,source:'RWS UE'},b3:{value:16,source:'RWS UE'},

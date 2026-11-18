@@ -35,6 +35,27 @@
 .supplement-plan-row>div>strong { display:block; font-size:15px; }
 .supplement-plan-row>div>small { display:block; color:var(--muted); margin-top:4px; font-size:12px; }
 .supplement-plan-row>.field { margin-bottom:0; }
+.supplement-plan-product { display:flex; align-items:center; gap:12px; }
+.supplement-plan-product>img { width:44px; height:56px; object-fit:contain; padding:4px; border-radius:9px; background:#fff; flex-shrink:0; }
+.supplement-plan-product>div { min-width:0; }
+.supplement-plan-product strong { display:block; font-size:15px; }
+.supplement-plan-product small { display:block; color:var(--muted); margin-top:4px; font-size:12px; }
+.supplement-plan-options { grid-column:1/-1; display:flex; flex-direction:column; gap:12px; }
+.supplement-optional-toggle { display:flex; align-items:flex-start; gap:9px; font-size:13px; cursor:pointer; }
+.supplement-optional-toggle input { width:16px; height:16px; flex-shrink:0; margin-top:2px; accent-color:var(--accent); }
+.supplement-optional-toggle small { display:block; color:var(--muted); font-size:11px; margin-top:3px; line-height:1.5; }
+.supplement-weekdays { border:0; padding:0; margin:0; min-width:0; }
+.supplement-weekdays legend { color:var(--muted); font-size:12px; margin-bottom:8px; }
+.supplement-weekdays>div { display:flex; flex-wrap:wrap; gap:6px; }
+.supplement-weekdays label { position:relative; cursor:pointer; }
+.supplement-weekdays input { position:absolute; opacity:0; width:100%; height:100%; margin:0; }
+.supplement-weekdays span { display:block; min-width:36px; padding:9px 8px; border:1px solid var(--border); border-radius:9px; color:var(--muted); background:var(--raised); text-align:center; font-size:12px; }
+.supplement-weekdays input:checked+span { color:#0b1426; background:var(--accent); border-color:var(--accent); font-weight:700; }
+.supplement-weekdays input:focus-visible+span { outline:2px solid var(--accent); outline-offset:3px; }
+.supplement-macros { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:18px 0; }
+.supplement-macros>div { background:var(--raised); border-radius:10px; padding:12px 8px; text-align:center; min-width:0; }
+.supplement-macros span { display:block; color:var(--muted); font-size:11px; margin-bottom:5px; }
+.supplement-macros strong { font-size:14px; font-variant-numeric:tabular-nums; }
 .supplement-plan-settings .help-note { margin-top:16px; }
 .supplement-plan-actions { display:flex; align-items:center; flex-wrap:wrap; gap:14px; }
 .supplement-plan-saved { color:var(--success); display:flex; align-items:center; gap:6px; font-size:14px; }

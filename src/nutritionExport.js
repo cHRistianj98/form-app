@@ -6,7 +6,7 @@ import {displayAmount,readableNutritionNote} from './nutritionDisplay.js';
 import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
 import {genericNutritionInfo} from './genericNutrition.js';
 import {normalizeProfile} from './profile.js';
-import {supplementPlanFor,SUPPLEMENT_SCHEDULES} from './supplementPlan.js';
+import {supplementPlanFor,supplementScheduleLabel} from './supplementPlan.js';
 import {isTea,TEA_CUP_ML,teaRecipeOf} from './teaRecipe.js';
 import {teaPortionLabel} from './foodPortions.js';
 import {TEA_ADDONS} from './tea.js';
@@ -162,7 +162,7 @@ export function buildNutritionExport({entries=[],daily=[],activities=[],profile,
   nutrientBlock('Składniki mineralne',MINERAL_KEYS);
   nutrientBlock('Witaminy',VITAMIN_KEYS);
   const components=SUPPLEMENT_COMPONENT_KEYS.filter(key=>summary.totals[key]!=null);
-  if(components.length)nutrientBlock('Kwasy tłuszczowe i ekstrakty',components);
+  if(components.length)nutrientBlock('Składniki suplementów',components);
   const energyDays=days.filter(d=>d.summary.totals.kcal!=null);
   const movement=days.reduce((sum,d)=>sum+d.movement.total,0);
   lines.push('','### Ruch i bilans',`Zapisany ruch w uwzględnionych dniach: ${fmt(movement,2)} kcal (${days.some(d=>d.movement.source==='garmin')?'kalorie aktywne Garmin; w dniach bez danych szacunek z kroków i treningów':'szacunek ponad bazę aplikacji'}).`);
@@ -187,7 +187,7 @@ export function buildNutritionExport({entries=[],daily=[],activities=[],profile,
       lines.push(`- ${productName(food)}: ${fmt(count,2)} ${foodUnit(food)} w ${takenDays} ${takenDays===1?'dniu':'dniach'} z zapisem.`);
       if(p.supplementPlan[id]) {
         const plan=supplementPlanFor(p.supplementPlan,id);
-        lines.push(`  Plan z ustawień: ${fmt(plan.quantity)} ${foodUnit(food)} — ${SUPPLEMENT_SCHEDULES.find(row=>row.id===plan.schedule).label.toLocaleLowerCase('pl-PL')}.`);
+        lines.push(`  Plan z ustawień: ${fmt(plan.quantity)} ${foodUnit(food)} — ${supplementScheduleLabel(plan).toLocaleLowerCase('pl-PL')}.`);
       }
       const s=sumNutrition(records),keys=NUTRIENTS.filter(([key])=>s.totals[key]!=null).map(([key])=>key);
       if(keys.length)lines.push(`  Suma składników z tych wpisów: ${compactSummary(s,keys)}.`);
@@ -211,7 +211,7 @@ export function buildNutritionExport({entries=[],daily=[],activities=[],profile,
       lines.push('','Suma dnia (jedzenie + suplementy):',compactSummary(d.summary,MACROS.map(row=>row[0]))+'.');
       // The day export already contains its full micronutrient summary above.
       if(period!=='day') {
-        for(const [title,keys] of [['Błonnik i inne',['fiber','sugars','saturatedFat','salt']],['Minerały',MINERAL_KEYS],['Witaminy',VITAMIN_KEYS],['Kwasy i ekstrakty',components]]) {
+        for(const [title,keys] of [['Błonnik i inne',['fiber','sugars','saturatedFat','salt']],['Minerały',MINERAL_KEYS],['Witaminy',VITAMIN_KEYS],['Składniki suplementów',components]]) {
           if(keys.length)lines.push(`${title}: ${compactSummary(d.summary,keys)}.`);
         }
       }
@@ -223,7 +223,7 @@ export function buildNutritionExport({entries=[],daily=[],activities=[],profile,
   }
   lines.push('','## Jakość danych i sposób liczenia',
     'Brak danych i brak wpisów nie są zerem. Jawne 0 pozostaje zerem. Dane częściowe są sumą tylko znanej części składu. Granice z etykiet są opisane słownie; przyjmujemy górną granicę do sumy. Ogólne produkty i domowe dania mogą mieć szacunkowe wartości; skład zależy od receptury i przygotowania.',
-    'RWS UE to wartości odniesienia dla dorosłych z etykiet, a nie indywidualne zapotrzebowanie ani górny bezpieczny limit. Cukry ogółem nie oznaczają cukrów wolnych. Witamina A: µg RE; niacyna: mg NE; foliany i B12: µg. EPA i DHA są częścią oleju rybiego; witanolidy i krzemionka są częścią ekstraktów — nie należy dodawać ich ponownie do masy składnika.',
+    'RWS UE to wartości odniesienia dla dorosłych z etykiet, a nie indywidualne zapotrzebowanie ani górny bezpieczny limit. Cukry ogółem nie oznaczają cukrów wolnych. Witamina A: µg RE; niacyna: mg NE; foliany, B12 i selen: µg. EPA i DHA są częścią oleju rybiego; witanolidy i krzemionka są częścią ekstraktów; kreatyna jest częścią monohydratu — nie należy dodawać ich ponownie do masy składnika. Plan suplementów nie jest zapisem spożycia. Opcjonalne produkty i dni tygodnia nie dopisują automatycznie przyjętych sztuk.',
     ...REFERENCE_SOURCES.map(source=>`${source.name}: ${source.url}`),
     '','## Źródła produktów i założenia',...sourceLines(selected));
   if(!selected.length)lines.push('Brak zapisanych produktów w wybranym okresie.');
