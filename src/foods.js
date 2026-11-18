@@ -128,7 +128,7 @@ export function foodOptions(query='',personal=[],remote=[]) {
     seen.add(food.id);
     const text=canonicalText(food.name+' '+(food.brand||'')+' '+(food.aliases||[]).join(' '));
     return terms.every(term=>text.includes(term));
-  }).slice(0,terms.length?50:18);
+  }).slice(0,terms.length?50:Math.max(18,FAVORITE_FOODS.length));
 }
 export function parseNum(value) { const n = Number(String(value).replace(',','.')); return Number.isFinite(n) ? n : 0; }
 export const DAY_LABELS = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];

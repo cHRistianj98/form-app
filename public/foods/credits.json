@@ -728,6 +728,23 @@
     "licenseUrl": "https://essensey.com/witaminy-i-mineraly/selen-pro-forte-w-120-kapsulkach.html",
     "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
   },
+  "fav-guseppe-four-cheese": {
+    "image": "/foods/fav-guseppe-four-cheese.webp",
+    "title": "Pizza Guseppe 4 Sery — 335 g",
+    "source": "https://www.oetker.pl/produkty/p/guseppe-4-cheese",
+    "author": "Dr. Oetker",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-kania-mild-ketchup": {
+    "image": "/foods/fav-kania-mild-ketchup.webp",
+    "title": "Kania Ketchup łagodny — 560 g",
+    "source": "https://gazetki-pdf.ding.pl/gazetka/6863f78d94528674/swiezo-w-promocji-%E2%80%93-lidl%2C60622.pdf#page=7",
+    "author": "Lidl",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "changes": "Wyizolowano zdjęcie łagodnego ketchupu z gazetki Lidla i zapisano jako WebP."
+  },
   "supplement:essensey-melatonin": {
     "image": "/foods/supp-essensey-melatonin.webp",
     "title": "Essensey Melatonina 1 mg, 120 kapsułek",

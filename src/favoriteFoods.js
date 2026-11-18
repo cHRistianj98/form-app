@@ -1,5 +1,4 @@
-// User-supplied product tables stay unchanged by packaging photographs.
-// The appended prepared-tea estimate declares its own source separately.
+// Product labels, user tables and estimates carry their own source.
 import {NUTRIENT_FIELDS,MINERAL_KEYS,VITAMIN_KEYS} from './nutrients.js';
 import {TEA_FOOD} from './tea.js';
 import genericEstimates from './genericFoodEstimates.json' with {type:'json'};
@@ -103,4 +102,26 @@ export const FAVORITE_FOODS = [
     servingSizes:[{label:'100 g',quantity:100},{label:'200 g — pół puszki',quantity:200},{label:'400 g — puszka',quantity:400}],
   }),
   TEA_FOOD,
+  labelled('guseppe-four-cheese','Pizza Guseppe 4 Sery','Dr. Oetker','g',299,9.6,35,13,{
+    sugars:3,saturatedFat:4.8,fiber:1.7,salt:0.98,
+    // Generic frozen cheese pizza, USDA FoodData Central 170317.
+    calcium:179,potassium:152,magnesium:23,zinc:1.32,selenium:21.5,
+    source:'Dane producenta',sourceUrl:'https://www.oetker.pl/produkty/p/guseppe-4-cheese',
+    imageNote:'Porcje i wartości odnoszą się do wagi przed pieczeniem.',
+    estimateNotes:'Kalorie, makro, cukry, błonnik i sól pochodzą z tabeli Dr. Oetker na 100 g produktu w opakowaniu. Wapń, potas, magnez, cynk i selen to szacunki z tabeli podobnej pizzy serowej USDA FoodData Central (170317).',
+    aliases:['pizza guseppe','pizza giuseppe','guseppe 4 cheese','pizza cztery sery','5900437005171'],
+    defaultQuantity:335,
+    servingSizes:[{label:'¼ pizzy — 83,75 g',quantity:83.75},{label:'½ pizzy — 167,5 g',quantity:167.5},{label:'Cała pizza — 335 g',quantity:335}],
+  }),
+  labelled('kania-mild-ketchup','Ketchup łagodny Kania','Lidl','g',148,1.1,35,0.1,{
+    sugars:30,saturatedFat:0.1,fiber:1.1,salt:3.3,upperBoundNutrients:['saturatedFat'],
+    // Generic tomato ketchup, USDA FoodData Central 168556.
+    calcium:15,potassium:281,magnesium:13,iron:0.35,zinc:0.17,selenium:0.7,
+    source:'Szacunek z etykiety',sourceUrl:'https://czytamyetykiety.pl/lidl-vs-biedronka-kto-ma-lepsze-ceny-i-sklady/',
+    imageNote:'Opakowanie 560 g. Wartości oparte na etykiecie polskiego wariantu z 62% przecieru pomidorowego.',
+    estimateNotes:'Kalorie, makro, cukry, błonnik i sól pochodzą z opublikowanej etykiety polskiego wariantu 560 g z 62% przecieru pomidorowego. Receptura może się różnić między partiami. Minerały, w tym selen, oszacowano na podstawie ogólnego ketchupu USDA FoodData Central (168556).',
+    aliases:['keczup kania','ketchup lidl','ketchup lagodny 560 g','sos pomidorowy kania'],
+    defaultQuantity:15,
+    servingSizes:[{label:'10 g',quantity:10},{label:'15 g',quantity:15},{label:'30 g',quantity:30}],
+  }),
 ].map(fillFavoriteSelenium);
