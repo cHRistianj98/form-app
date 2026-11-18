@@ -7,6 +7,7 @@ import {displayTotal as totalLabel} from './nutritionDisplay.js';
 import {GENERIC_NUTRITION_SOURCES} from './genericNutrition.js';
 import {MACRO_PRESENTATION} from './macroPresentation.js';
 import ProgressRing from './ProgressRing.jsx';
+import {NutritionExportButton} from './NutritionExportModal.jsx';
 import {REFERENCE_LIMITS} from './progressPresentation.js';
 import './nutrition-stats.css';
 
@@ -72,7 +73,7 @@ function WeekMacroChart({report,metric,setMetric}) {
   </section>;
 }
 
-export default function NutritionStats({entries,daily,activities=[],profile,day,onChangeDay}) {
+export default function NutritionStats({entries,daily,activities=[],profile,day,onChangeDay,onExport}) {
   const [period,setPeriod]=useState('day');
   const [metric,setMetric]=useState('protein');
   const today=localDay();
@@ -81,7 +82,7 @@ export default function NutritionStats({entries,daily,activities=[],profile,day,
   return <div className="nutrition-stats">
     <section className="panel nutrition-period-panel">
       <div><span className="nutrition-eyebrow"><BarChart3 size={15}/> TWÓJ BILANS</span><h2>{period==='day'?'Podsumowanie dnia':'Podsumowanie tygodnia'}</h2><p>{shortDate(report.from)}{period==='week'?` – ${shortDate(report.to)}`:''} — {report.summary.entryCount} wpisów{period==='week'?` — ${report.loggedDays}/7 dni z wpisami`:''}</p></div>
-      <div className="nutrition-period-switch" aria-label="Okres statystyk"><button onClick={()=>setPeriod('day')} aria-pressed={period==='day'}>Dzień</button><button onClick={()=>setPeriod('week')} aria-pressed={period==='week'}>Tydzień</button></div>
+      <div className="nutrition-period-actions"><div className="nutrition-period-switch" aria-label="Okres statystyk"><button onClick={()=>setPeriod('day')} aria-pressed={period==='day'}>Dzień</button><button onClick={()=>setPeriod('week')} aria-pressed={period==='week'}>Tydzień</button></div>{onExport&&<NutritionExportButton compact onClick={()=>onExport(period)}/>}</div>
     </section>
     {period==='week'&&onChangeDay&&<div className="nutrition-week-nav"><button className="button ghost compact" onClick={()=>onChangeDay(shiftDay(report.from,-7))}><ChevronLeft size={16}/> Poprzedni tydzień</button><button className="button ghost compact" disabled={report.from>=calendarWeek(today)[0]} onClick={()=>onChangeDay(shiftDay(report.from,7))}>Następny tydzień <ChevronRight size={16}/></button></div>}
     {!report.summary.entryCount&&<div className="nutrition-empty"><Info size={18}/><span>Brak wpisów w tym okresie. Dodaj posiłek lub suplement, żeby zobaczyć podsumowanie.</span></div>}
