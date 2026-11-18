@@ -1,1 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" rx="14" fill="#142b4c"/><path d="M14 32V16h21M14 24h17" fill="none" stroke="#78b4ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#192c48"/>
+      <stop offset=".55" stop-color="#111f35"/>
+      <stop offset="1" stop-color="#0b1426"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2=".6" y2="1">
+      <stop stop-color="#b6daff"/>
+      <stop offset="1" stop-color="#78b4ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#navy)"/>
+  <circle cx="256" cy="256" r="174" fill="none" stroke="#2b4162" stroke-width="16"/>
+  <circle cx="256" cy="256" r="174" fill="none" stroke="#78b4ff" stroke-width="16" stroke-linecap="round" stroke-dasharray="820 1094" transform="rotate(135 256 256)"/>
+  <path d="M206 332V180h108M206 254h94" fill="none" stroke="url(#blue)" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
