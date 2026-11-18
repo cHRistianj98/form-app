@@ -1,10 +1,11 @@
-import {ACTIVITY_TYPES,MEALS,calcDailyBalance,calcDailyMovement,fmt,foodUnit,localDay,scaleFood,shiftDay} from './foods.js';
+import {ACTIVITY_TYPES,MEALS,calcDailyBalance,calcDailyMovement,fmt,foodUnit,localDay,resolveFoodNutrition,scaleFood,shiftDay} from './foods.js';
 import {monthStart,shiftMonth} from './calendar.js';
 import {calendarWeek,sumNutrition,targetsOnDay} from './nutritionStats.js';
 import {DAILY_REFERENCES,MINERAL_KEYS,NUTRIENTS,REFERENCE_SOURCES,SUPPLEMENT_COMPONENT_KEYS,VITAMIN_KEYS} from './nutrients.js';
 import {displayAmount,readableNutritionNote} from './nutritionDisplay.js';
 import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
 import {genericNutritionInfo} from './genericNutrition.js';
+import {favoriteSeleniumInfo} from './favoriteFoods.js';
 import {normalizeProfile} from './profile.js';
 import {supplementPlanFor,supplementScheduleLabel} from './supplementPlan.js';
 import {isTea,TEA_CUP_ML,teaRecipeOf} from './teaRecipe.js';
@@ -68,6 +69,7 @@ function productName(food) {
 }
 
 function entryLines(entry,supplement=false) {
+  entry={...entry,food:resolveFoodNutrition(entry.food)};
   const values=scaleFood(entry.food,entry.grams);
   const quantity=isTea(entry.food)?teaPortionLabel(entry.grams):`${fmt(entry.grams,2)} ${foodUnit(entry.food)}`;
   const lines=[`- ${productName(entry.food)} — ${quantity}.`,
@@ -76,6 +78,7 @@ function entryLines(entry,supplement=false) {
     const keys=NUTRIENTS.filter(([key])=>values[key]!=null).map(([key])=>key);
     lines.push(keys.length?`  Skład przyjętej porcji: ${keys.map(key=>`${meta(key)[1]}: ${entryValue(entry,values,key)}`).join(' | ')}`:'  Pozostały skład przyjętej porcji: brak podanych ilości.');
   }
+  if(!supplement&&values.selenium!=null)lines.push(`  Selen: ${entryValue(entry,values,'selenium')}.`);
   if(isTea(entry.food)) {
     const recipe=teaRecipeOf(entry.food),cups=entry.grams/TEA_CUP_ML;
     const extras=TEA_ADDONS.filter(addon=>recipe[addon.key]>0).map(addon=>`${addon.name}: ${fmt(recipe[addon.key]*addon.grams*cups,2)} g`);
@@ -86,8 +89,10 @@ function entryLines(entry,supplement=false) {
 
 function sourceLines(entries) {
   const seen=new Set(),lines=[];
-  for(const {food} of entries) {
+  for(const entry of entries) {
+    const food=resolveFoodNutrition(entry.food);
     const info=genericNutritionInfo(food);
+    const selenium=favoriteSeleniumInfo(food);
     const source=food.sourceUrl||info?.url;
     const notes=food.estimateNotes||info?.method||'';
     const signature=JSON.stringify([food.name,food.brand,source,notes,food.labelNote]);
@@ -95,6 +100,7 @@ function sourceLines(entries) {
     seen.add(signature);
     lines.push(`- ${productName(food)}: ${clean(food.source||info?.sourceName||'zapis produktu')}${info?`; ogólny szacunek dla: ${clean(info.variant)}`:''}.${source?` ${clean(source)}`:''}`);
     if(notes)lines.push(`  Założenia: ${note(notes)}`);
+    if(selenium&&food.selenium===selenium.value)lines.push(`  Szacunek selenu na podstawie produktu ogólnego (${clean(selenium.variant)}). ${selenium.url}`);
     if(food.labelNote)lines.push(`  Etykieta: ${note(food.labelNote)}`);
   }
   return lines;

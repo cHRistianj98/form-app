@@ -41,6 +41,7 @@
         "magnesium": 20.316667,
         "iron": 1.075556,
         "zinc": 0.641148,
+        "selenium": 2.652941,
         "sugars": 0.35,
         "saturatedFat": 0.789015
       }
@@ -73,6 +74,7 @@
         "magnesium": 20.818182,
         "iron": 1.312941,
         "zinc": 0.754118,
+        "selenium": 3.1,
         "sugars": 0.35,
         "saturatedFat": 0.652294
       }
@@ -103,6 +105,7 @@
         "magnesium": 12.0,
         "iron": 0.02,
         "zinc": 0.6,
+        "selenium": 3.7,
         "sugars": 4.0,
         "saturatedFat": 0.1
       }
@@ -137,6 +140,7 @@
         "magnesium": 11.8,
         "iron": 0.017667,
         "zinc": 0.476667,
+        "selenium": 4.0,
         "sugars": 3.647241,
         "saturatedFat": 3.04288
       }
@@ -170,6 +174,7 @@
         "magnesium": 11.753731,
         "iron": 0.029,
         "zinc": 0.412667,
+        "selenium": 1.3,
         "sugars": 3.78,
         "saturatedFat": 1.295
       }
@@ -212,9 +217,102 @@
         "magnesium": 15.4,
         "iron": 0.819,
         "zinc": 0.49,
+        "selenium": 23.73,
         "sugars": 0.189,
         "saturatedFat": 0.5504
       }
+    }
+  },
+  "favoriteSelenium": {
+    "favorite:piatnica-cream-18": {
+      "unit": "g",
+      "value": 2.2,
+      "variant": "Śmietana fermentowana 18%",
+      "url": "https://doi.org/10.11583/DTU.32312844"
+    },
+    "favorite:hochland-gouda": {
+      "unit": "g",
+      "value": 8.8,
+      "variant": "Ser topiony o zbliżonej zawartości tłuszczu",
+      "url": "https://doi.org/10.11583/DTU.32312844"
+    },
+    "favorite:lidl-protein-cheese": {
+      "unit": "g",
+      "value": 12.0,
+      "variant": "Ser dojrzewający o obniżonej zawartości tłuszczu",
+      "url": "https://doi.org/10.11583/DTU.32312844"
+    },
+    "favorite:lidl-protein-cup": {
+      "unit": "g",
+      "value": 3.7,
+      "variant": "Skyr naturalny 0,2%",
+      "url": "https://doi.org/10.11583/DTU.32312844"
+    },
+    "favorite:laciate-milk-32": {
+      "unit": "ml",
+      "value": 1.690412,
+      "variant": "Mleko pełne 3,5% (1,03 g/ml)",
+      "url": "https://doi.org/10.11583/DTU.32312844"
+    },
+    "favorite:lidl-turkey-breast": {
+      "unit": "g",
+      "value": 7.9,
+      "variant": "Wędlina z piersi indyka (gotowana lub wędzona)",
+      "url": "https://doi.org/10.11583/DTU.32312844"
+    },
+    "favorite:vanilla-aerosol-cream": {
+      "unit": "g",
+      "value": 0.812307,
+      "variant": "Śmietanka do ubijania 38% jako składnik śmietanki słodzonej; ilość śmietanki oszacowana z tłuszczu na etykiecie",
+      "url": "https://doi.org/10.11583/DTU.32312844"
+    },
+    "favorite:lidl-aerosol-cream": {
+      "unit": "g",
+      "value": 1.071471,
+      "variant": "Śmietanka do ubijania 38% jako składnik śmietanki słodzonej; ilość śmietanki oszacowana z tłuszczu na etykiecie",
+      "url": "https://doi.org/10.11583/DTU.32312844"
+    },
+    "favorite:laciate-butter": {
+      "unit": "g",
+      "value": 1.0,
+      "variant": "Masło niesolone",
+      "url": "https://fdc.nal.usda.gov/food-details/173430/nutrients"
+    },
+    "favorite:alesto-walnuts": {
+      "unit": "g",
+      "value": 4.9,
+      "variant": "Orzechy włoskie",
+      "url": "https://fdc.nal.usda.gov/food-details/170187/nutrients"
+    },
+    "favorite:basia-pizza-flour": {
+      "unit": "g",
+      "value": 33.9,
+      "variant": "Mąka pszenna niewzbogacana",
+      "url": "https://fdc.nal.usda.gov/food-details/169761/nutrients"
+    },
+    "favorite:reduced-fat-cocoa": {
+      "unit": "g",
+      "value": 14.3,
+      "variant": "Kakao niesłodzone w proszku",
+      "url": "https://fdc.nal.usda.gov/food-details/169593/nutrients"
+    },
+    "favorite:mutti-pizza-sauce": {
+      "unit": "g",
+      "value": 0.7,
+      "variant": "Przecier pomidorowy",
+      "url": "https://fdc.nal.usda.gov/food-details/170460/nutrients"
+    },
+    "favorite:lidl-protein-milk": {
+      "unit": "ml",
+      "value": 2.472,
+      "variant": "Mleko odtłuszczone wzbogacone białkiem (1,03 g/ml)",
+      "url": "https://fdc.nal.usda.gov/food-details/171271/nutrients"
+    },
+    "favorite:cincin-rose-zero": {
+      "unit": "ml",
+      "value": 0.2,
+      "variant": "Wino bezalkoholowe (przyjęto 1 g/ml)",
+      "url": "https://fdc.nal.usda.gov/food-details/174157/nutrients"
     }
   }
 }

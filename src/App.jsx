@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import {
   ACTIVITY_TYPES, BASE_FOODS, FAVORITE_FOODS, HOMEMADE_FOODS, MEALS, NUTRIENTS, activityKcal,
-  calcTargets, calcDailyBalance, calcDailyMovement, dateTitle, fmt, foodBasis, foodBasisLabel, foodImage, foodOptions, foodUnit, localDay, nutrientLabel, parseNum, scaleFood, shiftDay
+  calcTargets, calcDailyBalance, calcDailyMovement, dateTitle, fmt, foodBasis, foodBasisLabel, foodImage, foodOptions, foodUnit, localDay, nutrientLabel, parseNum, resolveFoodNutrition, scaleFood, shiftDay
 } from './foods.js';
 import {DEFAULT_PROFILE, api, mutate, readLocal, uuid, writeLocal} from './storage.js';
 import {normalizeProfile} from './profile.js';
@@ -18,7 +18,8 @@ import Modal, {allowFieldAutofocus} from './Modal.jsx';
 import NutritionStats, {DailyNutrientPreview} from './NutritionStats.jsx';
 import {sumNutrition,recentEnergyDays} from './nutritionStats.js';
 import {displayTotal as totalLabel,displayFoodNutrientLabel as foodNutrientLabel,readableNutritionNote} from './nutritionDisplay.js';
-import {enrichGenericFood,genericNutritionInfo,genericNutritionGap} from './genericNutrition.js';
+import {genericNutritionInfo,genericNutritionGap} from './genericNutrition.js';
+import {favoriteSeleniumInfo} from './favoriteFoods.js';
 import MacroValues from './MacroValues.jsx';
 import {MACRO_PRESENTATION} from './macroPresentation.js';
 import WeightInput from './WeightInput.jsx';
@@ -132,7 +133,7 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
   const [remote,setRemote]=useState([]);
   const [busy,setBusy]=useState(false);
   const [remoteError,setRemoteError]=useState(false);
-  const [selected,setSelected]=useState(()=>enrichGenericFood(editing?.food||initialFood||null));
+  const [selected,setSelected]=useState(()=>resolveFoodNutrition(editing?.food||initialFood||null));
   const [amount,setAmount]=useState(String(editing?(initialInCups?initialCups:editing.grams):initialInCups?1:defaultFoodQuantity(initialFood)));
   const [quantityMode,setQuantityMode]=useState(initialInCups?'cup':'base');
   const [teaRecipe,setTeaRecipe]=useState(()=>teaRecipeOf(editing?.food||initialFood));
@@ -156,10 +157,11 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
   const displayFood=effectiveFood||selected;
   const scaled=effectiveFood?scaleFood(effectiveFood,quantity||0):selected?scaleFood(selected,0):null;
   const nutritionInfo=genericNutritionInfo(displayFood);
+  const seleniumEstimate=favoriteSeleniumInfo(displayFood);
   const nutritionGap=genericNutritionGap(displayFood);
   const recipe=HOMEMADE_FOODS.find(food=>food.id===selected?.id);
   const recipeSources=tea?TEA_SOURCES:recipe?.recipeSources||(selected?.sourceUrl?[{name:'Źródło szacunku',url:selected.sourceUrl}]:[]);
-  function selectFood(food){setSelected(enrichGenericFood(food));setAmount(String(isTea(food)?1:defaultFoodQuantity(food)));setQuantityMode(isTea(food)?'cup':'base');setTeaRecipe(teaRecipeOf(food));}
+  function selectFood(food){setSelected(resolveFoodNutrition(food));setAmount(String(isTea(food)?1:defaultFoodQuantity(food)));setQuantityMode(isTea(food)?'cup':'base');setTeaRecipe(teaRecipeOf(food));}
   function changeQuantityMode(mode){
     if(mode===quantityMode)return;
     if(mode==='cup') {
@@ -202,7 +204,13 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
       </div>
       {['kcal','protein','carbs','fat'].some(key=>displayFood[key]==null)&&<p className="help-note fat-bound-note">W przekazanych danych brakuje kalorii lub części makro. Zapiszemy je jako nieznane (—), nie jako zero.</p>}
       {displayFood.estimateNotes&&<details className="recipe-estimate"><summary>{recipe?'Jak policzono to danie?':'Założenia szacunku'}</summary><p>{readableNutritionNote(displayFood.estimateNotes)}</p>{recipe&&<p>Wartości są orientacyjne. Masa po przygotowaniu jest założeniem — inna ilość odparowanej wody zmienia wartości na 100 g.</p>}<div className="nutrition-sources">{recipeSources.map(s=><a key={s.url} href={s.url} target="_blank" rel="noreferrer">{s.name} ↗</a>)}</div></details>}
-      {NUTRIENTS.some(([key])=>displayFood[key]!=null)&&<details className="food-nutrient-details"><summary>Witaminy i pozostałe składniki tej porcji{nutritionInfo?' — szacunek z tabel':''}</summary>{nutritionInfo&&<p className="food-product-note generic-nutrition-note">Szacunek dla: {nutritionInfo.variant}. Brakujące składniki uzupełniono z <a href={nutritionInfo.url} target="_blank" rel="noreferrer">{nutritionInfo.sourceName} ↗</a>. {nutritionInfo.method||'Wartości zależą od odmiany i przygotowania.'}</p>}{displayFood.partialNutrients?.length>0&&<p className="food-product-note generic-nutrition-note">Wartości mogą obejmować tylko znaną część składnika. Nie wszystkie użyte etykiety podają pełny skład; brakujących wartości nie liczymy jako zero.</p>}<div className="micros-grid">{NUTRIENTS.filter(([key])=>displayFood[key]!=null).map(([key,name,unit])=><div className="micro-item" key={key}><span>{name}</span><strong>{foodNutrientLabel(displayFood,key,scaled[key],2)} {unit}</strong></div>)}</div></details>}
+      {NUTRIENTS.some(([key])=>displayFood[key]!=null)&&<details className="food-nutrient-details">
+        <summary>Witaminy i pozostałe składniki tej porcji{nutritionInfo?' — szacunek z tabel':''}</summary>
+        {nutritionInfo&&<p className="food-product-note generic-nutrition-note">Szacunek dla {nutritionInfo.variant}. Brakujące składniki uzupełniono z <a href={nutritionInfo.url} target="_blank" rel="noreferrer">{nutritionInfo.sourceName} ↗</a>. {nutritionInfo.method||'Wartości zależą od odmiany i przygotowania.'}</p>}
+        {seleniumEstimate&&displayFood.selenium===seleniumEstimate.value&&<p className="food-product-note generic-nutrition-note">Selen oszacowano na podstawie tabel dla produktu ogólnego. <a href={seleniumEstimate.url} target="_blank" rel="noreferrer">Źródło szacunku ↗</a></p>}
+        {displayFood.partialNutrients?.length>0&&<p className="food-product-note generic-nutrition-note">Wartości mogą obejmować tylko znaną część składnika. Nie wszystkie użyte etykiety podają pełny skład; brakujących wartości nie liczymy jako zero.</p>}
+        <div className="micros-grid">{NUTRIENTS.filter(([key])=>displayFood[key]!=null).map(([key,name,unit])=><div className="micro-item" key={key}><span>{name}</span><strong>{foodNutrientLabel(displayFood,key,scaled[key],2)} {unit}</strong></div>)}</div>
+      </details>}
       {(displayFood.fatLessThan||displayFood.upperBoundNutrients?.length>0)&&<p className="help-note fat-bound-note">Dla tego produktu część wartości oznacza górną granicę podaną na etykiecie. Do sumy przyjmujemy tę granicę; kalorie pozostają zgodne z podanymi wartościami. Przy brakach danych pokazujemy znaną część wartości.</p>}
     </form>:
     custom?<form id={formId} onSubmit={saveCustom}><p className="help-note">Podawaj wartości <strong>na {foodBasisLabel({unit:form.unit})} produktu</strong>, zgodnie z etykietą. Możesz uzupełnić również mikroskładniki.</p><div className="field-row"><label className="field"><span>Nazwa produktu *</span><input value={form.name} required maxLength={180} placeholder="np. Moje spaghetti" onChange={e=>setForm({...form,name:e.target.value})}/></label><label className="field"><span>Marka (opcjonalnie)</span><input value={form.brand} maxLength={120} placeholder="np. własny przepis" onChange={e=>setForm({...form,brand:e.target.value})}/></label></div><label className="field"><span>Wartości odżywcze podane na</span><select value={form.unit} onChange={e=>setForm({...form,unit:e.target.value})}><option value="g">100 g — masa produktu</option><option value="ml">100 ml — objętość napoju</option><option value="tablet">1 tabletka — skład suplementu</option></select></label><div className="nutrient-editor">{[['kcal','Kalorie','kcal'],...MACRO_PRESENTATION.map(m=>[m.key,m.fullName,'g']),...NUTRIENTS.map(([k,n,u])=>[k,n,u])].map(([key,label,unit])=><label className="field" key={key}><span>{label}</span><div className="with-unit"><input type="number" step="any" min="0" max="100000" placeholder="—" value={form[key]} onChange={e=>setForm({...form,[key]:e.target.value})}/><span>{unit}</span></div></label>)}</div></form>:

@@ -1,6 +1,7 @@
 import ingredients from './dishIngredients.json' with {type:'json'};
 import {calculateDish} from './dishNutrition.js';
 import {NUTRIENT_FIELDS} from './nutrients.js';
+import {favoriteSeleniumInfo} from './favoriteFoods.js';
 
 const RETENTION_URL='https://www.ars.usda.gov/ARSUserFiles/80400530/pdf/retn06.pdf';
 const PIZZA_URL='https://www.monsieur-cuisine.com/pl/recipe/pizza-wloska';
@@ -26,6 +27,10 @@ const make=(id,name,rows,yieldGrams,extra)=>({
 export function createHomemadeFoods(baseFoods,favoriteFoods) {
   const base=id=>baseFoods.find(f=>f.id===`base:${id}`);
   const favorite=id=>favoriteFoods.find(f=>f.id===`favorite:${id}`);
+  const seleniumSource=id=>{
+    const {variant,url}=favoriteSeleniumInfo(favorite(id));
+    return {name:`Selen: ${variant}`,url};
+  };
   // Keep the user's branded milk/flour/sauce label data, including unknowns.
   const crepes=calculateDish([
     part(favorite('laciate-milk-32'),350), // ml, never treated as 350 g of milk.
@@ -33,12 +38,13 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
     part(generic('flour'),300,FLOUR_FRIED),
     part(base('olive'),4*0.91),           // ml -> g; assumed olive oil density.
   ],650);
-  const nutella={kcal:539,protein:6.3,carbs:57.5,fat:30.9,sugars:56.3,saturatedFat:10.6,salt:0.107};
+  const nutella={kcal:539,protein:6.3,carbs:57.5,fat:30.9,sugars:56.3,saturatedFat:10.6,salt:0.107,
+    selenium:generic('hazelnutSpread').selenium};
   const crepeNotes='Ciasto na całą partię: 350 ml mleka Łaciate 3,2%, 2 jajka (100 g bez skorupek), około 300 g mąki pszennej i 4 ml oliwy (około 3,64 g). Założono 650 g usmażonych placków, bez dodatkowego tłuszczu, cukru ani soli. Zważ porcję razem z nadzieniem.';
   const vitaminsNote='Wybrane straty witamin oszacowano tabelami USDA; pozostałe składniki bez korekty strat. Braki na etykietach oznaczają częściowe sumy (≥), nie zero.';
   // The user confirmed Pilos bucket curd, but not its label or fat variant.
-  // Keep the selected 6% variant explicit and never invent its micronutrients.
-  const pilosQuark={kcal:108,protein:9,carbs:4.5,fat:6,saturatedFat:4,sugars:3.5,fiber:0};
+  // The quark proxy only contributes selenium. Other missing micros stay unknown.
+  const pilosQuark={kcal:108,protein:9,carbs:4.5,fat:6,saturatedFat:4,sugars:3.5,fiber:0,selenium:base('tw').selenium};
   return [
     make('chicken-mushroom-roulade','Rolada z piersi kurczaka z pieczarkami',[
       part(generic('chickenRoasted'),80),part(generic('mushroomsCooked'),18),
@@ -77,7 +83,7 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
       aliases:['sernik','sernik królewski','sernik krolewski','sernik Pilos','sernik z wiaderka','sernik kakao','sernik z kruszonką','ciasto serowe'],
       servingSizes:[{label:'80 g',quantity:80},{label:'100 g',quantity:100},{label:'150 g',quantity:150}],
       estimateNotes:'Sernik bez rodzynek, z kakaowym spodem i kruszonką. Receptura szacunkowa w stylu sernika królewskiego: 1 kg twarogu sernikowego Pilos z wiaderka, 400 g mąki, 400 g masła Łaciate (300 g w cieście i 100 g w masie), 280 g cukru, 5 jajek (250 g bez skorupek), 2 żółtka (34 g), 40 g kakao, 40 g skrobi zamiast budyniu bez cukru i 8 g proszku do pieczenia. Przyjęto 2300 g wystudzonego ciasta, bez polewy i skórki cytrynowej. Dla Pilos przyjęto wariant 6%: 108 kcal, 9 g białka, 4,5 g węgli i 6 g tłuszczu na 100 g według pomocniczej tabeli Fitatu, nie Twojej etykiety. Inny wariant twarogu, ilość masła, cukru lub masa po pieczeniu zmieniają wynik. Waż gotowy kawałek razem z kruszonką. Mikroskładniki z tabel surowców, bez korekty strat podczas pieczenia; nieznane dane twarogu pozostają brakujące.',
-      recipeSources:[{name:'Receptura porównawcza: sernik królewski AniaGotuje',url:CHEESECAKE_URL},{name:'Pilos 6%: pomocnicza tabela Fitatu — sprawdź etykietę wiaderka',url:PILOS_QUARK_URL},source('flour'),source('cocoa'),source('cornstarch'),source('eggYolk'),source('bakingPowder')],
+      recipeSources:[{name:'Receptura porównawcza: sernik królewski AniaGotuje',url:CHEESECAKE_URL},{name:'Pilos 6%: pomocnicza tabela Fitatu — sprawdź etykietę wiaderka',url:PILOS_QUARK_URL},{name:'Selen w twarogu: szacunek na podstawie quarku z DTU Frida',url:'https://doi.org/10.11583/DTU.32312844'},seleniumSource('laciate-butter'),source('flour'),source('cocoa'),source('cornstarch'),source('eggYolk'),source('bakingPowder')],
     }),
     make('tomato-soup-noodles','Pomidorowa z makaronem (Lidlomix, bez śmietany)',[
       part(generic('stock'),1000),part(generic('tomatoPuree'),150),part(base('pasta'),200),
@@ -105,7 +111,7 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
       aliases:['pizza','pizza włoska','pizza domowa','lidlomix','monsieur cuisine','salami mozzarella'],
       servingSizes:[{label:'100 g',quantity:100},{label:'200 g',quantity:200},{label:'300 g',quantity:300}],
       estimateNotes:'Cała partia: 400 g mąki Basia na pizzę, 220 ml wody, 4 g świeżych drożdży, 5 g cukru, 6 g soli i 20 g oliwy według ciasta Monsieur Cuisine. Dodatki: 200 g sosu Mutti z czosnkiem i bazylią, 250 g mozzarelli pełnotłustej i 100 g salami. Założono 1000 g całej pizzy po pieczeniu (całej partii, także gdy dzielisz ją na kilka pizz). Ser i salami są szacunkami ogólnymi. '+vitaminsNote,
-      recipeSources:[{name:'Ciasto: pizza włoska Monsieur Cuisine',url:PIZZA_URL},source('mozzarella'),source('salami'),source('yeast'),{name:'Retencja witamin USDA',url:RETENTION_URL}],
+      recipeSources:[{name:'Ciasto: pizza włoska Monsieur Cuisine',url:PIZZA_URL},source('mozzarella'),source('salami'),source('yeast'),seleniumSource('basia-pizza-flour'),seleniumSource('mutti-pizza-sauce'),{name:'Retencja witamin USDA',url:RETENTION_URL}],
     }),
     make('crepes-nutella','Naleśniki z Nutellą',[
       part(crepes,80),part(nutella,20),
@@ -113,7 +119,7 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
       aliases:['naleśniki','nalesniki','naleśnik nutella','nutella','naleśniki czekoladowe'],
       servingSizes:[{label:'100 g',quantity:100},{label:'150 g',quantity:150},{label:'200 g',quantity:200}],
       estimateNotes:'Na 100 g gotowego dania: 80 g usmażonego naleśnika i 20 g Nutelli. '+crepeNotes+' '+vitaminsNote,
-      recipeSources:[{name:'Nutella: tabela producenta',url:NUTELLA_URL},source('flour'),{name:'Retencja witamin USDA',url:RETENTION_URL}],
+      recipeSources:[{name:'Nutella: tabela producenta',url:NUTELLA_URL},{name:'Selen: krem kakaowo-orzechowy z tabeli USDA',url:ingredients.hazelnutSpread.url},source('flour'),seleniumSource('laciate-milk-32'),{name:'Retencja witamin USDA',url:RETENTION_URL}],
     }),
     make('crepes-jam','Naleśniki z dżemem',[
       part(crepes,80),part(generic('jam'),20),
@@ -121,7 +127,7 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
       aliases:['naleśniki','nalesniki','naleśnik dżem','dżem','dzem','marmolada'],
       servingSizes:[{label:'100 g',quantity:100},{label:'150 g',quantity:150},{label:'200 g',quantity:200}],
       estimateNotes:'Na 100 g gotowego dania: 80 g usmażonego naleśnika i 20 g tradycyjnego dżemu z cukrem (ogólna tabela USDA, nie dżem niskosłodzony). '+crepeNotes+' '+vitaminsNote,
-      recipeSources:[source('jam'),source('flour'),{name:'Retencja witamin USDA',url:RETENTION_URL}],
+      recipeSources:[source('jam'),source('flour'),seleniumSource('laciate-milk-32'),{name:'Retencja witamin USDA',url:RETENTION_URL}],
     }),
   ];
 }

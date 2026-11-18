@@ -74,7 +74,7 @@ FIELDS = {
     'saturatedFat': (1258, 'G'), 'salt': (1093, 'MG'),
     'calcium': (1087, 'MG'), 'iron': (1089, 'MG'),
     'potassium': (1092, 'MG'), 'magnesium': (1090, 'MG'),
-    'zinc': (1095, 'MG'),
+    'zinc': (1095, 'MG'), 'selenium': (1103, 'UG'),
     'vitaminC': (1162, 'MG'), 'vitaminD': (1114, 'UG'),
     'vitaminE': (1109, 'MG'), 'vitaminK': (1185, 'UG'),
     'b1': (1165, 'MG'), 'b2': (1166, 'MG'), 'b5': (1170, 'MG'),

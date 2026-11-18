@@ -1,11 +1,13 @@
 import {ACTIVITY_LEVELS, DEFAULT_PROFILE} from './profile.js';
-import {FAVORITE_FOODS} from './favoriteFoods.js';
+import {FAVORITE_FOODS,fillFavoriteSelenium} from './favoriteFoods.js';
 export {FAVORITE_FOODS} from './favoriteFoods.js';
 import {NUTRIENTS,NUTRIENT_FIELDS} from './nutrients.js';
 import {enrichGenericFood} from './genericNutrition.js';
 import {createHomemadeFoods} from './homemadeFoods.js';
 import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
 import {SUPPLEMENTS} from './supplements.js';
+import {createTeaFood} from './tea.js';
+import {isTea,normalizeTeaRecipe} from './teaRecipe.js';
 export {NUTRIENTS} from './nutrients.js';
 
 // Orientacyjne wartości na 100 g. Brakujące składniki uzupełniamy z jawnie
@@ -69,6 +71,23 @@ export const BASE_FOODS = [
 ];
 
 export const HOMEMADE_FOODS=createHomemadeFoods(BASE_FOODS,FAVORITE_FOODS);
+const dishesById=new Map(HOMEMADE_FOODS.map(food=>[food.id,food]));
+
+export function resolveFoodNutrition(food) {
+  const resolved=enrichGenericFood(food);
+  if(!resolved||(resolved.selenium!=null&&resolved.selenium!==''))return resolved;
+  const favorite=fillFavoriteSelenium(resolved);
+  if(favorite!==resolved)return favorite;
+  const recipe=isTea(resolved)&&resolved.source==='Szacunek naparu'&&normalizeTeaRecipe(resolved.teaRecipe);
+  const estimate=recipe?createTeaFood(recipe):dishesById.get(resolved.id);
+  if(estimate?.selenium==null||estimate.source!==resolved.source||estimate.unit!==resolved.unit||
+    (resolved.basisQuantity!=null&&resolved.basisQuantity!==100))return resolved;
+
+  // Add the missing mineral to a known saved dish or tea without rebuilding its snapshot.
+  const nutrients={...resolved,selenium:estimate.selenium};
+  if(isPartialNutrient(estimate,'selenium'))nutrients.partialNutrients=[...new Set([...(resolved.partialNutrients||[]),'selenium'])];
+  return nutrients;
+}
 
 export function canonicalText(text = '') {
   return text.toLocaleLowerCase('pl').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g,'l').trim();
@@ -79,7 +98,7 @@ export const foodUnit = food => food.unit === 'capsule' ? 'kaps.' : food.unit ==
 export const foodBasis = food => ['capsule','tablet'].includes(food.unit) ? 1 : 100;
 export const foodBasisLabel = food => `${foodBasis(food)} ${foodUnit(food)}`;
 export function scaleFood(food, quantity) {
-  const resolved=enrichGenericFood(food);
+  const resolved=resolveFoodNutrition(food);
   return Object.fromEntries(NUTRIENT_FIELDS.map((k) => [k, resolved[k] == null || resolved[k] === '' ? null : Number(resolved[k]) * Number(quantity || 0) / foodBasis(resolved)]));
 }
 export const fmt = (n, digits = 0) => Number(n || 0).toLocaleString('pl-PL',{maximumFractionDigits:digits,minimumFractionDigits:0});

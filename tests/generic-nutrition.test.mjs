@@ -1,11 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {BASE_FOODS,FAVORITE_FOODS,scaleFood} from '../src/foods.js';
+import {BASE_FOODS,FAVORITE_FOODS,HOMEMADE_FOODS,resolveFoodNutrition,scaleFood} from '../src/foods.js';
 import {enrichGenericFood,genericNutritionGap,genericNutritionInfo} from '../src/genericNutrition.js';
 import {NUTRIENT_FIELDS} from '../src/nutrients.js';
 import {nutritionReport,sumNutrition} from '../src/nutritionStats.js';
 import {DEFAULT_PROFILE} from '../src/profile.js';
+import {SUPPLEMENTS} from '../src/supplements.js';
+import {createTeaFood} from '../src/tea.js';
+import {DEFAULT_TEA_RECIPE} from '../src/teaRecipe.js';
+import {buildNutritionExport} from '../src/nutritionExport.js';
 
 const data=JSON.parse(readFileSync(new URL('../src/genericFoodNutrients.json',import.meta.url),'utf8'));
 const estimates=JSON.parse(readFileSync(new URL('../src/genericFoodEstimates.json',import.meta.url),'utf8'));
@@ -148,4 +152,48 @@ test('day and calendar-week statistics include old generic micronutrients and re
   const week=nutritionReport({entries,daily:[],profile:DEFAULT_PROFILE,day:'2026-11-14',period:'week',today:'2026-11-14'});
   assert.equal(week.summary.totals.vitaminK,summary.totals.vitaminK);
   assert.equal(week.summary.genericEntryCount,2);
+});
+
+test('selenium uses source-specific quantities and old food snapshots contribute alongside supplements',()=>{
+  assert.ok(BASE_FOODS.every(food=>Number.isFinite(food.selenium)));
+  assert.ok(HOMEMADE_FOODS.every(food=>Number.isFinite(food.selenium)));
+  near(scaleFood(legacy('egg'),50).selenium,15.35);
+  near(scaleFood(legacy('tuna'),100).selenium,80.4);
+  near(scaleFood(legacy('skyr'),200).selenium,7.4);
+
+  const milk=FAVORITE_FOODS.find(food=>food.id==='favorite:lidl-protein-milk');
+  const oldMilk={...milk,selenium:null};
+  near(scaleFood(oldMilk,250).selenium,6.18);
+  near(scaleFood(oldMilk,250).kcal,135);
+  assert.equal(scaleFood({...oldMilk,unit:'g'},250).selenium,null);
+  assert.equal(scaleFood({...oldMilk,selenium:0},250).selenium,0);
+  assert.equal(oldMilk.selenium,null);
+
+  const dish=HOMEMADE_FOODS.find(food=>food.id==='dish:roasted-chicken-breast');
+  const savedDish={...dish,selenium:null,kcal:171};
+  near(scaleFood(savedDish,100).selenium,27.2815);
+  assert.equal(scaleFood(savedDish,100).kcal,171);
+  assert.equal(savedDish.selenium,null);
+
+  const pill=SUPPLEMENTS.find(food=>food.id==='supplement:essensey-selenium-pro-forte');
+  const entries=[entry(legacy('egg'),50),entry(oldMilk,250),entry(pill,1)];
+  near(sumNutrition(entries).totals.selenium,221.53);
+  const {text}=buildNutritionExport({entries,profile:DEFAULT_PROFILE,day:'2026-11-14',today:'2026-11-14'});
+  assert.match(text,/Selen: 221,53 µg/);
+  assert.match(text,/Selen: 15,35 µg/);
+  assert.match(text,/Szacunek selenu na podstawie produktu ogólnego/);
+});
+
+test('backfilling tea selenium honors recorded additions, uncertainty and exact custom entries',()=>{
+  const tea=createTeaFood({...DEFAULT_TEA_RECIPE,sugar:1,lemon:1});
+  const saved={...tea,selenium:null,partialNutrients:tea.partialNutrients.filter(key=>key!=='selenium')};
+  near(scaleFood(saved,250).selenium,.03);
+  assert.equal(sumNutrition([entry(saved,250)]).coverage.selenium.complete,false);
+  assert.equal(saved.selenium,null);
+  assert.equal(saved.partialNutrients.includes('selenium'),false);
+  const plain=createTeaFood(DEFAULT_TEA_RECIPE);
+  assert.equal(resolveFoodNutrition({...plain,selenium:null}).selenium,0);
+  const custom={...legacy('egg'),id:'own:egg',source:'Własny'};
+  assert.equal(scaleFood(custom,100).selenium,null);
+  assert.equal(scaleFood({...custom,selenium:7},50).selenium,3.5);
 });

@@ -13,6 +13,20 @@ const product = (id, name, brand, unit, kcal, protein, carbs, fat, extra={}) => 
 });
 const labelled = (...args) => ({...Object.fromEntries(NUTRIENT_FIELDS.map(key=>[key,null])),...product(...args)});
 
+export function favoriteSeleniumInfo(food) {
+  if(food?.source!=='Twoja tabela'||!Object.hasOwn(genericEstimates.favoriteSelenium,food.id))return null;
+  const estimate=genericEstimates.favoriteSelenium[food?.id];
+  if(food.unit!==estimate.unit||
+    (food.basisQuantity!=null&&food.basisQuantity!==100))return null;
+  return estimate;
+}
+
+export function fillFavoriteSelenium(food) {
+  if(food?.selenium!=null&&food.selenium!=='')return food;
+  const estimate=favoriteSeleniumInfo(food);
+  return estimate?{...food,selenium:estimate.value}:food;
+}
+
 export const FAVORITE_FOODS = [
   product('lidl-protein-milk','Mleko wysokobiałkowe','Lidl — Pilos High Protein','ml',54,8,4.7,0.5,{fatLessThan:true}),
   product('piatnica-cream-18','Śmietana 18%','Piątnica','g',191,2.5,4.8,18),
@@ -89,4 +103,4 @@ export const FAVORITE_FOODS = [
     servingSizes:[{label:'100 g',quantity:100},{label:'200 g — pół puszki',quantity:200},{label:'400 g — puszka',quantity:400}],
   }),
   TEA_FOOD,
-];
+].map(fillFavoriteSelenium);
