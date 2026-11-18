@@ -42,7 +42,8 @@ export function recentEnergyDays({entries,daily,activities,day}) {
   return Array.from({length:7},(_,i)=>{
     const date=shiftDay(day,i-6);
     const summary=sumNutrition(entries.filter(entry=>entry.day===date));
-    const movement=calcDailyMovement(daily.find(row=>row.day===date)?.steps||0,activities.filter(a=>a.day===date)).total;
+    const metrics=daily.find(row=>row.day===date);
+    const movement=calcDailyMovement(metrics?.steps||0,activities.filter(a=>a.day===date),metrics?.garminActiveKcal).total;
     const eaten=summary.totals.kcal;
     return {day:date,summary,eaten,movement,net:eaten==null?null:eaten-movement};
   });
@@ -56,7 +57,8 @@ export function nutritionReport({entries,daily,activities=[],profile,day,period=
   const days=dates.map(date=>{
     const records=date<=today?entries.filter(entry=>entry.day===date):[];
     const baseGoal=targetsOnDay(profile,daily,date>today?today:date);
-    const movement=date>today?0:calcDailyMovement(daily.find(row=>row.day===date)?.steps||0,activities.filter(a=>a.day===date)).total;
+    const metrics=daily.find(row=>row.day===date);
+    const movement=date>today?0:calcDailyMovement(metrics?.steps||0,activities.filter(a=>a.day===date),metrics?.garminActiveKcal).total;
     const goal={...baseGoal,calories:calcDailyBalance(baseGoal,0,movement).budget};
     return {day:date,summary:sumNutrition(records),goal,movement,future:date>today};
   });

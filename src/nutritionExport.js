@@ -111,7 +111,7 @@ export function buildNutritionExport({entries=[],daily=[],activities=[],profile,
     const food=records.filter(entry=>!isReportSupplement(entry)),supplements=records.filter(isReportSupplement);
     const acts=activities.filter(activity=>activity.day===date);
     const metrics=daily.find(row=>row.day===date);
-    const movement=calcDailyMovement(metrics?.steps||0,acts);
+    const movement=calcDailyMovement(metrics?.steps||0,acts,metrics?.garminActiveKcal);
     const goal=targetsOnDay(p,daily,date);
     return {day:date,records,food,supplements,acts,metrics,movement,goal,budget:calcDailyBalance(goal,0,movement.total).budget,summary:sumNutrition(records)};
   });
@@ -165,7 +165,7 @@ export function buildNutritionExport({entries=[],daily=[],activities=[],profile,
   if(components.length)nutrientBlock('Kwasy tłuszczowe i ekstrakty',components);
   const energyDays=days.filter(d=>d.summary.totals.kcal!=null);
   const movement=days.reduce((sum,d)=>sum+d.movement.total,0);
-  lines.push('','### Ruch i bilans',`Zapisany ruch w uwzględnionych dniach: ${fmt(movement,2)} kcal (szacunek ponad bazę aplikacji).`);
+  lines.push('','### Ruch i bilans',`Zapisany ruch w uwzględnionych dniach: ${fmt(movement,2)} kcal (${days.some(d=>d.movement.source==='garmin')?'kalorie aktywne Garmin; w dniach bez danych szacunek z kroków i treningów':'szacunek ponad bazę aplikacji'}).`);
   if(energyDays.length) {
     const energyMovement=energyDays.reduce((sum,d)=>sum+d.movement.total,0);
     lines.push(`Znane spożycie minus ruch: ${amount(summary.totals.kcal-energyMovement,'kcal')} z ${energyDays.length} ${energyDays.length===1?'dnia ze znanymi kaloriami':'dni ze znanymi kaloriami'}${!summary.coverage.kcal.complete?' (spożycie częściowe)':''}.`);
@@ -219,7 +219,7 @@ export function buildNutritionExport({entries=[],daily=[],activities=[],profile,
     lines.push(`Plan dnia: ${fmt(d.goal.calories,2)} kcal + ${fmt(d.movement.total,2)} kcal ruchu = ${fmt(d.budget,2)} kcal; białko ${fmt(d.goal.protein,2)} g, węglowodany ${fmt(d.goal.carbs,2)} g, tłuszcze ${fmt(d.goal.fat,2)} g.`);
     if(d.metrics)lines.push(`Zapisane kroki: ${d.metrics.steps==null?'brak zapisu':fmt(d.metrics.steps)}. Zapisana waga: ${d.metrics.weight==null?'brak pomiaru':`${fmt(d.metrics.weight,2)} kg`}.`);
     for(const activity of d.acts)lines.push(`Aktywność: ${ACTIVITY_TYPES.find(type=>type.id===activity.type)?.name||'Trening'}, ${fmt(activity.minutes,2)} min${activity.distance>0?`, ${fmt(activity.distance,2)} km`:''}; ${fmt(activity.kcal,2)} kcal szacunkowo${activity.includedInSteps?'; kroki treningu zawarte w liczniku':''}.`);
-    lines.push(d.metrics?.steps!=null||d.acts.length?`Ruch: kroki ponad bazę ${fmt(d.movement.stepsBurn,2)} kcal + treningi ${fmt(d.movement.workout,2)} kcal = ${fmt(d.movement.total,2)} kcal.`:'Ruch: brak zapisów kroków i treningów; do budżetu dodano 0 kcal.');
+    lines.push(d.movement.source==='garmin'?`Ruch: ${fmt(d.movement.total,2)} kcal aktywnych z Garmin Connect. Zastępują szacunek z kroków i treningów; nie doliczamy go ponownie.`:d.metrics?.steps!=null||d.acts.length?`Ruch: kroki ponad bazę ${fmt(d.movement.stepsBurn,2)} kcal + treningi ${fmt(d.movement.workout,2)} kcal = ${fmt(d.movement.total,2)} kcal.`:'Ruch: brak zapisów kroków i treningów; do budżetu dodano 0 kcal.');
   }
   lines.push('','## Jakość danych i sposób liczenia',
     'Brak danych i brak wpisów nie są zerem. Jawne 0 pozostaje zerem. Dane częściowe są sumą tylko znanej części składu. Granice z etykiet są opisane słownie; przyjmujemy górną granicę do sumy. Ogólne produkty i domowe dania mogą mieć szacunkowe wartości; skład zależy od receptury i przygotowania.',

@@ -178,9 +178,13 @@ export function calcDailyBalance(targets, eaten, movement=0) {
   return {budget,remaining:budget-(Number(eaten)||0)};
 }
 
-export function calcDailyMovement(steps=0,activities=[]) {
+export function calcDailyMovement(steps=0,activities=[],garminActiveKcal=null) {
   const workout=activities.reduce((total,a)=>total+Math.max(0,Number(a.kcal)||0),0);
   const stepsBurn=calcStepsKcal(steps,activities);
+  // Garmin's daily active total already includes everyday movement and workouts.
+  // A recorded zero is real data; missing/invalid values use the local estimate.
+  if(typeof garminActiveKcal==='number'&&Number.isFinite(garminActiveKcal)&&garminActiveKcal>=0&&garminActiveKcal<=30000)
+    return {workout,stepsBurn,total:garminActiveKcal,source:'garmin'};
   return {workout,stepsBurn,total:workout+stepsBurn};
 }
 

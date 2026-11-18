@@ -6,7 +6,7 @@ import {displayTotal} from './nutritionDisplay.js';
 import {progressPresentation} from './progressPresentation.js';
 import './dashboard.css';
 
-export default function DailyBalance({nutrition,goal,budget,movement,onDetails}) {
+export default function DailyBalance({nutrition,goal,budget,movement,movementSource,onDetails}) {
   const eaten=nutrition.totals.kcal;
   const unknown=nutrition.entryCount>0&&eaten==null;
   const remaining=budget-(eaten||0);
@@ -26,7 +26,7 @@ export default function DailyBalance({nutrition,goal,budget,movement,onDetails})
         <div className="balance-gauge-value"><strong data-balance="remaining">{unknown?'—':fmt(Math.abs(remaining))}</strong><span>{over?'Ponad plan':'Pozostało'}</span><small>kcal</small></div>
         <div className="balance-target">Cel <strong>{fmt(budget)}</strong> kcal</div>
       </div>
-      <div className="balance-side"><strong data-balance="movement">{fmt(movement)}</strong><span>Ruch</span><small>kcal szac.</small></div>
+      <div className="balance-side"><strong data-balance="movement">{fmt(movement)}</strong><span>Ruch</span><small>{movementSource==='garmin'?'kcal z Garmin':'kcal szac.'}</small></div>
     </div>
     <div className="balance-macros">{MACRO_PRESENTATION.map(m=>{
       const value=nutrition.totals[m.key],target=goal[m.key];
@@ -37,6 +37,6 @@ export default function DailyBalance({nutrition,goal,budget,movement,onDetails})
         <p><strong>{displayTotal(nutrition,m.key)}</strong><span> / {fmt(target)} g</span></p>
       </div>;
     })}</div>
-    <details className="balance-notes"><summary>{partial?'Bilans z dostępnych danych':'Jak liczymy bilans?'}</summary><p>{partial?'Część wpisów nie ma podanych kalorii. Pokazujemy sumę znanych wartości. ':''}Cel na dziś to {fmt(goal.calories)} kcal z planu + {fmt(movement)} kcal z zapisanego ruchu. Makro pozostaje według planu z ustawień.</p></details>
+    <details className="balance-notes"><summary>{partial?'Bilans z dostępnych danych':'Jak liczymy bilans?'}</summary><p>{partial?'Część wpisów nie ma podanych kalorii. Pokazujemy sumę znanych wartości. ':''}Cel na dziś to {fmt(goal.calories)} kcal z planu + {fmt(movement)} kcal {movementSource==='garmin'?'aktywnych z Garmin Connect. Ta suma obejmuje ruch i treningi, więc nie doliczamy ponownie szacunków aplikacji.':'z zapisanego ruchu.'} Makro pozostaje według planu z ustawień.</p></details>
   </section>;
 }

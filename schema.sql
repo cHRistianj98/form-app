@@ -59,3 +59,9 @@ CREATE TABLE IF NOT EXISTS garmin_daily_imports (
   steps_run TEXT,
   weight_run TEXT
 );
+
+CREATE TABLE IF NOT EXISTS garmin_daily_calories (
+  day TEXT PRIMARY KEY,
+  active_kcal REAL NOT NULL CHECK (active_kcal >= 0 AND active_kcal <= 30000),
+  synced_at TEXT NOT NULL
+);

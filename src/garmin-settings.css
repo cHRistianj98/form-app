@@ -9,7 +9,21 @@
 .garmin-last { display:flex; align-items:center; gap:9px; padding:15px 0; margin-top:7px; border-bottom:1px solid var(--border); color:var(--muted); }
 .garmin-last>span { flex:1; font-size:11px; display:grid; gap:4px; }
 .garmin-last strong { color:var(--text); font-size:13px; font-weight:600; }
-.garmin-refresh-status { border:1px solid var(--border); width:36px; height:36px; border-radius:10px; background:#172c47; color:var(--accent); display:grid; place-items:center; cursor:pointer; }
+.garmin-status-check { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:11px; }
+.garmin-status-check>small { color:var(--muted); font-size:10px; }
+.garmin-refresh-status { border:1px solid var(--border); min-height:36px; padding:8px 10px; border-radius:10px; background:#172c47; color:var(--accent); display:inline-flex; gap:6px; align-items:center; justify-content:center; cursor:pointer; font-size:11px; }
+.garmin-refresh-status:disabled { opacity:.6; cursor:default; }
+.garmin-setup-status { margin-top:14px; padding:13px; border:1px solid var(--border); border-radius:12px; background:#172a43; }
+.garmin-setup-status>strong { color:var(--text); font-size:13px; font-weight:650; }
+.garmin-setup-status ul { list-style:none; margin:12px 0 0; padding:0; display:grid; gap:13px; }
+.garmin-setup-status li { display:flex; gap:8px; align-items:flex-start; font-size:12px; color:var(--text); }
+.garmin-setup-status li>svg { flex-shrink:0; color:var(--accent); margin-top:2px; }
+.garmin-setup-status li>span { min-width:0; display:grid; gap:4px; }
+.garmin-setup-status small { color:var(--muted); font-size:11px; line-height:1.6; overflow-wrap:anywhere; }
+.garmin-first-sync { display:flex; gap:8px; color:var(--muted); font-size:12px; line-height:1.7; margin-top:14px; }
+.garmin-first-sync>svg { flex-shrink:0; color:var(--accent); margin-top:3px; }
+.garmin-first-sync strong { color:var(--text); }
+.garmin-sync-unavailable { margin-top:15px; }
 .garmin-info { display:flex; align-items:flex-start; gap:8px; font-size:12px; line-height:1.7; color:var(--muted); margin:13px 0 0; }
 .garmin-info>svg { flex-shrink:0; margin-top:3px; }
 .garmin-previous-result { font-size:11px; }

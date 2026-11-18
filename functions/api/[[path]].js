@@ -98,17 +98,20 @@ async function readBody(req) {
   catch { throw new Error('Niepoprawny JSON'); }
 }
 async function state(db) {
-  const [er,ar,dr,fr,pr] = await Promise.all([
+  const [er,ar,dr,fr,pr,cr] = await Promise.all([
     db.prepare('SELECT id, day, meal, grams, food_json FROM entries ORDER BY day DESC, created_at DESC').all(),
     db.prepare('SELECT id, day, type, minutes, distance, kcal, included_in_steps FROM activities ORDER BY day DESC, created_at DESC').all(),
     db.prepare('SELECT day, steps, weight, notes FROM daily_metrics ORDER BY day DESC').all(),
     db.prepare('SELECT id, food_json FROM foods ORDER BY created_at DESC').all(),
-    db.prepare("SELECT value_json FROM settings WHERE key='profile'").first()
+    db.prepare("SELECT value_json FROM settings WHERE key='profile'").first(),
+    db.prepare('SELECT day,active_kcal AS garminActiveKcal,synced_at AS garminCaloriesSyncedAt FROM garmin_daily_calories').all()
+      .catch(error=>{if(/no such table.*garmin_daily_calories/i.test(String(error?.message)))return {results:[]};throw error;})
   ]);
+  const calories=new Map(cr.results.map(({day,...fields})=>[day,fields]));
   return {
     entries:er.results.map(({food_json,...x})=>({...x,food:JSON.parse(food_json)})),
     activities:ar.results.map(({included_in_steps,...x})=>({...x,includedInSteps:!!included_in_steps})),
-    daily:dr.results,
+    daily:dr.results.map(row=>({...row,...calories.get(row.day)})),
     foods:fr.results.map(r=>JSON.parse(r.food_json)),
     profile:normalizeProfile(pr ? JSON.parse(pr.value_json) : null),
   };
@@ -243,7 +246,7 @@ export async function onRequest(context) {
     }
     return json({error:'Nieznany adres API'},404);
   } catch(e) {
-    if(e instanceof GarminError)return json({error:e.message,code:e.code,retryAt:e.retryAt},e.status,e.retryAt?{'Retry-After':String(Math.max(1,Math.ceil((Date.parse(e.retryAt)-Date.now())/1000)))}:{});
+    if(e instanceof GarminError)return json({error:e.message,code:e.code,retryAt:e.retryAt,diagnostic:e.diagnostic},e.status,e.retryAt?{'Retry-After':String(Math.max(1,Math.ceil((Date.parse(e.retryAt)-Date.now())/1000)))}:{});
     const msg = e instanceof Error ? e.message : 'Błąd serwera';
     // Nie ujawniamy szczegółów błędów bazy danych ani sekretów.
     if (/Dane są za duże|Niepoprawny JSON/.test(msg)) return json({error:msg},400);
