@@ -124,4 +124,31 @@ export const FAVORITE_FOODS = [
     defaultQuantity:15,
     servingSizes:[{label:'10 g',quantity:10},{label:'15 g',quantity:15},{label:'30 g',quantity:30}],
   }),
+  labelled('muller-mullermilch-chocolate','Müllermilch czekoladowe','Müller','g',71,3.4,10.7,1.6,{
+    sugars:10.2,saturatedFat:1.1,fiber:null,salt:0.15,b1:0.23,b2:0.35,b6:0.28,b12:0.5,
+    sourceUrl:'https://www.mullerpolska.pl/produkty/muellermilch/mullermilch-original/muellermilch-czekolada',
+    aliases:['mleko czekoladowe','napój mleczny czekoladowy','muellermilch'],
+    servingSizes:[{label:'100 g',quantity:100},{label:'Cała butelka — 400 g',quantity:400}],
+  }),
+  labelled('piatnica-strawberry-skyr','Skyr truskawkowy','Piątnica','g',78,9.6,10,0,{
+    defaultQuantity:150,
+    sugars:10,saturatedFat:0,fiber:null,salt:0.06,
+    sourceUrl:'https://piatnica.com.pl/produkt/skyr-z-truskawkami-150-g/',
+    aliases:['skyr truskawka'],
+    servingSizes:[{label:'Cały kubek — 150 g',quantity:150}],
+  }),
+  labelled('lidl-turkey-frankfurters','Parówki z filetem z indyka','Lidl','g',190,15,0.9,14,{
+    defaultQuantity:200,
+    sugars:0.9,saturatedFat:4.3,fiber:null,salt:1.6,
+    aliases:['parówki z indyka','parówki indycze','Pikok Pure','20902575'],
+    servingSizes:[{label:'Całe opakowanie — 200 g',quantity:200}],
+  }),
+  labelled('lidl-mountain-wheat-rye-roll','Bułka górska pszenno-żytnia','Lidl','g',null,null,null,null,{
+    defaultQuantity:75,
+    source:'Dane producenta',sourceUrl:'https://www.lidl.pl/p/bulka-typu-gorskiego/p11432568',
+    ingredients:'Mąka pszenna (59%), woda, mąka żytnia (6%), płatki ziemniaczane (5,8%), sól, drożdże, gluten pszenny, cukier i kwas askorbinowy (środek do przetwarzania mąki).',
+    labelNote:'Możliwa obecność mleka, jaj, soi, sezamu i orzechów.',
+    aliases:['bułka typu górskiego','bułka pszenno-żytnia'],
+    servingSizes:[{label:'1 bułka — 75 g',quantity:75}],
+  }),
 ].map(fillFavoriteSelenium);

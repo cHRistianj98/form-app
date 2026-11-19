@@ -205,6 +205,12 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
         <MacroValues values={scaled} food={effectiveFood||selected}/>
       </div>
       {['kcal','protein','carbs','fat'].some(key=>displayFood[key]==null)&&<p className="help-note fat-bound-note">W przekazanych danych brakuje kalorii lub części makro. Zapiszemy je jako nieznane (—), nie jako zero.</p>}
+      {(displayFood.ingredients||displayFood.labelNote)&&<details className="recipe-estimate">
+        <summary>Skład i informacje z etykiety</summary>
+        {displayFood.ingredients&&<p>{displayFood.ingredients}</p>}
+        {displayFood.labelNote&&<p>{displayFood.labelNote}</p>}
+        {displayFood.sourceUrl&&<div className="nutrition-sources"><a href={displayFood.sourceUrl} target="_blank" rel="noreferrer">Karta produktu ↗</a></div>}
+      </details>}
       {displayFood.estimateNotes&&<details className="recipe-estimate"><summary>{recipe?'Jak policzono to danie?':'Założenia szacunku'}</summary><p>{readableNutritionNote(displayFood.estimateNotes)}</p>{recipe&&<p>Wartości są orientacyjne. Masa po przygotowaniu jest założeniem — inna ilość odparowanej wody zmienia wartości na 100 g.</p>}<div className="nutrition-sources">{recipeSources.map(s=><a key={s.url} href={s.url} target="_blank" rel="noreferrer">{s.name} ↗</a>)}</div></details>}
       {NUTRIENTS.some(([key])=>displayFood[key]!=null)&&<details className="food-nutrient-details">
         <summary>Witaminy i pozostałe składniki tej porcji{nutritionInfo?' — szacunek z tabel':''}</summary>

@@ -121,5 +121,34 @@
     "source": "https://www.oetker.pl/produkty/p/guseppe-4-cheese",
     "author": "Dr. Oetker",
     "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "muller-mullermilch-chocolate": {
+    "title": "Müller — Müllermilch Czekolada 400 g",
+    "url": "https://www.mullerpolska.pl/fileadmin/Mu___lllermilch_Stan_Choco_PL_nodecla_924x1000px%4072dpi.png",
+    "source": "https://www.mullerpolska.pl/produkty/muellermilch/mullermilch-original/muellermilch-czekolada",
+    "author": "Müller",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "piatnica-strawberry-skyr": {
+    "title": "Piątnica — Skyr z truskawkami 150 g",
+    "url": "https://piatnica.com.pl/content/uploads/2025/02/12780-SKYR-TRUSKAW_150G-PIAT-05-25_wizualizacja.png",
+    "source": "https://piatnica.com.pl/produkt/skyr-z-truskawkami-150-g/",
+    "author": "Piątnica",
+    "license": "Materiał produktowy — prawa zastrzeżone"
+  },
+  "lidl-turkey-frankfurters": {
+    "title": "Pikok Pure — Parówki z filetem z indyka 200 g",
+    "url": "https://images.openfoodfacts.org/images/products/000/002/090/2575/front_pl.43.400.jpg",
+    "source": "https://world.openfoodfacts.org/product/20902575",
+    "author": "Open Food Facts contributors",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "lidl-mountain-wheat-rye-roll": {
+    "title": "Lidl — Bułka typu górskiego 75 g",
+    "url": "https://www.lidl.pl/assets/gcp2acda39cc9e14202ba4b5ed00aa2d1dd.png",
+    "source": "https://www.lidl.pl/p/bulka-typu-gorskiego/p11432568",
+    "author": "Lidl",
+    "license": "Materiał produktowy — prawa zastrzeżone"
   }
 }

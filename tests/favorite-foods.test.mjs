@@ -16,7 +16,7 @@ test('seven selectable products retain the user table, including ml basis and th
     ['cincin-rose-zero','ml',22,0,5.3,0],
   ]);
   assert.equal(FAVORITE_FOODS[0].fatLessThan,true);
-  const otherSources=['favorite:lipton-earl-grey','favorite:guseppe-four-cheese','favorite:kania-mild-ketchup'];
+  const otherSources=['favorite:lipton-earl-grey','favorite:guseppe-four-cheese','favorite:kania-mild-ketchup','favorite:lidl-mountain-wheat-rye-roll'];
   assert.equal(FAVORITE_FOODS.filter(f=>!otherSources.includes(f.id)).every(f=>f.source==='Twoja tabela'),true);
 });
 

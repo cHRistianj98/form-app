@@ -753,5 +753,41 @@
     "source": "https://essensey.com/ziola-i-suplementy-na-sen/melatonina-w-120-kapsulkach.html",
     "licenseUrl": "https://essensey.com/ziola-i-suplementy-na-sen/melatonina-w-120-kapsulkach.html",
     "changes": "Wycentrowano opakowanie na białym tle 480 × 480 px i zapisano jako WebP. Opakowanie może różnić się wersją etykiety."
+  },
+  "fav-muller-mullermilch-chocolate": {
+    "image": "/foods/fav-muller-mullermilch-chocolate.webp",
+    "title": "Müller — Müllermilch Czekolada 400 g",
+    "author": "Müller",
+    "source": "https://www.mullerpolska.pl/produkty/muellermilch/mullermilch-original/muellermilch-czekolada",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-piatnica-strawberry-skyr": {
+    "image": "/foods/fav-piatnica-strawberry-skyr.webp",
+    "title": "Piątnica — Skyr z truskawkami 150 g",
+    "author": "Piątnica",
+    "source": "https://piatnica.com.pl/produkt/skyr-z-truskawkami-150-g/",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-lidl-turkey-frankfurters": {
+    "image": "/foods/fav-lidl-turkey-frankfurters.webp",
+    "title": "Pikok Pure — Parówki z filetem z indyka 200 g",
+    "author": "Open Food Facts contributors",
+    "source": "https://world.openfoodfacts.org/product/20902575",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-lidl-mountain-wheat-rye-roll": {
+    "image": "/foods/fav-lidl-mountain-wheat-rye-roll.webp",
+    "title": "Lidl — Bułka typu górskiego 75 g",
+    "author": "Lidl",
+    "source": "https://www.lidl.pl/p/bulka-typu-gorskiego/p11432568",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
   }
 }
