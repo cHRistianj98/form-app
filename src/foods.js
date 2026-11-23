@@ -1,7 +1,7 @@
 import {ACTIVITY_LEVELS, DEFAULT_PROFILE} from './profile.js';
 import {FAVORITE_FOODS,fillFavoriteSelenium} from './favoriteFoods.js';
 export {FAVORITE_FOODS} from './favoriteFoods.js';
-import {NUTRIENTS,NUTRIENT_FIELDS} from './nutrients.js';
+import {MACRO_FIELDS,NUTRIENTS,NUTRIENT_FIELDS} from './nutrients.js';
 import {enrichGenericFood} from './genericNutrition.js';
 import {createHomemadeFoods} from './homemadeFoods.js';
 import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
@@ -73,13 +73,33 @@ export const BASE_FOODS = [
 export const HOMEMADE_FOODS=createHomemadeFoods(BASE_FOODS,FAVORITE_FOODS);
 const dishesById=new Map(HOMEMADE_FOODS.map(food=>[food.id,food]));
 
+function fillSavedDishGaps(food,dish) {
+  const basePotato=food.id==='base:potato'&&food.source==='Orientacyjne'&&!food.brand;
+  if(!dish||food===dish||(!basePotato&&food.source!==dish.source)||
+    (food.unit??'g')!==dish.unit||(food.basisQuantity??100)!==dish.basisQuantity||
+    MACRO_FIELDS.some(key=>food[key]!=null&&food[key]!==''&&food[key]!==dish[key]))return food;
+
+  // A matching catalog recipe can fill gaps without rewriting recorded values.
+  const keys=NUTRIENT_FIELDS.filter(key=>dish[key]!=null&&!isPartialNutrient(dish,key)&&
+    (food[key]==null||food[key]===''||(isPartialNutrient(food,key)&&!isUpperBoundNutrient(food,key))));
+  if(!keys.length)return food;
+  return {
+    ...food,...Object.fromEntries(keys.map(key=>[key,dish[key]])),
+    partialNutrients:(food.partialNutrients||[]).filter(key=>!keys.includes(key)),
+    upperBoundNutrients:[...new Set([...(food.upperBoundNutrients||[]),...keys.filter(key=>isUpperBoundNutrient(dish,key))])],
+    estimateNotes:dish.estimateNotes,
+  };
+}
+
 export function resolveFoodNutrition(food) {
-  const resolved=enrichGenericFood(food);
-  if(!resolved||(resolved.selenium!=null&&resolved.selenium!==''))return resolved;
+  if(!food)return food;
+  const dish=dishesById.get(food.id);
+  const resolved=fillSavedDishGaps(enrichGenericFood(food),dish);
+  if(resolved.selenium!=null&&resolved.selenium!=='')return resolved;
   const favorite=fillFavoriteSelenium(resolved);
   if(favorite!==resolved)return favorite;
   const recipe=isTea(resolved)&&resolved.source==='Szacunek naparu'&&normalizeTeaRecipe(resolved.teaRecipe);
-  const estimate=recipe?createTeaFood(recipe):dishesById.get(resolved.id);
+  const estimate=recipe?createTeaFood(recipe):dish;
   if(estimate?.selenium==null||estimate.source!==resolved.source||estimate.unit!==resolved.unit||
     (resolved.basisQuantity!=null&&resolved.basisQuantity!==100))return resolved;
 

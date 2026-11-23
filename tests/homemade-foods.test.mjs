@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {BASE_FOODS,FAVORITE_FOODS,HOMEMADE_FOODS,foodBasis,foodImage,foodNutrientLabel,foodOptions,scaleFood} from '../src/foods.js';
+import {BASE_FOODS,FAVORITE_FOODS,HOMEMADE_FOODS,foodBasis,foodImage,foodNutrientLabel,foodOptions,resolveFoodNutrition,scaleFood} from '../src/foods.js';
 import {calculateDish} from '../src/dishNutrition.js';
-import {MINERAL_KEYS,NUTRIENT_FIELDS,VITAMIN_KEYS} from '../src/nutrients.js';
+import {NUTRIENT_FIELDS,SUPPLEMENT_COMPONENT_KEYS} from '../src/nutrients.js';
 import {nutritionReport,sumNutrition,totalLabel} from '../src/nutritionStats.js';
 import {DEFAULT_PROFILE} from '../src/profile.js';
 import worker from '../worker/index.js';
@@ -13,13 +13,17 @@ const favorite=id=>FAVORITE_FOODS.find(f=>f.id===`favorite:${id}`);
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-9,`${a} != ${b}`);
 const entry=(food,grams,day='2026-11-15')=>({id:`entry:${food.id}`,food,grams,day,meal:'lunch'});
 
-test('eleven ready dishes are discoverable by Polish names, aliases and gram quantities',()=>{
+test('eleven ready dishes are discoverable and have values for every tracked food nutrient',()=>{
   assert.equal(HOMEMADE_FOODS.length,11);
+  const foodKeys=NUTRIENT_FIELDS.filter(key=>!SUPPLEMENT_COMPONENT_KEYS.includes(key));
   for(const food of HOMEMADE_FOODS) {
     assert.equal(food.unit,'g');assert.equal(foodBasis(food),100);
     assert.equal(foodOptions(food.name)[0].id,food.id);
     assert.ok(food.estimateNotes.length>100&&food.estimateNotes.length<1800);
     for(const key of NUTRIENT_FIELDS) assert.ok(Object.hasOwn(food,key),`${food.id}:${key}`);
+    for(const key of foodKeys) assert.ok(Number.isFinite(food[key])&&food[key]>=0,`${food.id}:${key}`);
+    assert.deepEqual(food.partialNutrients,[],food.id);
+    assert.equal(new Set(food.recipeSources.map(source=>source.url)).size,food.recipeSources.length,food.id);
     const bytes=readFileSync(new URL('../public'+food.image,import.meta.url));
     assert.equal(bytes.toString('ascii',0,4),'RIFF');assert.equal(bytes.toString('ascii',8,12),'WEBP');
     assert.equal(foodImage({id:food.id,name:food.name}),food.image);
@@ -37,11 +41,13 @@ test('eleven ready dishes are discoverable by Polish names, aliases and gram qua
 test('mushroom roulade and seasoned breast use cooked chicken and scale finished portions',()=>{
   const roll=get('chicken-mushroom-roulade'),breast=get('roasted-chicken-breast');
   near(roll.kcal,165*.8+28*.18+884*.015+331*.001+251*.001);
+  near(roll.biotin,4.2*.8+5.8*.18+3.5*.001+20*.001);
   near(scaleFood(roll,150).kcal,roll.kcal*1.5);
   assert.match(roll.estimateNotes,/nadzieniem z pieczarek/);
   assert.match(roll.estimateNotes,/GOTOWEJ rolady/);
   assert.match(roll.estimateNotes,/bez sera, boczku, panierki/);
   near(breast.kcal,165*.985+331*.003+282*.003+251*.001);
+  near(breast.biotin,4.2*.985+3.5*.003+39*.003+20*.001);
   near(scaleFood(breast,175).kcal,breast.kcal*1.75);
   assert.match(breast.estimateNotes,/sól z mieszanki jest już wliczona/);
   assert.match(breast.estimateNotes,/nie surową pierś/);
@@ -56,6 +62,7 @@ test('boiled potatoes reuse the established food identity, nutrients and new ima
   assert.deepEqual(foodOptions('ziemniaki gotowane').map(f=>f.id),['base:potato']);
   for(const key of ['kcal','protein','carbs','fat','salt'])assert.equal(potato[key],base[key],key);
   near(scaleFood(potato,200).kcal,174);
+  near(scaleFood(base,200).biotin,.6);
   assert.equal(foodImage({id:'base:potato'}),'/foods/dish-boiled-potatoes.webp');
   assert.match(potato.estimateNotes,/po ugotowaniu i odcedzeniu/);
 });
@@ -70,8 +77,8 @@ test('cheesecake includes cocoa crumble and Pilos bucket curd with explicit assu
   assert.match(cake.estimateNotes,/Pilos z wiaderka/);
   assert.match(cake.estimateNotes,/wariant 6%/);
   assert.match(cake.estimateNotes,/2300 g/);
-  assert.ok(cake.partialNutrients.includes('calcium'));
-  assert.ok(cake.partialNutrients.includes('salt'));
+  near(cake.vitaminC,10/23);
+  assert.ok(cake.calcium>100&&cake.salt>0);
   assert.equal(cake.recipeSources.some(s=>s.url.includes('fitatu.com')),true);
 });
 
@@ -83,10 +90,6 @@ test('karpatka follows the Winiary batch with cooked yield and sits near the pub
   near(scaleFood(cake,170).kcal,batch/1700*170);
   near(cake.biotin,batchBiotin/17);
   near(scaleFood(cake,113).biotin,batchBiotin/1700*113);
-  for(const key of [...VITAMIN_KEYS,...MINERAL_KEYS]){
-    assert.ok(Number.isFinite(cake[key]),key);
-    assert.ok(!cake.partialNutrients.includes(key),key);
-  }
   assert.ok(Math.abs(batch-4895)/4895<0.05,`${batch} kcal vs Winiary 4895 kcal`);
   assert.match(cake.estimateNotes,/1700 g/);
   assert.match(cake.estimateNotes,/800 ml mleka/);
@@ -100,6 +103,7 @@ test('baked salmon uses cooked USDA fish plus retained olive oil and added salt 
   near(fish.fat,12.35*.965+100*.03+3.26*.001);
   assert.ok(fish.salt>0.5&&fish.salt<0.6);
   assert.ok(fish.vitaminD>12&&fish.selenium>35);
+  near(fish.biotin,8.8*.965+20*.001);
   assert.equal(fish.partialNutrients.length,0);
   assert.match(fish.estimateNotes,/GOTOWEJ ryby/);
   assert.ok(fish.recipeSources[0].url.includes('/175168/'));
@@ -128,6 +132,9 @@ test('recipe yield uses cooked grams, counts ml by their own label and converts 
   near(get('crepes-nutella').kcal,plainKcal*0.8+539*0.2);
   near(get('crepes-jam').kcal,plainKcal*0.8+278*0.2);
   near(get('crepes-nutella').protein,((3.2*3.5+12.6+10.33*3)/650*100)*0.8+6.3*0.2);
+  const plainBiotin=(1.55*1.03*3.5+23.55+2.27*3)/6.5;
+  near(get('crepes-nutella').biotin,plainBiotin*.8+16*.2);
+  near(get('crepes-jam').biotin,plainBiotin*.8+1.8*.2);
   near(scaleFood(get('crepes-jam'),250).kcal,get('crepes-jam').kcal*2.5);
   const ingredients=[{food:{kcal:100,protein:5,carbs:10,fat:4},quantity:200}];
   const initial=structuredClone(ingredients);
@@ -141,6 +148,8 @@ test('recipe yield uses cooked grams, counts ml by their own label and converts 
 test('rosol and pizza match the stated noodle ratio, user sauce, toppings and cooked batch yield',()=>{
   near(get('rosol-noodles').kcal,36*0.8+138*0.2);
   near(get('rosol-noodles').protein,2.52*0.8+4.54*0.2);
+  near(get('rosol-noodles').vitaminD,.1*.2);
+  near(get('rosol-noodles').b5,(.02/2.02)*2.52*.8+.263*.2);
   const pizza=get('italian-pizza');
   const batch=340*4+4.2+387*0.05+884*0.2+33*2+299*2.5+378;
   near(pizza.kcal,batch/10);
@@ -156,17 +165,40 @@ test('missing labels yield partial known micros, true zeros stay zero and no dat
   assert.equal(dish.fiber,null); // A known zero plus unknown is not complete data.
   const zero=calculateDish([{food:{fiber:0},quantity:100}],100);
   assert.equal(zero.fiber,0);assert.equal(zero.partialNutrients.includes('fiber'),false);
-  const pancakes=get('crepes-nutella');
-  assert.equal(pancakes.biotin,null);
-  assert.ok(pancakes.partialNutrients.includes('calcium'));
-  assert.match(foodNutrientLabel(pancakes,'calcium'),/^≥ /);
-  const summary=sumNutrition([entry(pancakes,100)]);
+  const incomplete={...dish,id:'own:partial-dish',name:'Danie z częściowymi danymi',unit:'g'};
+  assert.equal(incomplete.biotin,null);
+  assert.match(foodNutrientLabel(incomplete,'calcium'),/^≥ /);
+  const summary=sumNutrition([entry(incomplete,100)]);
   assert.equal(summary.coverage.calcium.complete,false);
   assert.equal(summary.coverage.calcium.known,1);
   assert.match(totalLabel(summary,'calcium'),/^≥ /);
-  const week=nutritionReport({entries:[entry(pancakes,100)],daily:[],profile:DEFAULT_PROFILE,day:'2026-11-15',period:'week',today:'2026-11-15'});
+  const week=nutritionReport({entries:[entry(incomplete,100)],daily:[],profile:DEFAULT_PROFILE,day:'2026-11-15',period:'week',today:'2026-11-15'});
   assert.equal(week.summary.coverage.calcium.complete,false);
-  near(week.summary.totals.calcium,pancakes.calcium);
+  near(week.summary.totals.calcium,incomplete.calcium);
+});
+
+test('saved recipe portions gain missing estimates while retaining recorded nutrition and label bounds',()=>{
+  const pizza=get('italian-pizza');
+  const oldPizza={...pizza,kcal:pizza.kcal,biotin:null,calcium:128,saturatedFat:null,vitaminC:0,
+    partialNutrients:['calcium'],upperBoundNutrients:['fat'],estimateNotes:'Starsze założenia.'};
+  const resolved=resolveFoodNutrition(oldPizza);
+  near(resolved.biotin,pizza.biotin);
+  near(resolved.calcium,pizza.calcium);
+  assert.equal(resolved.vitaminC,0);
+  assert.equal(resolved.kcal,oldPizza.kcal);
+  assert.equal(resolved.estimateNotes,pizza.estimateNotes);
+  assert.deepEqual(resolved.partialNutrients,[]);
+  assert.deepEqual(resolved.upperBoundNutrients,['fat','saturatedFat']);
+  assert.equal(oldPizza.biotin,null);
+  assert.equal(oldPizza.calcium,128);
+
+  const {totals,coverage}=sumNutrition([entry(oldPizza,200)]);
+  near(totals.biotin,pizza.biotin*2);
+  assert.equal(coverage.calcium.complete,true);
+  assert.equal(coverage.saturatedFat.upper,true);
+  assert.equal(resolveFoodNutrition({...oldPizza,kcal:200}).biotin,null);
+  assert.equal(resolveFoodNutrition({...oldPizza,source:'Własny'}).biotin,null);
+  assert.equal(resolveFoodNutrition({...oldPizza,unit:'ml'}).biotin,null);
 });
 
 test('Mutti fat and saturated fat limits survive recipe arithmetic, portions and weekly totals',()=>{
