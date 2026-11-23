@@ -20,6 +20,7 @@ MATCHES = {
     'garlicPowder':171325, 'paprika':171329,
     'blackTeaBrewed':173227, 'lemon':167746, 'orange':169097, 'ginger':169231,
     'hazelnutSpread':168000, 'proteinFortifiedMilk':171271, 'alcoholFreeWine':174157,
+    'salmonBaked':175168, 'milkWhole':172217, 'powderedSugar':169656,
 }
 with zipfile.ZipFile(ROOT/'.cache/usda-sr-legacy-2018.zip') as archive:
     def rows(filename):

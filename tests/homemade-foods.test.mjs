@@ -13,8 +13,8 @@ const favorite=id=>FAVORITE_FOODS.find(f=>f.id===`favorite:${id}`);
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-9,`${a} != ${b}`);
 const entry=(food,grams,day='2026-11-15')=>({id:`entry:${food.id}`,food,grams,day,meal:'lunch'});
 
-test('nine ready dishes are discoverable by Polish names, aliases and gram quantities',()=>{
-  assert.equal(HOMEMADE_FOODS.length,9);
+test('eleven ready dishes are discoverable by Polish names, aliases and gram quantities',()=>{
+  assert.equal(HOMEMADE_FOODS.length,11);
   for(const food of HOMEMADE_FOODS) {
     assert.equal(food.unit,'g');assert.equal(foodBasis(food),100);
     assert.equal(foodOptions(food.name)[0].id,food.id);
@@ -73,6 +73,31 @@ test('cheesecake includes cocoa crumble and Pilos bucket curd with explicit assu
   assert.ok(cake.partialNutrients.includes('calcium'));
   assert.ok(cake.partialNutrients.includes('salt'));
   assert.equal(cake.recipeSources.some(s=>s.url.includes('fitatu.com')),true);
+});
+
+test('karpatka follows the Winiary batch with cooked yield and sits near the published per-portion energy',()=>{
+  const cake=get('karpatka');
+  const batch=717*3.5+364*1.8+143*2+61*8.24+381*0.7+387*1.2+389*0.1;
+  near(cake.kcal,batch/17);
+  near(scaleFood(cake,170).kcal,batch/1700*170);
+  assert.ok(Math.abs(batch-4895)/4895<0.05,`${batch} kcal vs Winiary 4895 kcal`);
+  assert.match(cake.estimateNotes,/1700 g/);
+  assert.match(cake.estimateNotes,/800 ml mleka/);
+  assert.equal(cake.recipeSources[0].url,'https://winiary.pl/przepisy/karpatka');
+  assert.equal(foodOptions('karpatka')[0].id,cake.id);
+});
+
+test('baked salmon uses cooked USDA fish plus retained olive oil and added salt per 100 g ready fish',()=>{
+  const fish=get('baked-salmon-olive-oil');
+  near(fish.kcal,206*.965+884*.03+251*.001);
+  near(fish.fat,12.35*.965+100*.03+3.26*.001);
+  assert.ok(fish.salt>0.5&&fish.salt<0.6);
+  assert.ok(fish.vitaminD>12&&fish.selenium>35);
+  assert.equal(fish.partialNutrients.length,0);
+  assert.match(fish.estimateNotes,/GOTOWEJ ryby/);
+  assert.ok(fish.recipeSources[0].url.includes('/175168/'));
+  assert.equal(foodOptions('losos pieczony')[0].id,fish.id);
+  assert.ok(foodOptions('losos').some(f=>f.id==='base:salmon'));
 });
 
 test('tomato soup follows the supplied Lidlomix recipe using dry pasta and excluding cream',()=>{

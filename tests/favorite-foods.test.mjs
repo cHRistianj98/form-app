@@ -16,7 +16,7 @@ test('seven selectable products retain the user table, including ml basis and th
     ['cincin-rose-zero','ml',22,0,5.3,0],
   ]);
   assert.equal(FAVORITE_FOODS[0].fatLessThan,true);
-  const otherSources=['favorite:lipton-earl-grey','favorite:guseppe-four-cheese','favorite:kania-mild-ketchup','favorite:lidl-mountain-wheat-rye-roll'];
+  const otherSources=['favorite:lipton-earl-grey','favorite:guseppe-four-cheese','favorite:kania-mild-ketchup','favorite:lidl-mountain-wheat-rye-roll','favorite:danio-cream'];
   assert.equal(FAVORITE_FOODS.filter(f=>!otherSources.includes(f.id)).every(f=>f.source==='Twoja tabela'),true);
 });
 
@@ -114,4 +114,17 @@ test('Worker saves and reloads product snapshots with units, images, qualifiers 
   for(const change of [{basisQuantity:100},{b1:'1.1'},{vitaminC:-1},{defaultQuantity:1.5},{servingSizes:[{label:'Pół tabletki',quantity:0.5}]}]) {
     assert.equal((await ask('entries','POST',{...record,food:{...tablet,...change}})).status,400);
   }
+});
+
+test('Danio cream cheese keeps label macros, corrects the misprinted energy and defaults to one cup',()=>{
+  const danio=FAVORITE_FOODS.find(f=>f.id==='favorite:danio-cream');
+  assert.deepEqual([danio.kcal,danio.protein,danio.carbs,danio.fat,danio.sugars,danio.saturatedFat,danio.salt],[96,4.9,12.5,2.9,11.7,1.9,0.1]);
+  assert.ok(Math.abs(danio.protein*4+danio.carbs*4+danio.fat*9-danio.kcal)<1);
+  const cup=scaleFood(danio,140);
+  assert.ok(Math.abs(cup.kcal-134.4)<1e-9);assert.ok(Math.abs(cup.calcium-239.4)<1e-9);
+  assert.equal(cup.vitaminD,null);assert.equal(cup.fiber,null);
+  assert.equal(danio.defaultQuantity,140);
+  assert.match(danio.estimateNotes,/69 kcal/);assert.match(danio.estimateNotes,/170888/);
+  assert.equal(foodOptions('danio')[0].id,danio.id);
+  assert.equal(foodOptions('serek danio smietankowe')[0].id,danio.id);
 });

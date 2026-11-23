@@ -151,4 +151,20 @@ export const FAVORITE_FOODS = [
     aliases:['bułka typu górskiego','bułka pszenno-żytnia'],
     servingSizes:[{label:'1 bułka — 75 g',quantity:75}],
   }),
+  // The retailer label prints 69 kcal, but its own macros and 134 kcal per
+  // 140 g cup both give 96 kcal per 100 g; keep the internally consistent value.
+  labelled('danio-cream','Danio śmietankowe','Danone','g',96,4.9,12.5,2.9,{
+    sugars:11.7,saturatedFat:1.9,fiber:null,salt:0.1,
+    // Vanilla low-fat yogurt with the same protein, USDA FoodData Central 170888;
+    // vitamin A scaled by fat (2.9 g vs 1.25 g).
+    calcium:171,iron:0.07,potassium:219,magnesium:16,zinc:0.83,selenium:4.9,
+    b1:0.042,b2:0.201,b5:0.552,b6:0.045,folate:11,b12:0.53,vitaminA:28,
+    source:'Dane producenta',
+    sourceUrl:'https://dodomku.pl/Danone_Danio_Biale_Serek_homogenizowany_o_smaku_smietankowym_4_x_140_g/60547.html',
+    labelNote:'Opakowanie 4 × 140 g (EAN 5900643031773). Zawiera mleko.',
+    estimateNotes:'Makro, cukry, tłuszcze nasycone i sól pochodzą z etykiety Danio o smaku śmietankowym 4 × 140 g. Etykieta podaje 69 kcal na 100 g, ale 134 kcal na kubek 140 g oraz podane makro dają około 96 kcal na 100 g, więc przyjęto 96 kcal. Minerały i witaminy z grupy B oszacowano tabelą jogurtu waniliowego o obniżonej zawartości tłuszczu z USDA FoodData Central (170888), który ma tyle samo białka (4,9 g). Witaminę A przeliczono proporcjonalnie do tłuszczu. To przybliżenie, nie analiza laboratoryjna tego serka. Witaminy D, E, K, C, B3 i biotyna pozostają nieznane.',
+    aliases:['danio','danio białe','serek danio','serek homogenizowany śmietankowy','5900643031773'],
+    defaultQuantity:140,
+    servingSizes:[{label:'1 kubek — 140 g',quantity:140}],
+  }),
 ].map(fillFavoriteSelenium);

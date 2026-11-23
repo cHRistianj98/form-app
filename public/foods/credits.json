@@ -789,5 +789,32 @@
     "license": "Materiał produktowy — prawa zastrzeżone",
     "licenseUrl": "",
     "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "fav-danio-cream": {
+    "image": "/foods/fav-danio-cream.webp",
+    "title": "Danone — Danio o smaku śmietankowym 4 × 140 g",
+    "author": "Danone",
+    "source": "https://dodomku.pl/Danone_Danio_Biale_Serek_homogenizowany_o_smaku_smietankowym_4_x_140_g/60547.html",
+    "license": "Materiał produktowy — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
+  },
+  "dish:karpatka": {
+    "image": "/foods/dish-karpatka.webp",
+    "title": "Karpatka.jpg",
+    "author": "Michał Sulik",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Karpatka.jpg",
+    "changes": "Wykadrowano do kwadratu, zmniejszono do 480 px i skonwertowano do WebP. Zdjęcie poglądowe, nie zdjęcie rzeczywistej porcji."
+  },
+  "dish:baked-salmon-olive-oil": {
+    "image": "/foods/dish-baked-salmon-olive-oil.webp",
+    "title": "Pieczony łosoś - 2024.12.24.jpg",
+    "author": "Aw58",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Pieczony_%C5%82oso%C5%9B_-_2024.12.24.jpg",
+    "changes": "Wykadrowano do kwadratu, zmniejszono do 480 px i skonwertowano do WebP. Zdjęcie poglądowe, nie zdjęcie rzeczywistej porcji."
   }
 }

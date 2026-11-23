@@ -9,6 +9,7 @@ const NUTELLA_URL='https://www.nutella.com/pl/pl/produkty/krem/nutella';
 const TOMATO_SOUP_URL='https://www.monsieur-cuisine.com/pl/recipe/zupa-pomidorowa-z-makaronem-5';
 const CHEESECAKE_URL='https://aniagotuje.pl/przepis/sernik-krolewski';
 const PILOS_QUARK_URL='https://www.fitatu.com/catalog/pl/twarog-sernikowy-nie-wymaga-mielenia-6-tluszczu--115390620';
+const KARPATKA_URL='https://winiary.pl/przepisy/karpatka';
 // USDA Retention Factors release 6: 0305 flour/meal sauteed, 0103 eggs fried,
 // 0001 cheese baked. Only listed vitamin corrections are applied; this remains
 // an estimate, not an analysis of the user's cooking method.
@@ -84,6 +85,27 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
       servingSizes:[{label:'80 g',quantity:80},{label:'100 g',quantity:100},{label:'150 g',quantity:150}],
       estimateNotes:'Sernik bez rodzynek, z kakaowym spodem i kruszonką. Receptura szacunkowa w stylu sernika królewskiego: 1 kg twarogu sernikowego Pilos z wiaderka, 400 g mąki, 400 g masła Łaciate (300 g w cieście i 100 g w masie), 280 g cukru, 5 jajek (250 g bez skorupek), 2 żółtka (34 g), 40 g kakao, 40 g skrobi zamiast budyniu bez cukru i 8 g proszku do pieczenia. Przyjęto 2300 g wystudzonego ciasta, bez polewy i skórki cytrynowej. Dla Pilos przyjęto wariant 6%: 108 kcal, 9 g białka, 4,5 g węgli i 6 g tłuszczu na 100 g według pomocniczej tabeli Fitatu, nie Twojej etykiety. Inny wariant twarogu, ilość masła, cukru lub masa po pieczeniu zmieniają wynik. Waż gotowy kawałek razem z kruszonką. Mikroskładniki z tabel surowców, bez korekty strat podczas pieczenia; nieznane dane twarogu pozostają brakujące.',
       recipeSources:[{name:'Receptura porównawcza: sernik królewski AniaGotuje',url:CHEESECAKE_URL},{name:'Pilos 6%: pomocnicza tabela Fitatu — sprawdź etykietę wiaderka',url:PILOS_QUARK_URL},{name:'Selen w twarogu: szacunek na podstawie quarku z DTU Frida',url:'https://doi.org/10.11583/DTU.32312844'},seleniumSource('laciate-butter'),source('flour'),source('cocoa'),source('cornstarch'),source('eggYolk'),source('bakingPowder')],
+    }),
+    make('karpatka','Karpatka',[
+      // Choux pastry: 1 glass of water, 150 g butter, 1 glass of flour, 4 eggs.
+      part(zero,250),part(base('butter'),150),part(generic('flour'),160),part(base('egg'),200),part({...zero,salt:100},1),
+      // Cream: 800 ml milk, 2 sugar-free pudding packets, 2 tbsp flour, 120 g sugar, 200 g butter.
+      part(generic('milkWhole'),824),part(generic('cornstarch'),70),part(generic('flour'),20),
+      part(generic('sugar'),120),part(base('butter'),200),part(generic('powderedSugar'),10),
+    ],1700,{
+      aliases:['karpatka','ciasto karpatka','karpatka z budyniem','ciasto parzone z kremem','krem budyniowy','ciasto budyniowe'],
+      servingSizes:[{label:'100 g',quantity:100},{label:'1 kawałek (1/15 blachy) — 113 g',quantity:113},{label:'1/10 blachy — 170 g',quantity:170}],
+      estimateNotes:'Domowa karpatka z ciasta parzonego i kremu budyniowego z masłem, według proporcji Winiary na blachę 32 × 23 cm. Ciasto: 250 ml wody, 150 g masła, 160 g mąki pszennej (szklanka), 4 jajka (200 g bez skorupek) i 1 g soli. Krem: 800 ml mleka 3,2% (około 824 g), 2 budynie waniliowe bez cukru (przyjęto 70 g, liczone jak skrobia), 20 g mąki, 120 g cukru i 200 g masła. Na wierzch 10 g cukru pudru. Założono 1700 g gotowego ciasta po upieczeniu i ugotowaniu kremu: ciasto parzone traci w piekarniku część wody, a krem odparowuje niewiele. Wyszło około 4720 kcal na całą blachę; Winiary podaje 489,5 kcal na 1/10 blachy, czyli około 4895 kcal, więc wynik jest zbliżony. Więcej masła, budyń z cukrem lub inna masa po pieczeniu zmienią wynik. Waż kawałek razem z kremem. Mikroskładniki pochodzą z tabel surowców, bez korekty strat podczas pieczenia.',
+      recipeSources:[{name:'Receptura: karpatka Winiary',url:KARPATKA_URL},source('milkWhole'),source('flour'),source('cornstarch'),source('sugar'),source('powderedSugar'),{name:'USDA: masło bez soli',url:'https://fdc.nal.usda.gov/food-details/173430/nutrients'},{name:'USDA: jajko całe, surowe',url:'https://fdc.nal.usda.gov/food-details/171287/nutrients'}],
+    }),
+    make('baked-salmon-olive-oil','Łosoś pieczony na oliwie',[
+      part(generic('salmonBaked'),96.5),part(base('olive'),3),
+      part({...zero,salt:100},.4),part(generic('pepper'),.1),
+    ],100,{
+      aliases:['łosoś pieczony','pieczony łosoś','łosoś z piekarnika','łosoś na oliwie','filet z łososia pieczony','łosoś z oliwą'],
+      servingSizes:[{label:'100 g',quantity:100},{label:'150 g',quantity:150},{label:'200 g',quantity:200}],
+      estimateNotes:'Filet z łososia atlantyckiego hodowlanego, pieczony w piekarniku z oliwą, solą i pieprzem. Szacunek na 100 g GOTOWEJ ryby: 96,5 g pieczonego łososia (tabela USDA dla łososia pieczonego bez tłuszczu), 3 g oliwy, która zostaje na rybie, 0,4 g dodanej soli i 0,1 g pieprzu. Założono około łyżki oliwy (10 g) na 300–350 g surowego filetu; część zostaje na blasze. Pieczenie odparowuje wodę, więc 100 g gotowej ryby to około 125–130 g surowego filetu. Wariant ze skórą, bez masła, panierki i sosu. Dziki łosoś ma mniej tłuszczu. Waż rybę po upieczeniu, bez ości i skóry, jeśli ich nie jesz.',
+      recipeSources:[source('salmonBaked'),{name:'USDA: oliwa z oliwek',url:'https://fdc.nal.usda.gov/food-details/171413/nutrients'},source('pepper')],
     }),
     make('tomato-soup-noodles','Pomidorowa z makaronem (Lidlomix, bez śmietany)',[
       part(generic('stock'),1000),part(generic('tomatoPuree'),150),part(base('pasta'),200),
