@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {BASE_FOODS,FAVORITE_FOODS,HOMEMADE_FOODS,foodBasis,foodImage,foodNutrientLabel,foodOptions,scaleFood} from '../src/foods.js';
 import {calculateDish} from '../src/dishNutrition.js';
-import {NUTRIENT_FIELDS} from '../src/nutrients.js';
+import {MINERAL_KEYS,NUTRIENT_FIELDS,VITAMIN_KEYS} from '../src/nutrients.js';
 import {nutritionReport,sumNutrition,totalLabel} from '../src/nutritionStats.js';
 import {DEFAULT_PROFILE} from '../src/profile.js';
 import worker from '../worker/index.js';
@@ -78,12 +78,19 @@ test('cheesecake includes cocoa crumble and Pilos bucket curd with explicit assu
 test('karpatka follows the Winiary batch with cooked yield and sits near the published per-portion energy',()=>{
   const cake=get('karpatka');
   const batch=717*3.5+364*1.8+143*2+61*8.24+381*0.7+387*1.2+389*0.1;
+  const batchBiotin=23.55*2+2.27*1.8+1.55*8.24+0.1*0.7;
   near(cake.kcal,batch/17);
   near(scaleFood(cake,170).kcal,batch/1700*170);
+  near(cake.biotin,batchBiotin/17);
+  near(scaleFood(cake,113).biotin,batchBiotin/1700*113);
+  for(const key of [...VITAMIN_KEYS,...MINERAL_KEYS]){
+    assert.ok(Number.isFinite(cake[key]),key);
+    assert.ok(!cake.partialNutrients.includes(key),key);
+  }
   assert.ok(Math.abs(batch-4895)/4895<0.05,`${batch} kcal vs Winiary 4895 kcal`);
   assert.match(cake.estimateNotes,/1700 g/);
   assert.match(cake.estimateNotes,/800 ml mleka/);
-  assert.equal(cake.recipeSources[0].url,'https://winiary.pl/przepisy/karpatka');
+  assert.equal(cake.recipeSources[0].url,'https://www.winiary.pl/przepisy/karpatka/');
   assert.equal(foodOptions('karpatka')[0].id,cake.id);
 });
 
@@ -149,8 +156,8 @@ test('missing labels yield partial known micros, true zeros stay zero and no dat
   assert.equal(dish.fiber,null); // A known zero plus unknown is not complete data.
   const zero=calculateDish([{food:{fiber:0},quantity:100}],100);
   assert.equal(zero.fiber,0);assert.equal(zero.partialNutrients.includes('fiber'),false);
-  for(const food of HOMEMADE_FOODS) assert.equal(food.biotin,null,food.id);
   const pancakes=get('crepes-nutella');
+  assert.equal(pancakes.biotin,null);
   assert.ok(pancakes.partialNutrients.includes('calcium'));
   assert.match(foodNutrientLabel(pancakes,'calcium'),/^≥ /);
   const summary=sumNutrition([entry(pancakes,100)]);

@@ -9,7 +9,9 @@ const NUTELLA_URL='https://www.nutella.com/pl/pl/produkty/krem/nutella';
 const TOMATO_SOUP_URL='https://www.monsieur-cuisine.com/pl/recipe/zupa-pomidorowa-z-makaronem-5';
 const CHEESECAKE_URL='https://aniagotuje.pl/przepis/sernik-krolewski';
 const PILOS_QUARK_URL='https://www.fitatu.com/catalog/pl/twarog-sernikowy-nie-wymaga-mielenia-6-tluszczu--115390620';
-const KARPATKA_URL='https://winiary.pl/przepisy/karpatka';
+const KARPATKA_URL='https://www.winiary.pl/przepisy/karpatka/';
+const FRIDA_URL='https://doi.org/10.11583/DTU.32312844';
+const CORN_STARCH_BIOTIN_URL='https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=2_02035_6&MODE=0';
 // USDA Retention Factors release 6: 0305 flour/meal sauteed, 0103 eggs fried,
 // 0001 cheese baked. Only listed vitamin corrections are applied; this remains
 // an estimate, not an analysis of the user's cooking method.
@@ -46,6 +48,16 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
   // The user confirmed Pilos bucket curd, but not its label or fat variant.
   // The quark proxy only contributes selenium. Other missing micros stay unknown.
   const pilosQuark={kcal:108,protein:9,carbs:4.5,fat:6,saturatedFat:4,sugars:3.5,fiber:0,selenium:base('tw').selenium};
+  // Biotin (µg/100 g) from Frida 6.1: eggs 1662, butter 1015, flour 1301, milk 6, sugar 77.
+  const karpatkaEgg={...base('egg'),biotin:23.55};
+  const karpatkaButter={...base('butter'),biotin:0};
+  const karpatkaFlour={...generic('flour'),biotin:2.27};
+  const karpatkaMilk={...generic('milkWhole'),biotin:1.55};
+  const karpatkaStarch={...generic('cornstarch'),biotin:.1}; // MEXT 02035.
+  // Refined sucrose contributes zero niacin equivalents. Any starch in the
+  // sugar dusting contributes less than 0.001 mg NE and 0.001 µg biotin per batch.
+  const karpatkaSugar={...generic('sugar'),biotin:0,b3:0,partialNutrients:[]};
+  const karpatkaPowderedSugar={...generic('powderedSugar'),biotin:0,b3:0,partialNutrients:[]};
   return [
     make('chicken-mushroom-roulade','Rolada z piersi kurczaka z pieczarkami',[
       part(generic('chickenRoasted'),80),part(generic('mushroomsCooked'),18),
@@ -88,15 +100,22 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
     }),
     make('karpatka','Karpatka',[
       // Choux pastry: 1 glass of water, 150 g butter, 1 glass of flour, 4 eggs.
-      part(zero,250),part(base('butter'),150),part(generic('flour'),160),part(base('egg'),200),part({...zero,salt:100},1),
+      part(zero,250),part(karpatkaButter,150),part(karpatkaFlour,160),part(karpatkaEgg,200),part({...zero,salt:100},1),
       // Cream: 800 ml milk, 2 sugar-free pudding packets, 2 tbsp flour, 120 g sugar, 200 g butter.
-      part(generic('milkWhole'),824),part(generic('cornstarch'),70),part(generic('flour'),20),
-      part(generic('sugar'),120),part(base('butter'),200),part(generic('powderedSugar'),10),
+      part(karpatkaMilk,824),part(karpatkaStarch,70),part(karpatkaFlour,20),
+      part(karpatkaSugar,120),part(karpatkaButter,200),part(karpatkaPowderedSugar,10),
     ],1700,{
       aliases:['karpatka','ciasto karpatka','karpatka z budyniem','ciasto parzone z kremem','krem budyniowy','ciasto budyniowe'],
       servingSizes:[{label:'100 g',quantity:100},{label:'1 kawałek (1/15 blachy) — 113 g',quantity:113},{label:'1/10 blachy — 170 g',quantity:170}],
-      estimateNotes:'Domowa karpatka z ciasta parzonego i kremu budyniowego z masłem, według proporcji Winiary na blachę 32 × 23 cm. Ciasto: 250 ml wody, 150 g masła, 160 g mąki pszennej (szklanka), 4 jajka (200 g bez skorupek) i 1 g soli. Krem: 800 ml mleka 3,2% (około 824 g), 2 budynie waniliowe bez cukru (przyjęto 70 g, liczone jak skrobia), 20 g mąki, 120 g cukru i 200 g masła. Na wierzch 10 g cukru pudru. Założono 1700 g gotowego ciasta po upieczeniu i ugotowaniu kremu: ciasto parzone traci w piekarniku część wody, a krem odparowuje niewiele. Wyszło około 4720 kcal na całą blachę; Winiary podaje 489,5 kcal na 1/10 blachy, czyli około 4895 kcal, więc wynik jest zbliżony. Więcej masła, budyń z cukrem lub inna masa po pieczeniu zmienią wynik. Waż kawałek razem z kremem. Mikroskładniki pochodzą z tabel surowców, bez korekty strat podczas pieczenia.',
-      recipeSources:[{name:'Receptura: karpatka Winiary',url:KARPATKA_URL},source('milkWhole'),source('flour'),source('cornstarch'),source('sugar'),source('powderedSugar'),{name:'USDA: masło bez soli',url:'https://fdc.nal.usda.gov/food-details/173430/nutrients'},{name:'USDA: jajko całe, surowe',url:'https://fdc.nal.usda.gov/food-details/171287/nutrients'}],
+      estimateNotes:'Domowa karpatka z ciasta parzonego i kremu budyniowego z masłem według przepisu Winiary na blachę 32 × 23 cm. Na blaty przyjęto 250 ml wody, 150 g masła, 160 g mąki pszennej, 4 jajka (200 g bez skorupek) i 1 g soli. Na krem przyjęto 800 ml mleka 3,2% (około 824 g), 70 g budyniu waniliowego bez cukru (oszacowanego jak skrobia kukurydziana), 20 g mąki, 120 g cukru i 200 g masła. Na wierzch doliczono 10 g cukru pudru. Szacowana masa gotowego ciasta to 1700 g, a energia całej blachy to około 4720 kcal. Winiary podaje 489,5 kcal na 1/10 blachy. Witaminy i minerały oszacowano z tabel surowców. Biotynę uzupełniono z tabel DTU Frida i MEXT, bez korekty strat podczas pieczenia i gotowania.',
+      recipeSources:[
+        {name:'Karpatka Winiary',url:KARPATKA_URL},source('milkWhole'),source('flour'),source('cornstarch'),
+        source('sugar'),source('powderedSugar'),
+        {name:'USDA – masło bez soli',url:'https://fdc.nal.usda.gov/food-details/173430/nutrients'},
+        {name:'USDA – jajko całe, surowe',url:'https://fdc.nal.usda.gov/food-details/171287/nutrients'},
+        {name:'Biotyna i równoważniki niacyny – DTU Frida 6.1 (CC BY 4.0)',url:FRIDA_URL},
+        {name:'Biotyna w skrobi kukurydzianej – MEXT',url:CORN_STARCH_BIOTIN_URL},
+      ],
     }),
     make('baked-salmon-olive-oil','Łosoś pieczony na oliwie',[
       part(generic('salmonBaked'),96.5),part(base('olive'),3),
