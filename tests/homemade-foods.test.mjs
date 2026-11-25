@@ -13,8 +13,8 @@ const favorite=id=>FAVORITE_FOODS.find(f=>f.id===`favorite:${id}`);
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-9,`${a} != ${b}`);
 const entry=(food,grams,day='2026-11-15')=>({id:`entry:${food.id}`,food,grams,day,meal:'lunch'});
 
-test('eleven ready dishes are discoverable and have values for every tracked food nutrient',()=>{
-  assert.equal(HOMEMADE_FOODS.length,11);
+test('twelve ready dishes are discoverable and have values for every tracked food nutrient',()=>{
+  assert.equal(HOMEMADE_FOODS.length,12);
   const foodKeys=NUTRIENT_FIELDS.filter(key=>!SUPPLEMENT_COMPONENT_KEYS.includes(key));
   for(const food of HOMEMADE_FOODS) {
     assert.equal(food.unit,'g');assert.equal(foodBasis(food),100);
@@ -36,6 +36,16 @@ test('eleven ready dishes are discoverable and have values for every tracked foo
   assert.equal(foodOptions('sernik krolewski')[0].id,get('cocoa-crumble-cheesecake').id);
   assert.equal(foodOptions('pomidorowka')[0].id,get('tomato-soup-noodles').id);
   assert.equal(foodOptions('lidlomix pomidorowa')[0].id,get('tomato-soup-noodles').id);
+});
+
+test('pierogi include sautéed onion and olive oil in the finished weight',()=>{
+  const pierogi=get('pierogi-onion-olive-oil');
+  const batchKcal=364*5+87*5+133*3+40*2+884*.6+251*.008;
+  near(pierogi.kcal,batchKcal/17.5);
+  near(scaleFood(pierogi,250).kcal,batchKcal/1750*250);
+  assert.equal(foodOptions('pierogi ruskie')[0].id,pierogi.id);
+  assert.match(pierogi.estimateNotes,/60 g oliwy/);
+  assert.match(pierogi.estimateNotes,/1750 g gotowego dania razem z okrasą/);
 });
 
 test('mushroom roulade and seasoned breast use cooked chicken and scale finished portions',()=>{

@@ -15,6 +15,7 @@ const estimates={
   'base:butter':{biotin:0}, // Frida 1015
   'base:olive':{biotin:0}, // Frida 1467
   'base:oil':{biotin:0,b3:0}, // AFCD F006159, canola oil
+  'base:onion':{biotin:.95}, // Frida 716, raw onion
   'base:potato':{biotin:.3}, // MEXT 02019, boiled peeled potato
   'base:pasta':{biotin:4,vitaminA:0}, // AFCD F006458, dry white pasta
   chickenRoasted:{biotin:4.2}, // AFCD F002590, baked skinless breast

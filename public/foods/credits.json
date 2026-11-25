@@ -816,5 +816,32 @@
     "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Pieczony_%C5%82oso%C5%9B_-_2024.12.24.jpg",
     "changes": "Wykadrowano do kwadratu, zmniejszono do 480 px i skonwertowano do WebP. Zdjęcie poglądowe, nie zdjęcie rzeczywistej porcji."
+  },
+  "dish:pierogi-onion-olive-oil": {
+    "image": "/foods/dish-pierogi-onion-olive-oil.webp",
+    "title": "Pierogi z cebulą i oliwą",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "fav-pilos-sour-cream-12": {
+    "image": "/foods/fav-pilos-sour-cream-12.webp",
+    "title": "Śmietana 12% Pilos",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/additional-food-image-prompts.json",
+    "licenseUrl": "/foods/additional-food-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "fav-pilos-cream-30": {
+    "image": "/foods/fav-pilos-cream-30.webp",
+    "title": "Śmietanka 30% Pilos",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/additional-food-image-prompts.json",
+    "licenseUrl": "/foods/additional-food-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
   }
 }

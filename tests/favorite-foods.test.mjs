@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {BASE_FOODS,FAVORITE_FOODS,foodImage,foodOptions,foodUnit,nutrientLabel,scaleFood} from '../src/foods.js';
+import {NUTRIENT_FIELDS,SUPPLEMENT_COMPONENT_KEYS} from '../src/nutrients.js';
 import worker from '../worker/index.js';
 
 test('seven selectable products retain the user table, including ml basis and the fat upper bound',()=>{
@@ -16,7 +17,7 @@ test('seven selectable products retain the user table, including ml basis and th
     ['cincin-rose-zero','ml',22,0,5.3,0],
   ]);
   assert.equal(FAVORITE_FOODS[0].fatLessThan,true);
-  const otherSources=['favorite:lipton-earl-grey','favorite:guseppe-four-cheese','favorite:kania-mild-ketchup','favorite:lidl-mountain-wheat-rye-roll','favorite:danio-cream'];
+  const otherSources=['favorite:lipton-earl-grey','favorite:guseppe-four-cheese','favorite:kania-mild-ketchup','favorite:lidl-mountain-wheat-rye-roll','favorite:danio-cream','favorite:pilos-sour-cream-12','favorite:pilos-cream-30'];
   assert.equal(FAVORITE_FOODS.filter(f=>!otherSources.includes(f.id)).every(f=>f.source==='Twoja tabela'),true);
 });
 
@@ -53,6 +54,21 @@ test('user products appear without online search and match brand/name in either 
   assert.equal(foodOptions('mleko lidl')[0].id,FAVORITE_FOODS[0].id);
   assert.equal(foodOptions('Cin&Cin')[0].id,FAVORITE_FOODS[6].id);
   assert.equal(foodOptions('protein',[FAVORITE_FOODS[0]],[FAVORITE_FOODS[0]]).filter(f=>f.id===FAVORITE_FOODS[0].id).length,1);
+});
+
+test('Pilos creams retain label macros and have estimates for every tracked food nutrient',()=>{
+  const foodKeys=NUTRIENT_FIELDS.filter(key=>!SUPPLEMENT_COMPONENT_KEYS.includes(key));
+  for(const [query,id,kcal,protein,carbs,fat] of [
+    ['smietna 12 pilos','favorite:pilos-sour-cream-12',136,3,4,12],
+    ['smietana 30 lidl','favorite:pilos-cream-30',292,2.4,3.2,30],
+  ]) {
+    const [food]=foodOptions(query);
+    assert.equal(food.id,id);
+    assert.deepEqual([foodUnit(food),food.kcal,food.protein,food.carbs,food.fat],['g',kcal,protein,carbs,fat]);
+    assert.equal(scaleFood(food,30).kcal,kcal*30/100);
+    assert.match(food.estimateNotes,/Frida 6\.1/);
+    for(const key of foodKeys) assert.ok(Number.isFinite(food[key])&&food[key]>=0,`${id}:${key}`);
+  }
 });
 
 test('packshots ship as real WebP assets with source metadata and remain resolvable for snapshots',()=>{

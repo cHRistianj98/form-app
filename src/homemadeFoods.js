@@ -18,9 +18,13 @@ const KARPATKA_URL='https://www.winiary.pl/przepisy/karpatka/';
 const FLOUR_FRIED={vitaminC:0.8,b1:0.75,b2:0.9,b3:0.9,b6:0.9,folate:0.65,b12:1,vitaminA:0.85};
 const EGG_FRIED={vitaminC:0.8,b1:0.85,b2:0.95,b3:0.95,b6:0.95,folate:0.75,b12:0.85,vitaminA:1};
 const CHEESE_BAKED={vitaminC:0.65,b1:0.75,b2:1,b3:1,b6:0.75,folate:0.8,b12:0.55,vitaminA:1};
+// USDA 0302 (flour, boiled) and 3780 (other vegetables, fried).
+const FLOUR_BOILED={vitaminC:.8,b1:.8,b2:.9,b3:.9,b6:.9,folate:.7};
+const ONION_SAUTEED={vitaminC:.85,b1:.85,b2:.95,b3:.9,b6:.9,folate:.7,vitaminA:.85};
 const generic=key=>applyIngredientEstimate({...ingredients[key].nutrients,partialNutrients:ingredients[key].partialNutrients},key);
 const source=key=>({name:`USDA: ${ingredients[key].description}`,url:ingredients[key].url});
 const part=(food,quantity,retention)=>({food,quantity,retention});
+const excludingFiber=food=>({...food,carbs:food.carbs-food.fiber});
 const zero=Object.fromEntries(NUTRIENT_FIELDS.map(key=>[key,0]));
 const make=(id,name,rows,yieldGrams,extra)=>({
   id:`dish:${id}`,name,brand:'Domowa kuchnia',source:'Domowy szacunek',unit:'g',basisQuantity:100,
@@ -70,6 +74,24 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
   const pizzaFlour=fillIngredientGaps(favorite('basia-pizza-flour'),generic('flour'));
   const pizzaSauce=fillIngredientGaps(favorite('mutti-pizza-sauce'),generic('tomatoPuree'));
   return [
+    make('pierogi-onion-olive-oil','Pierogi z cebulą i oliwą',[
+      part(excludingFiber(generic('flour')),500,FLOUR_BOILED),part(zero,250),
+      part(excludingFiber(base('potato')),500),part(base('tw'),300),
+      part(excludingFiber(base('onion')),200,ONION_SAUTEED),part(base('olive'),60),
+      part({...zero,salt:100},10),part(excludingFiber(generic('pepper')),0.8),
+    ],1750,{
+      aliases:['pierogi ruskie','pierogi z cebulką','pierogi z oliwą','pierogi z ziemniakami i twarogiem','pierogi z okrasą'],
+      servingSizes:[{label:'150 g',quantity:150},{label:'200 g',quantity:200},{label:'250 g',quantity:250}],
+      estimateNotes:'Przyjęto gotowane pierogi ruskie z nadzieniem z ziemniaków i twarogu oraz okrasą z cebuli podsmażonej na oliwie. Na partię założono 500 g mąki pszennej, 250 ml wody, 500 g ugotowanych ziemniaków, 300 g twarogu półtłustego, 200 g cebuli przed smażeniem, 60 g oliwy pozostającej łącznie w cieście i okrasie, 10 g soli i 0,8 g pieprzu. Przyjęto 1750 g gotowego dania razem z okrasą. Węglowodany podano bez błonnika. Witaminy i minerały oszacowano z tabel składników, a dla części witamin w cieście i cebuli uwzględniono straty podczas obróbki. Cebula i oliwa są wliczone w porcję. Wariant bez śmietany.',
+      recipeSources:[
+        {name:'Przepis porównawczy – pierogi ruskie AniaGotuje',url:'https://aniagotuje.pl/przepis/pierogi-ruskie'},
+        source('flour'),source('pepper'),
+        {name:'USDA – ziemniaki gotowane, bez soli',url:'https://fdc.nal.usda.gov/food-details/170438/nutrients'},
+        {name:'USDA – cebula surowa',url:'https://fdc.nal.usda.gov/food-details/170000/nutrients'},
+        {name:'USDA – oliwa z oliwek',url:'https://fdc.nal.usda.gov/food-details/171413/nutrients'},
+        mextSource('2_02019_7','biotyna gotowanych ziemniaków'),pepperSource,fridaSource,retentionSource,
+      ],
+    }),
     make('chicken-mushroom-roulade','Rolada z piersi kurczaka z pieczarkami',[
       part(generic('chickenRoasted'),80),part(generic('mushroomsCooked'),18),
       part(base('oil'),1.5),part(generic('garlicPowder'),.1),part(generic('pepper'),.1),part({...zero,salt:100},.3),

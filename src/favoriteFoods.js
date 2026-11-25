@@ -167,4 +167,31 @@ export const FAVORITE_FOODS = [
     defaultQuantity:140,
     servingSizes:[{label:'1 kubek — 140 g',quantity:140}],
   }),
+  labelled('pilos-sour-cream-12','Śmietana 12%','Pilos — Lidl','g',136,3,4,12,{
+    source:'Etykieta i szacunek',
+    sourceUrl:'https://www.calori.com/product/20857912/smietana-12-pilos',
+    sugars:4,saturatedFat:8,fiber:0,salt:.1,
+    // Frida 6.1 food 671. Scale fat-soluble vitamins by 12 / 18.5665.
+    calcium:98.4,iron:.024,potassium:122.5,magnesium:9.91,zinc:.344,selenium:2.2,
+    vitaminA:85.7,vitaminC:.1,vitaminD:.142,vitaminE:.168,vitaminK:6.73,
+    b1:.032,b2:.18,b3:.587,b5:.3,b6:.034,biotin:1.4,folate:10,b12:.2,
+    imageFit:'cover',imageNote:'Wygenerowane zdjęcie poglądowe śmietany.',
+    estimateNotes:'Kalorie, makro, cukry, kwasy tłuszczowe nasycone i sól pochodzą z tabeli dla kubka Pilos 400 g (EAN 20857912). Przyjęto 0 g błonnika dla śmietanki z kulturami bakterii. Witaminy i minerały oszacowano z tabeli śmietany fermentowanej 18% (pozycja 671 w DTU National Food Institute, Frida 6.1, CC BY 4.0). Witaminy A, D, E i K przeliczono proporcjonalnie do 12% tłuszczu.',
+    aliases:['śmietna 12%','śmietana kwaśna 12%','śmietana naturalna 12%','20857912'],
+    servingSizes:[{label:'1 łyżka — ok. 15 g',quantity:15},{label:'2 łyżki — ok. 30 g',quantity:30},{label:'Całe opakowanie — 400 g',quantity:400}],
+  }),
+  labelled('pilos-cream-30','Śmietanka 30%','Pilos — Lidl','g',292,2.4,3.2,30,{
+    source:'Etykieta i szacunek',
+    sourceUrl:'https://shelfpedia.com/pl-pl/produkt/4335619334076-smietanka-30/',
+    sugars:3.2,saturatedFat:20.7,fiber:0,salt:.07,
+    // USDA FoodData Central 170858. B7 interpolated between Frida 662 and 1174.
+    // Total vitamin K from Frida 1174, scaled by 30 / 38.0181.
+    calcium:69,iron:.03,potassium:97,magnesium:7,zinc:.25,selenium:.5,
+    vitaminA:284,vitaminC:.6,vitaminD:.6,vitaminE:.88,vitaminK:8.85,
+    b1:.024,b2:.125,b3:.559,b5:.259,b6:.028,biotin:1.1,folate:4,b12:.2,
+    imageFit:'cover',imageNote:'Wygenerowane zdjęcie poglądowe śmietanki.',
+    estimateNotes:'Kalorie, makro, cukry, kwasy tłuszczowe nasycone, błonnik i sól pochodzą z tabeli dla śmietanki Pilos 200 g (EAN 4335619334076). Witaminy i minerały oszacowano na podstawie płynnej śmietanki do ubijania 30,9% z USDA FoodData Central (170858). Biotynę oszacowano interpolacją danych dla śmietanki 18% i 38%, a witaminę K przeliczono proporcjonalnie z wariantu 38% (pozycje 662 i 1174 w DTU National Food Institute, Frida 6.1, CC BY 4.0).',
+    aliases:['śmietana 30%','śmietanka kremówka 30%','śmietanka kremowa 30%','4335619334076'],
+    servingSizes:[{label:'1 łyżka — ok. 15 g',quantity:15},{label:'2 łyżki — ok. 30 g',quantity:30},{label:'Całe opakowanie — 200 g',quantity:200}],
+  }),
 ].map(fillFavoriteSelenium);

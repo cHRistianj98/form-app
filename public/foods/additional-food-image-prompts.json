@@ -1,6 +1,6 @@
 {
   "tool": "Built-in imagegen",
-  "usage": "Poglądowe grafiki produktów ogólnych, bez wskazanej marki.",
+  "usage": "Poglądowe grafiki produktów i porcji bez widocznego opakowania.",
   "images": [
     {
       "id": "garlic",
@@ -19,6 +19,18 @@
       "name": "Herbata Earl Grey — kubek naparu",
       "image": "/foods/fav-lipton-earl-grey.webp",
       "prompt": "Use case: product-mockup. Asset type: square food catalog photograph for a dark navy Polish nutrition diary, clear when viewed as a 48-pixel thumbnail. Subject: one ivory ceramic mug filled with clear amber freshly brewed black Earl Grey tea, on a matching small ivory saucer, centered on a plain dark charcoal navy tabletop. Close slightly overhead view with the complete mug and saucer visible and generous clean margin. Soft natural side light, realistic glazed ceramic and translucent amber tea, subtle gentle steam, premium appetizing photography. No fruit, lemon, orange, ginger, sugar, milk, garnish, teabag, packaging, branding, text, logos, watermarks, cutlery, napkins, people or hands. One image, no collage."
+    },
+    {
+      "id": "fav-pilos-sour-cream-12",
+      "name": "Śmietana 12% Pilos",
+      "image": "/foods/fav-pilos-sour-cream-12.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: square Polish food diary catalogue thumbnail, a serving illustration. Photograph thick white cultured sour cream with soft peaks and a spoon swirl in a simple small white ceramic ramekin, with a single stainless teaspoon at the side. Pale mint neutral surface and background, gentle natural daylight. Shot from 45 degrees, focus on texture, centered, tight crop with all important detail inside the central 80%. No branding, packaging, labels, garnish, text or watermark. Photo realistic."
+    },
+    {
+      "id": "fav-pilos-cream-30",
+      "name": "Śmietanka 30% Pilos",
+      "image": "/foods/fav-pilos-cream-30.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: square Polish food diary catalogue thumbnail, a serving illustration. Photograph smooth fluid unwhipped white dairy cream with a soft glossy surface in a small white ceramic pouring jug; style with a second small shallow white saucer containing a little poured cream. Soft pale pink warm neutral background, gentle natural daylight, shot from slightly above at 45 degrees, tightly framed center with important details within the central 80%. No branding, packaging, labels, fruit, garnish, text or watermark. Photo realistic."
     }
   ]
 }

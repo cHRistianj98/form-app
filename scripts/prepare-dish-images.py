@@ -22,9 +22,9 @@ jobs.extend((source,[key]) for key,source in args.dish)
 if not jobs: parser.error('Provide images to convert.')
 out=ROOT/'public/foods'
 prompts=(ROOT/'scripts/dish-image-prompts.json').read_bytes()
-known={file.removeprefix('/foods/dish-').removesuffix('.webp') for row in json.loads(prompts)['images'] for file in row['files']}
+known={file.removeprefix('/foods/dish-').removesuffix('.webp'):row for row in json.loads(prompts)['images'] for file in row['files']}
 for source,keys in jobs:
-    if not set(keys)<=known: parser.error('Dish ID must be listed in dish-image-prompts.json.')
+    if not set(keys)<=known.keys(): parser.error('Dish ID must be listed in dish-image-prompts.json.')
     if not Path(source).is_file(): parser.error(f'Image does not exist: {source}')
 (out/'dish-image-prompts.json').write_bytes(prompts)
 credits_path=out/'credits.json'
@@ -36,7 +36,7 @@ for source,keys in jobs:
         target=ROOT/f'public/foods/dish-{key}.webp'
         image.save(target,'WEBP',quality=85,method=6)
         credits[f'dish:{key}']={
-            'image':f'/foods/dish-{key}.webp','title':f'Domowe danie: {key}',
+            'image':f'/foods/dish-{key}.webp','title':known[key].get('title',f'Domowe danie: {key}'),
             'author':'Wygenerowano dla aplikacji Forma przy użyciu imagegen',
             'license':'Grafika wygenerowana AI',
             'source':'/foods/dish-image-prompts.json','licenseUrl':'/foods/dish-image-prompts.json',
