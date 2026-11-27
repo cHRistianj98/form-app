@@ -72,29 +72,34 @@ export const BASE_FOODS = [
 
 export const HOMEMADE_FOODS=createHomemadeFoods(BASE_FOODS,FAVORITE_FOODS);
 const dishesById=new Map(HOMEMADE_FOODS.map(food=>[food.id,food]));
+const mountainRoll=FAVORITE_FOODS.find(food=>food.id==='favorite:lidl-mountain-wheat-rye-roll');
 
-function fillSavedDishGaps(food,dish) {
+function fillSavedCatalogGaps(food,catalogFood) {
+  if(!catalogFood||food===catalogFood)return food;
   const basePotato=food.id==='base:potato'&&food.source==='Orientacyjne'&&!food.brand;
-  if(!dish||food===dish||(!basePotato&&food.source!==dish.source)||
-    (food.unit??'g')!==dish.unit||(food.basisQuantity??100)!==dish.basisQuantity||
-    MACRO_FIELDS.some(key=>food[key]!=null&&food[key]!==''&&food[key]!==dish[key]))return food;
+  const legacyRoll=catalogFood===mountainRoll&&food.brand===mountainRoll.brand&&food.source==='Dane producenta';
+  if((!basePotato&&!legacyRoll&&food.source!==catalogFood.source)||
+    (food.unit??'g')!==catalogFood.unit||(food.basisQuantity??100)!==(catalogFood.basisQuantity??100)||
+    MACRO_FIELDS.some(key=>food[key]!=null&&food[key]!==''&&food[key]!==catalogFood[key]))return food;
 
-  // A matching catalog recipe can fill gaps without rewriting recorded values.
-  const keys=NUTRIENT_FIELDS.filter(key=>dish[key]!=null&&!isPartialNutrient(dish,key)&&
+  // A matching catalog item can fill gaps without rewriting recorded values.
+  const keys=NUTRIENT_FIELDS.filter(key=>catalogFood[key]!=null&&!isPartialNutrient(catalogFood,key)&&
     (food[key]==null||food[key]===''||(isPartialNutrient(food,key)&&!isUpperBoundNutrient(food,key))));
   if(!keys.length)return food;
   return {
-    ...food,...Object.fromEntries(keys.map(key=>[key,dish[key]])),
+    ...food,...Object.fromEntries(keys.map(key=>[key,catalogFood[key]])),
+    ...(legacyRoll?{source:catalogFood.source,sourceUrl:catalogFood.sourceUrl}:{}),
     partialNutrients:(food.partialNutrients||[]).filter(key=>!keys.includes(key)),
-    upperBoundNutrients:[...new Set([...(food.upperBoundNutrients||[]),...keys.filter(key=>isUpperBoundNutrient(dish,key))])],
-    estimateNotes:dish.estimateNotes,
+    upperBoundNutrients:[...new Set([...(food.upperBoundNutrients||[]),...keys.filter(key=>isUpperBoundNutrient(catalogFood,key))])],
+    estimateNotes:catalogFood.estimateNotes,
   };
 }
 
 export function resolveFoodNutrition(food) {
   if(!food)return food;
   const dish=dishesById.get(food.id);
-  const resolved=fillSavedDishGaps(enrichGenericFood(food),dish);
+  const catalogFood=dish??(food.id===mountainRoll.id?mountainRoll:null);
+  const resolved=fillSavedCatalogGaps(enrichGenericFood(food),catalogFood);
   if(resolved.selenium!=null&&resolved.selenium!=='')return resolved;
   const favorite=fillFavoriteSelenium(resolved);
   if(favorite!==resolved)return favorite;

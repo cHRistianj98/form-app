@@ -843,5 +843,23 @@
     "source": "/foods/additional-food-image-prompts.json",
     "licenseUrl": "/foods/additional-food-image-prompts.json",
     "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "dish:zurek": {
+    "image": "/foods/dish-zurek.webp",
+    "title": "Żurek z białą kiełbasą i jajkiem",
+    "author": "Wygenerowano dla aplikacji Forma przy użyciu imagegen",
+    "license": "Grafika wygenerowana AI",
+    "source": "/foods/dish-image-prompts.json",
+    "licenseUrl": "/foods/dish-image-prompts.json",
+    "changes": "Zmniejszono do 480 px i skonwertowano do WebP. Grafika poglądowa, nie zdjęcie rzeczywistej porcji."
+  },
+  "fav-pilos-high-protein-chocolate-drink": {
+    "image": "/foods/fav-pilos-high-protein-chocolate-drink.webp",
+    "title": "Pilos — Napój High Protein czekoladowy 350 g",
+    "author": "Zdjęcie z katalogu Dine4Fit",
+    "source": "https://www.dine4fit.pl/produkty/high-protein-napoj-mleczny-o-smaku-czekolada-pilos",
+    "license": "Zdjęcie produktu — prawa zastrzeżone",
+    "licenseUrl": "",
+    "changes": "Resized and converted to WebP. Original aspect ratio preserved."
   }
 }

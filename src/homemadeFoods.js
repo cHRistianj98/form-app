@@ -73,7 +73,30 @@ export function createHomemadeFoods(baseFoods,favoriteFoods) {
   const butter=fillIngredientGaps(favorite('laciate-butter'),base('butter'));
   const pizzaFlour=fillIngredientGaps(favorite('basia-pizza-flour'),generic('flour'));
   const pizzaSauce=fillIngredientGaps(favorite('mutti-pizza-sauce'),generic('tomatoPuree'));
+  const whiteSausage=fillIngredientGaps(
+    {kcal:262,protein:11,carbs:2.7,fat:23,saturatedFat:9,sugars:.25,salt:1.8,fiber:0},
+    generic('porkBratwurst'),
+  );
   return [
+    make('zurek','Żurek z białą kiełbasą i jajkiem',[
+      part(excludingFiber(generic('stock')),1000),
+      part(excludingFiber(generic('ryeFlour')),50,FLOUR_BOILED),part(zero,450),
+      part(excludingFiber(base('potato')),350),part(whiteSausage,300),
+      part(generic('boiledEgg'),200),part(favorite('pilos-sour-cream-12'),80),
+      part(excludingFiber(generic('garlic')),8),part(excludingFiber(generic('marjoram')),3),
+      part(excludingFiber(generic('pepper')),1),
+    ],2300,{
+      aliases:['żur','żurek domowy','żurek na zakwasie','żurek z ziemniakami'],
+      servingSizes:[{label:'300 g',quantity:300},{label:'400 g',quantity:400},{label:'500 g',quantity:500}],
+      estimateNotes:'Żurek na zakwasie żytnim z białą kiełbasą, jajkami, ziemniakami i śmietaną 12%. Na partię przyjęto 1000 g bulionu drobiowego, 500 g wymieszanego zakwasu (oszacowanego jak 50 g mąki żytniej w 450 g wody), 350 g ugotowanych ziemniaków, 300 g białej kiełbasy parzonej, 200 g jajek na twardo bez skorupek, 80 g śmietany, 8 g czosnku, 3 g majeranku i 1 g pieprzu. Masa gotowego dania z dodatkami to około 2300 g. Sól pochodzi głównie z bulionu i kiełbasy, której cukry oszacowano w połowie zakresu podanego na etykiecie. Wariant bez boczku i pieczywa. Mikroskładniki pochodzą z tabel składników, a kiełbasę przybliżono parzoną kiełbasą wieprzową. Fermentację zakwasu przybliżono składem mąki i wody. Waż porcję z kiełbasą, jajkiem i ziemniakami.',
+      recipeSources:[
+        {name:'Przepis porównawczy – tradycyjny żurek',url:'https://www.kwestiasmaku.com/kuchnia_polska/wielkanoc/zurek/przepis.html'},
+        {name:'Sokołów – etykieta białej kiełbasy parzonej',url:'https://sokolow.pl/produkty/kielbasa-biala-parzona'},
+        {name:'Kuchnia Lidla – proporcje zakwasu',url:'https://przepisy.lidl.pl/przepis/zakwas-na-zurek'},
+        ...stockSources,source('ryeFlour'),source('porkBratwurst'),source('boiledEgg'),source('marjoram'),
+        mextSource('11_11189_7','biotyna kiełbasy wieprzowej'),fridaSource,retentionSource,
+      ],
+    }),
     make('pierogi-onion-olive-oil','Pierogi z cebulą i oliwą',[
       part(excludingFiber(generic('flour')),500,FLOUR_BOILED),part(zero,250),
       part(excludingFiber(base('potato')),500),part(base('tw'),300),

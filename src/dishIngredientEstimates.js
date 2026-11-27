@@ -48,6 +48,10 @@ const estimates={
   hazelnutSpread:{biotin:16,b3:1.86,fiber:3.7}, // AFCD F008777
   jam:{biotin:1.8}, // Frida 997, strawberry jam as a fruit jam proxy
   milkWhole:{biotin:1.55}, // Frida 6
+  ryeFlour:{biotin:6}, // Frida 60, wholemeal rye flour as a proxy for B7
+  porkBratwurst:{biotin:4.3}, // MEXT 11189, cooked pork frankfurter
+  boiledEgg:{biotin:25.8}, // Frida 1666, boiled egg
+  marjoram:{b3:6.23,b5:.921,biotin:2}, // USDA marjoram niacin plus tryptophan estimated at 1% of protein, B5 and B7 from dried oregano
 };
 
 export function applyIngredientEstimate(food,key) {

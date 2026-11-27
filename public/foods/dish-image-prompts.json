@@ -64,6 +64,14 @@
       "title": "Pierogi z cebulą i oliwą",
       "subject": "Boiled potato and farmer's cheese pierogi with sautéed onion and olive oil.",
       "prompt": "Use case: photorealistic-natural. Asset type: square food diary catalogue thumbnail. Take a realistic 45-degree overhead food photograph of five boiled Polish half-moon pierogi with joined lightly crimped edges, dressed with small cubes of golden sautéed onion and a subtle glistening drizzle of olive oil. One pieróg can show pale potato and farmer's cheese filling. Plain ivory ceramic plate, light warm neutral tabletop, natural soft daylight, appetizing and homemade. Keep all important detail inside the central 80% and let the plate fill most of the square. No sour cream, no garnish, no utensils, no text, no watermark."
+    },
+    {
+      "files": [
+        "/foods/dish-zurek.webp"
+      ],
+      "title": "Żurek z białą kiełbasą i jajkiem",
+      "subject": "Polish sour rye soup with white sausage, hard-boiled egg and potatoes.",
+      "prompt": "Use case: photorealistic-natural. Asset type: square food photograph for a dark navy Polish food diary catalogue. One centered ivory ceramic bowl of authentic Polish żurek, a pale cream-beige slightly opaque sour rye soup with tiny flecks of dried marjoram, two clearly visible hard-boiled egg halves with rich yellow yolks, visible slices of lightly colored Polish white sausage and a few irregular pieces of peeled potato. Tight 45-degree overhead framing with the complete bowl visible and clean margin on a plain dark charcoal navy tabletop. Soft natural side light, appetizing and homemade, recognizable at 64 pixels. No bread bowl, bacon pieces, garnish except a sparse sprinkle of marjoram, utensils, napkins, hands, people, text, logos or watermark."
     }
   ]
 }

@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {BASE_FOODS,FAVORITE_FOODS,foodImage,foodOptions,foodUnit,nutrientLabel,scaleFood} from '../src/foods.js';
+import {BASE_FOODS,FAVORITE_FOODS,foodImage,foodOptions,foodUnit,nutrientLabel,resolveFoodNutrition,scaleFood} from '../src/foods.js';
+import {defaultFoodQuantity} from '../src/foodPortions.js';
 import {NUTRIENT_FIELDS,SUPPLEMENT_COMPONENT_KEYS} from '../src/nutrients.js';
 import worker from '../worker/index.js';
 
@@ -17,7 +18,7 @@ test('seven selectable products retain the user table, including ml basis and th
     ['cincin-rose-zero','ml',22,0,5.3,0],
   ]);
   assert.equal(FAVORITE_FOODS[0].fatLessThan,true);
-  const otherSources=['favorite:lipton-earl-grey','favorite:guseppe-four-cheese','favorite:kania-mild-ketchup','favorite:lidl-mountain-wheat-rye-roll','favorite:danio-cream','favorite:pilos-sour-cream-12','favorite:pilos-cream-30'];
+  const otherSources=['favorite:lipton-earl-grey','favorite:guseppe-four-cheese','favorite:kania-mild-ketchup','favorite:lidl-mountain-wheat-rye-roll','favorite:danio-cream','favorite:pilos-sour-cream-12','favorite:pilos-cream-30','favorite:pilos-high-protein-chocolate-drink'];
   assert.equal(FAVORITE_FOODS.filter(f=>!otherSources.includes(f.id)).every(f=>f.source==='Twoja tabela'),true);
 });
 
@@ -69,6 +70,37 @@ test('Pilos creams retain label macros and have estimates for every tracked food
     assert.match(food.estimateNotes,/Frida 6\.1/);
     for(const key of foodKeys) assert.ok(Number.isFinite(food[key])&&food[key]>=0,`${id}:${key}`);
   }
+});
+
+test('the mountain roll and chocolate drink have complete nutrition and scale to one roll and one bottle',()=>{
+  const [roll]=foodOptions('bulki gorskie');
+  const [drink]=foodOptions('high protein czekolada lidl');
+  assert.equal(roll.id,'favorite:lidl-mountain-wheat-rye-roll');
+  assert.equal(drink.id,'favorite:pilos-high-protein-chocolate-drink');
+  const foodKeys=NUTRIENT_FIELDS.filter(key=>!SUPPLEMENT_COMPONENT_KEYS.includes(key));
+  for(const food of [roll,drink]){
+    assert.equal(foodUnit(food),'g');
+    for(const key of foodKeys)assert.ok(Number.isFinite(food[key])&&food[key]>=0,`${food.id}:${key}`);
+  }
+  assert.equal(defaultFoodQuantity(roll),75);
+  assert.equal(scaleFood(roll,75).kcal,185.25);
+  assert.equal(defaultFoodQuantity(drink),350);
+  assert.equal(scaleFood(drink,350).protein,35);
+  assert.equal(scaleFood(drink,350).kcal,224);
+  assert.equal(scaleFood(drink,175).protein,17.5);
+});
+
+test('saved mountain rolls gain missing estimates while preserving recorded nutrition',()=>{
+  const [roll]=foodOptions('bulka gorska');
+  const saved={...roll,source:'Dane producenta',kcal:null,protein:null,carbs:null,fat:null,calcium:40,biotin:null};
+  const resolved=resolveFoodNutrition(saved);
+  assert.equal(resolved.kcal,roll.kcal);
+  assert.equal(resolved.biotin,roll.biotin);
+  assert.equal(resolved.calcium,40);
+  assert.equal(resolved.estimateNotes,roll.estimateNotes);
+  assert.equal(saved.kcal,null);
+  assert.equal(resolveFoodNutrition({...saved,kcal:290}).biotin,null);
+  assert.equal(resolveFoodNutrition({...saved,unit:'ml'}).biotin,null);
 });
 
 test('packshots ship as real WebP assets with source metadata and remain resolvable for snapshots',()=>{

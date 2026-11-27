@@ -13,8 +13,8 @@ const favorite=id=>FAVORITE_FOODS.find(f=>f.id===`favorite:${id}`);
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-9,`${a} != ${b}`);
 const entry=(food,grams,day='2026-11-15')=>({id:`entry:${food.id}`,food,grams,day,meal:'lunch'});
 
-test('twelve ready dishes are discoverable and have values for every tracked food nutrient',()=>{
-  assert.equal(HOMEMADE_FOODS.length,12);
+test('thirteen ready dishes are discoverable and have values for every tracked food nutrient',()=>{
+  assert.equal(HOMEMADE_FOODS.length,13);
   const foodKeys=NUTRIENT_FIELDS.filter(key=>!SUPPLEMENT_COMPONENT_KEYS.includes(key));
   for(const food of HOMEMADE_FOODS) {
     assert.equal(food.unit,'g');assert.equal(foodBasis(food),100);
@@ -36,6 +36,16 @@ test('twelve ready dishes are discoverable and have values for every tracked foo
   assert.equal(foodOptions('sernik krolewski')[0].id,get('cocoa-crumble-cheesecake').id);
   assert.equal(foodOptions('pomidorowka')[0].id,get('tomato-soup-noodles').id);
   assert.equal(foodOptions('lidlomix pomidorowa')[0].id,get('tomato-soup-noodles').id);
+});
+
+test('zurek includes the cooked sausage, eggs, potatoes and cream in the finished soup portion',()=>{
+  const soup=get('zurek');
+  const batchKcal=36*10+349*.5+87*3.5+262*3+155*2+136*.8+149*.08+271*.03+251*.01;
+  assert.equal(foodOptions('zurek z ziemniakami')[0].id,soup.id);
+  near(soup.kcal,batchKcal/23);
+  near(scaleFood(soup,400).kcal,batchKcal/2300*400);
+  assert.match(soup.estimateNotes,/500 g wymieszanego zakwasu/);
+  assert.match(soup.estimateNotes,/2300 g/);
 });
 
 test('pierogi include sautéed onion and olive oil in the finished weight',()=>{

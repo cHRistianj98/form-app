@@ -143,12 +143,18 @@ export const FAVORITE_FOODS = [
     aliases:['parówki z indyka','parówki indycze','Pikok Pure','20902575'],
     servingSizes:[{label:'Całe opakowanie — 200 g',quantity:200}],
   }),
-  labelled('lidl-mountain-wheat-rye-roll','Bułka górska pszenno-żytnia','Lidl','g',null,null,null,null,{
+  labelled('lidl-mountain-wheat-rye-roll','Bułka górska pszenno-żytnia','Lidl','g',247,8.5,48,1.5,{
     defaultQuantity:75,
-    source:'Dane producenta',sourceUrl:'https://www.lidl.pl/p/bulka-typu-gorskiego/p11432568',
+    source:'Dane produktu i szacunek',sourceUrl:'https://listapromek.pl/produkty/2514-bulka-typu-gorskiego',
+    sugars:2.5,saturatedFat:.3,fiber:4.2,salt:1.2,
+    // Frida 6.1 foods 956 and 667 (80:20). Vitamin E from food 667.
+    calcium:43.8,iron:1.19,potassium:156,magnesium:23.6,zinc:.744,selenium:2.92,
+    vitaminA:2.2,vitaminC:0,vitaminD:0,vitaminE:.44,vitaminK:0,
+    b1:.157,b2:.078,b3:1.58,b5:.46,b6:.083,biotin:2.12,folate:63.1,b12:0,
     ingredients:'Mąka pszenna (59%), woda, mąka żytnia (6%), płatki ziemniaczane (5,8%), sól, drożdże, gluten pszenny, cukier i kwas askorbinowy (środek do przetwarzania mąki).',
     labelNote:'Możliwa obecność mleka, jaj, soi, sezamu i orzechów.',
-    aliases:['bułka typu górskiego','bułka pszenno-żytnia'],
+    estimateNotes:'Makro, cukry, błonnik, tłuszcze nasycone i sól przyjęto z orientacyjnej tabeli ListaPromek dla bułki typu górskiego 75 g. Skład i gramatura pochodzą z informacji Lidl. Witaminy i minerały oszacowano, uśredniając profil bułki pszennej i pieczywa pszenno-żytniego w proporcji 80:20 (pozycje 956 i 667 w DTU Frida 6.1, CC BY 4.0). Witaminę E przyjęto z pieczywa pszenno-żytniego.',
+    aliases:['bułka typu górskiego','bułka pszenno-żytnia','bułki górskie','5572327'],
     servingSizes:[{label:'1 bułka — 75 g',quantity:75}],
   }),
   // The retailer label prints 69 kcal, but its own macros and 134 kcal per
@@ -193,5 +199,20 @@ export const FAVORITE_FOODS = [
     estimateNotes:'Kalorie, makro, cukry, kwasy tłuszczowe nasycone, błonnik i sól pochodzą z tabeli dla śmietanki Pilos 200 g (EAN 4335619334076). Witaminy i minerały oszacowano na podstawie płynnej śmietanki do ubijania 30,9% z USDA FoodData Central (170858). Biotynę oszacowano interpolacją danych dla śmietanki 18% i 38%, a witaminę K przeliczono proporcjonalnie z wariantu 38% (pozycje 662 i 1174 w DTU National Food Institute, Frida 6.1, CC BY 4.0).',
     aliases:['śmietana 30%','śmietanka kremówka 30%','śmietanka kremowa 30%','4335619334076'],
     servingSizes:[{label:'1 łyżka — ok. 15 g',quantity:15},{label:'2 łyżki — ok. 30 g',quantity:30},{label:'Całe opakowanie — 200 g',quantity:200}],
+  }),
+  labelled('pilos-high-protein-chocolate-drink','Napój High Protein czekoladowy','Pilos — Lidl','g',64,10,5.03,.28,{
+    defaultQuantity:350,
+    source:'Etykieta i szacunek',
+    sourceUrl:'https://fitrecenzje.pl/napoj-proteinowy-pilos-high-protein-recenzja/',
+    sugars:4.84,saturatedFat:.19,fiber:.4,salt:.14,
+    // Frida 6.1 food 1108. Calcium from a comparable Arla protein drink;
+    // iron includes the contribution from 1.2% cocoa (USDA 169593).
+    calcium:136,iron:.19,potassium:211,magnesium:21.6,zinc:.5,selenium:1.3,
+    vitaminA:4.33,vitaminC:0,vitaminD:.007,vitaminE:.01,vitaminK:0,
+    b1:.027,b2:.164,b3:2.4,b5:.36,b6:.027,biotin:2,folate:4.72,b12:.05,
+    labelNote:'Cała butelka 350 g dostarcza 35 g białka. Zawiera mleko.',
+    estimateNotes:'Dane etykiety napoju czekoladowego przeliczono z objętości na masę opakowania (332 ml odpowiada 350 g). Energia całej butelki to 224 kcal według porcji z etykiety, a deklarowane 35 g białka to 10 g na 100 g. Błonnik oszacowano z 1,2% kakao. Mikroskładniki oszacowano z odtłuszczonego mleka czekoladowego UHT (pozycja 1108 w DTU Frida 6.1, CC BY 4.0). Wapń przyjęto z porównywalnego napoju Arla Protein, żelazo uwzględnia kakao (USDA 169593), a ekwiwalent niacyny dostosowano do wyższej zawartości białka.',
+    aliases:['napój mleczny proteinowy czekolada','napój wysokobiałkowy czekoladowy','czekoladowe mleko proteinowe','high orotein','35 g białka','35g','160556'],
+    servingSizes:[{label:'Cała butelka — 350 g',quantity:350},{label:'Pół butelki — 175 g',quantity:175}],
   }),
 ].map(fillFavoriteSelenium);
