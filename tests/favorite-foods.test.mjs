@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {BASE_FOODS,FAVORITE_FOODS,foodImage,foodOptions,foodUnit,nutrientLabel,resolveFoodNutrition,scaleFood} from '../src/foods.js';
+import {BASE_FOODS,FAVORITE_FOODS,foodImage,foodOptions,foodSearchHistory,foodUnit,nutrientLabel,resolveFoodNutrition,scaleFood} from '../src/foods.js';
 import {defaultFoodQuantity} from '../src/foodPortions.js';
 import {NUTRIENT_FIELDS,SUPPLEMENT_COMPONENT_KEYS} from '../src/nutrients.js';
 import worker from '../worker/index.js';
@@ -55,6 +55,36 @@ test('user products appear without online search and match brand/name in either 
   assert.equal(foodOptions('mleko lidl')[0].id,FAVORITE_FOODS[0].id);
   assert.equal(foodOptions('Cin&Cin')[0].id,FAVORITE_FOODS[6].id);
   assert.equal(foodOptions('protein',[FAVORITE_FOODS[0]],[FAVORITE_FOODS[0]]).filter(f=>f.id===FAVORITE_FOODS[0].id).length,1);
+});
+
+test('food search ranks matching products by their number of diary entries before limiting results',()=>{
+  const personal=Array.from({length:52},(_,index)=>({id:`own:${index}`,name:`Jogurt naturalny ${index}`}));
+  const [tie,largePortion]=personal;
+  const frequent=personal.at(-1);
+  const entries=[
+    {food:largePortion,grams:500},
+    {food:frequent,grams:20},
+    {food:tie,grams:50},
+    {food:frequent,grams:20},
+  ];
+  const history=foodSearchHistory(entries);
+  const results=foodOptions('jogurt naturalny',personal,[],history);
+  assert.equal(results.length,50);
+  assert.deepEqual(results.slice(0,3),[frequent,tie,largePortion]);
+  assert.equal(foodOptions('',personal,[],history)[0],frequent);
+  assert.deepEqual(foodOptions('żurek',personal,[],history).map(food=>food.id),['dish:zurek']);
+  assert.equal(foodOptions('jogurt naturalny',personal,[],foodSearchHistory(entries.slice(0,-1)))[0],tie);
+});
+
+test('previously logged Open Food Facts products are searchable and use the fresh catalog result when available',()=>{
+  const saved={id:'off:12345678',name:'Jogurt z wanilią',source:'Open Food Facts'};
+  const updated={...saved,kcal:110};
+  const deleted={id:'own:deleted',name:'Jogurt własny'};
+  const history=foodSearchHistory([{food:saved},{food:deleted},{food:saved}]);
+  assert.equal(foodOptions('jogurt z wanilia',[],[],history)[0],saved);
+  assert.equal(foodOptions('jogurt',[],[updated],history)[0],updated);
+  assert.equal(foodOptions('jogurt',[],[updated],history).filter(food=>food.id===saved.id).length,1);
+  assert.equal(foodOptions('jogurt wlasny',[],[],history).length,0);
 });
 
 test('Pilos creams retain label macros and have estimates for every tracked food nutrient',()=>{

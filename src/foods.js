@@ -5,7 +5,7 @@ import {MACRO_FIELDS,NUTRIENTS,NUTRIENT_FIELDS} from './nutrients.js';
 import {enrichGenericFood} from './genericNutrition.js';
 import {createHomemadeFoods} from './homemadeFoods.js';
 import {isPartialNutrient,isUpperBoundNutrient} from './nutritionQualifiers.js';
-import {SUPPLEMENTS} from './supplements.js';
+import {SUPPLEMENTS,isSupplement} from './supplements.js';
 import {createTeaFood} from './tea.js';
 import {isTea,normalizeTeaRecipe} from './teaRecipe.js';
 export {NUTRIENTS} from './nutrients.js';
@@ -144,16 +144,30 @@ export function foodNutrientLabel(food,key,value=food[key],digits=1) {
   return nutrientLabel(value,upper,digits);
 }
 
-export function foodOptions(query='',personal=[],remote=[]) {
-  const all=[...personal,...FAVORITE_FOODS,...HOMEMADE_FOODS,...BASE_FOODS,...remote];
+export function foodSearchHistory(entries) {
+  const counts=new Map();
+  const onlineFoods=new Map();
+  for(const entry of entries) {
+    const food=entry?.food;
+    if(typeof food?.id!=='string'||isSupplement(food))continue;
+    counts.set(food.id,(counts.get(food.id)??0)+1);
+    if(food.id.startsWith('off:')&&!onlineFoods.has(food.id))onlineFoods.set(food.id,food);
+  }
+  return {counts,onlineFoods:[...onlineFoods.values()]};
+}
+
+export function foodOptions(query='',personal=[],remote=[],history=null) {
+  const all=[...personal,...FAVORITE_FOODS,...HOMEMADE_FOODS,...BASE_FOODS,...remote,...(history?.onlineFoods??[])];
   const seen=new Set();
   const terms=canonicalText(query).split(/\s+/).filter(Boolean);
-  return all.filter(food=>{
+  const matches=all.filter(food=>{
     if (seen.has(food.id)) return false;
     seen.add(food.id);
     const text=canonicalText(food.name+' '+(food.brand||'')+' '+(food.aliases||[]).join(' '));
     return terms.every(term=>text.includes(term));
-  }).slice(0,terms.length?50:Math.max(18,FAVORITE_FOODS.length));
+  });
+  if(history?.counts.size)matches.sort((a,b)=>(history.counts.get(b.id)??0)-(history.counts.get(a.id)??0));
+  return matches.slice(0,terms.length?50:Math.max(18,FAVORITE_FOODS.length));
 }
 export function parseNum(value) { const n = Number(String(value).replace(',','.')); return Number.isFinite(n) ? n : 0; }
 export const DAY_LABELS = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];

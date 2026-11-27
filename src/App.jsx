@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import {
   ACTIVITY_TYPES, BASE_FOODS, FAVORITE_FOODS, HOMEMADE_FOODS, MEALS, NUTRIENTS, activityKcal,
-  calcTargets, calcDailyBalance, calcDailyMovement, dateTitle, fmt, foodBasis, foodBasisLabel, foodImage, foodOptions, foodUnit, localDay, nutrientLabel, parseNum, resolveFoodNutrition, scaleFood, shiftDay
+  calcTargets, calcDailyBalance, calcDailyMovement, dateTitle, fmt, foodBasis, foodBasisLabel, foodImage, foodOptions, foodSearchHistory, foodUnit, localDay, nutrientLabel, parseNum, resolveFoodNutrition, scaleFood, shiftDay
 } from './foods.js';
 import {DEFAULT_PROFILE, api, mutate, readLocal, uuid, writeLocal} from './storage.js';
 import {normalizeProfile} from './profile.js';
@@ -127,7 +127,7 @@ function HomemadeFoodsPanel({onSelect}) {
     <p className="muted-note">Proporcje składników i masa po przygotowaniu wpływają na wynik. Założenia znajdziesz po wybraniu dania; brakujące składniki pozostają nieznane.</p>
   </section>;
 }
-function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMeal='breakfast',initialFood=null,editing=null,local}) {
+function FoodModal({onClose,day,personal,entries,onAdd,onSaveFood,onDeleteFood,initialMeal='breakfast',initialFood=null,editing=null,local}) {
   const formId=React.useId();
   const initialCups=teaCups(editing?.grams);
   const initialInCups=isTea(editing?.food||initialFood)&&(!editing||initialCups!=null);
@@ -150,7 +150,8 @@ function FoodModal({onClose,day,personal,onAdd,onSaveFood,onDeleteFood,initialMe
     try {const r=await api('/search?q='+encodeURIComponent(q));setRemote(r.products||[]);setRemoteError(!!r.unavailable);}
     catch {setRemoteError(true)} finally {setBusy(false)}
   }
-  const options=useMemo(()=>foodOptions(query,personal.filter(food=>!isSupplement(food)),remote),[query,personal,remote]);
+  const history=useMemo(()=>foodSearchHistory(entries),[entries]);
+  const options=useMemo(()=>foodOptions(query,personal.filter(food=>!isSupplement(food)),remote,history),[query,personal,remote,history]);
   const sliceSize=sliceGrams(selected);
   const tea=isTea(selected);
   const portionFactor=quantityMode==='slice'?sliceSize:quantityMode==='cup'?TEA_CUP_ML:1;
@@ -378,7 +379,7 @@ function App() {
       {view==='settings'&&<SettingsPage personal={data.foods} currentWeight={weights.at(-1)?.weight} profile={data.profile} onSave={saveProfile} onExport={exportData} local={local} onLogout={logout} day={day} onGarminSynced={refreshGarminDaily}/>}
       <footer className="app-footer">Forma © 2026 — Twoje tempo. Twoja droga. <span>Wskazania kalorii i aktywności są orientacyjne.</span></footer>
     </main><nav className="mobile-nav">{nav.map(item=>{const Icon=item.icon;return <button key={item.id} className={view===item.id?'active':''} onClick={()=>setView(item.id)}><Icon size={22}/><small>{item.label}</small></button>})}</nav>
-    {foodModal&&<FoodModal day={day} personal={data.foods} editing={foodModal.editing||null} initialMeal={foodModal.meal||'breakfast'} initialFood={foodModal.food||null} local={local} onClose={()=>setFoodModal(null)} onAdd={record=>add('entries',record)} onSaveFood={record=>add('foods',record)} onDeleteFood={record=>remove('foods',record)}/>}
+    {foodModal&&<FoodModal day={day} personal={data.foods} entries={data.entries} editing={foodModal.editing||null} initialMeal={foodModal.meal||'breakfast'} initialFood={foodModal.food||null} local={local} onClose={()=>setFoodModal(null)} onAdd={record=>add('entries',record)} onSaveFood={record=>add('foods',record)} onDeleteFood={record=>remove('foods',record)}/>}
     {activityModal&&<ActivityModal day={day} weight={weight} onClose={()=>setActivityModal(false)} onSave={record=>add('activities',record)}/>}
     {metricModal&&<MetricModal day={day} current={metrics} defaultWeight={weight} onClose={()=>setMetricModal(false)} onSave={saveDaily}/>}
     {exportModal&&<NutritionExportModal entries={data.entries} daily={data.daily} activities={data.activities} profile={data.profile} day={day} initialPeriod={exportModal.period} onClose={()=>setExportModal(null)}/>}
