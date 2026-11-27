@@ -59,6 +59,8 @@ const sum = (arr, key) => arr.reduce((n,x)=>n+(Number(x[key])||0),0);
 const percent = (n,goal) => goal>0?Math.max(0,Math.min(100,n/goal*100)):0;
 const first = (name) => name.trim().charAt(0).toLocaleUpperCase('pl');
 const displayText = text => String(text||'').replace(/\s*[\u00b7\u2022]\s*/g, ', ');
+const productCountForms = {one:'produkt',few:'produkty',many:'produktów'};
+const polishPlural = new Intl.PluralRules('pl');
 
 function FoodPhoto({food,size=''}) {
   const src=foodImage(food);
@@ -78,11 +80,11 @@ function MealCard({meal,entries,onAdd,onEdit,onRemove}) {
   const [expanded,setExpanded]=useState(false);
   const Icon = mealIcons[meal.id];
   const mealNutrition=sumNutrition(entries);
-  return <div className={`meal-card meal-collapsible ${expanded?'expanded':''}`}>
-    <div className="meal-head"><button className="meal-toggle" aria-expanded={expanded} aria-controls={`meal-entries-${meal.id}`} onClick={()=>setExpanded(!expanded)}><span className="meal-name">
+  return <div className={`meal-card meal-collapsible ${expanded?'expanded':''}`} data-has-entries={entries.length>0}>
+    <div className="meal-head"><button type="button" className="meal-toggle" aria-expanded={expanded} aria-controls={`meal-entries-${meal.id}`} onClick={()=>setExpanded(!expanded)}><span className="meal-name">
       {mealImages[meal.id]?<img className="meal-photo" src={mealImages[meal.id]} alt="" width="76" height="76" decoding="async"/>:<IconBadge Icon={Icon} color={meal.id}/>}
-      <span className="meal-summary-text"><strong>{meal.name}</strong><span>{entries.length?`${totalLabel(mealNutrition,'kcal',0)} kcal · ${entries.length} ${entries.length===1?'produkt':'produktów'}`:'0 kcal · Brak wpisów'}</span></span>
-    </span><ChevronDown className="meal-expand-icon" size={18}/></button><button className="small-add" onClick={()=>onAdd(meal.id)} aria-label={`Dodaj do ${meal.name}`}><Plus size={22}/></button></div>
+      <span className="meal-summary-text"><strong>{meal.name}</strong><span>{entries.length?`${entries.length} ${productCountForms[polishPlural.select(entries.length)]}`:'Brak wpisów'}</span></span>
+    </span>{entries.length>0&&<span className="meal-summary-energy"><strong>{totalLabel(mealNutrition,'kcal',0)}</strong><small>kcal</small></span>}<ChevronDown className="meal-expand-icon" size={16} aria-hidden="true"/></button><button type="button" className="small-add" onClick={()=>onAdd(meal.id)} aria-label={`Dodaj do ${meal.name}`}><Plus size={20} aria-hidden="true"/></button></div>
     <div id={`meal-entries-${meal.id}`} className="meal-contents" hidden={!expanded}>
     {expanded&&entries.map(e=>{const n=scaleFood(e.food,e.grams);return <div className="meal-entry" key={e.id}>
       <button className="entry-main" onClick={()=>onEdit(e)}><FoodPhoto food={e.food}/><span className="entry-text"><strong>{e.food.name}</strong><small>{isTea(e.food)?teaPortionLabel(e.grams):`${fmt(e.grams,1)} ${foodUnit(e.food)}`}{e.food.brand?`, ${displayText(e.food.brand)}`:''}</small></span><span className="entry-calories">{nutrientLabel(n.kcal,false,0)} <small>kcal</small></span><MacroValues values={n} food={e.food} className="entry-macros"/></button>
